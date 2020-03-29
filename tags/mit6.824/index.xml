@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mit6.824 on 4 Fish</title>
+    <title>MIT6.824 on 4 Fish</title>
     <link>https://tonnie17.github.io/tags/mit6.824/</link>
-    <description>Recent content in Mit6.824 on 4 Fish</description>
+    <description>Recent content in MIT6.824 on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 12 Dec 2018 00:00:00 +0800</lastBuildDate>

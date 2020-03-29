@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Python on 4 Fish</title>
+    <title>python on 4 Fish</title>
     <link>https://tonnie17.github.io/tags/python/</link>
-    <description>Recent content in Python on 4 Fish</description>
+    <description>Recent content in python on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 27 Jun 2018 16:33:17 +0800</lastBuildDate>
@@ -125,7 +125,7 @@
       <pubDate>Tue, 01 Dec 2015 00:00:00 +0800</pubDate>
       
       <guid>https://tonnie17.github.io/posts/flask-source/</guid>
-      <description>首先看一个来自官方的使用例子： from flask import Flask app = Flask(__name__) @app.route(&amp;quot;/&amp;quot;) def hello(): return &amp;quot;Hello World!&amp;quot; if __name__ == &amp;quot;__main__&amp;quot;: app.run() 那么这里面发生了什么呢？进入源码一探究竟。 这是Flask的依赖的模块，可以</description>
+      <description>首先看一个来自官方的使用例子： from flask import Flask app = Flask(__name__) @app.route(&amp;#34;/&amp;#34;) def hello(): return &amp;#34;Hello World!&amp;#34; if __name__ == &amp;#34;__main__&amp;#34;: app.run() 那么这里面发生了什么呢？进入源码一探究竟。 这是Flask的依赖的模块，可以</description>
     </item>
     
   </channel>

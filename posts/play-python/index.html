@@ -7,7 +7,7 @@
 		
 		
 		
-		<meta name="generator" content="Hugo 0.44" />
+		<meta name="generator" content="Hugo 0.66.0" />
 		<title>Play Python &middot; 4 Fish</title>
 		<link rel="shortcut icon" href="https://tonnie17.github.io/images/favicon.ico">
 		<link rel="stylesheet" href="https://tonnie17.github.io/css/style.css">
@@ -49,8 +49,8 @@
                         Play Python
                     </h1>
                     <h2 class="headline">
-                    Mar 9, 2017 00:00
-                    · 1311 words
+                    Mar 9, 2017
+                    · 1310 words
                     · 3 minute read
                       <span class="tags">
                       
@@ -66,13 +66,9 @@
                 
                 <section id="post-body">
                     <p>Hello World</p>
-
-<pre><code class="language-python">In [1]: import __hello__
-Hello world!
-</code></pre>
-
-<p>查看API手册</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">1</span>]: <span style="color:#f92672">import</span> __hello__
+Hello world<span style="color:#960050;background-color:#1e0010">!</span>
+</code></pre></div><p>查看API手册</p>
 <pre><code>~ python
 11/17 17:02:27 2016
 Python 2.7.12 (default, Jun 29 2016, 14:05:02)
@@ -119,362 +115,269 @@ Some of this can actually be useful on non-Posix systems too, e.g.
 for manipulation of the pathname component of URLs.
 
 In [3]: os.path??
-</code></pre>
+</code></pre><p>遍历列表</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">array <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
 
-<p>遍历列表</p>
-
-<pre><code class="language-python">array = [1, 2, 3, 4, 5]
-
-for i in range(len(array)):
-    print (i, array[i])
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(array)):
+    <span style="color:#66d9ef">print</span> (i, array[i])
     
-# Pythonic 
-for i, item in enumerate(array):
-    print (i, item)
-</code></pre>
+<span style="color:#75715e"># Pythonic </span>
+<span style="color:#66d9ef">for</span> i, item <span style="color:#f92672">in</span> enumerate(array):
+    <span style="color:#66d9ef">print</span> (i, item)
+</code></pre></div><p>对列表的操作</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">array <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
 
-<p>对列表的操作</p>
+new_array <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> array:
+    new_array<span style="color:#f92672">.</span>append(str(item))
 
-<pre><code class="language-python">array = [1, 2, 3, 4, 5]
+<span style="color:#75715e"># Pythonic</span>
+new_array <span style="color:#f92672">=</span> [str(item) <span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> array]
 
-new_array = []
-for item in array:
-    new_array.append(str(item))
+<span style="color:#75715e"># Generator</span>
+new_array <span style="color:#f92672">=</span> (str(item) <span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> array)
 
-# Pythonic
-new_array = [str(item) for item in array]
+<span style="color:#75715e"># 函数式</span>
+new_array <span style="color:#f92672">=</span> map(str, array)
+</code></pre></div><p>列表推导</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 生成列表</span>
+[ i<span style="color:#f92672">*</span>i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> ]
+<span style="color:#75715e"># 生成集合</span>
+{ i<span style="color:#f92672">*</span>i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> }
+<span style="color:#75715e"># 生成字典</span>
+{ i:i <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">10</span>) <span style="color:#66d9ef">if</span> i <span style="color:#f92672">%</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> }
+</code></pre></div><p>上下文管理器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">file <span style="color:#f92672">=</span> open(<span style="color:#e6db74">&#39;file&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>)
+file<span style="color:#f92672">.</span>write(<span style="color:#ae81ff">123</span>)
+file<span style="color:#f92672">.</span>close()
 
-# Generator
-new_array = (str(item) for item in array)
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;file&#39;</span>, <span style="color:#e6db74">&#39;w&#39;</span>) <span style="color:#66d9ef">as</span> file:
+    file<span style="color:#f92672">.</span>write(<span style="color:#ae81ff">123</span>)
+</code></pre></div><p>条件判断</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">if</span> x <span style="color:#f92672">is</span> True:
+    y <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">else</span>:
+    y <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
 
-# 函数式
-new_array = map(str, array)
-</code></pre>
+<span style="color:#75715e"># Pythonic</span>
+y <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">if</span> x <span style="color:#f92672">is</span> True <span style="color:#66d9ef">else</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</code></pre></div><p>构造矩阵</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">y <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span> <span style="color:#66d9ef">for</span> _ <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">100000000</span>)]
+<span style="color:#75715e"># Pythonic</span>
+y <span style="color:#f92672">=</span> [<span style="color:#ae81ff">0</span>] <span style="color:#f92672">*</span> <span style="color:#ae81ff">100000000</span>
+</code></pre></div><p>装饰器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">logic</span>(x):
+    <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+        <span style="color:#66d9ef">return</span> False
+    <span style="color:#66d9ef">print</span> (x)
+    <span style="color:#66d9ef">return</span> True
 
-<p>列表推导</p>
+<span style="color:#75715e">#Pythonic</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_gt_zero</span>(func):
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">wrapper</span>(x):
+        <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+            <span style="color:#66d9ef">return</span> False
+        <span style="color:#66d9ef">return</span> func(x)
+    <span style="color:#66d9ef">return</span> wrapper 
 
-<pre><code class="language-python"># 生成列表
-[ i*i for i in range(10) if i % 2 == 0 ]
-# 生成集合
-{ i*i for i in range(10) if i % 2 == 0 }
-# 生成字典
-{ i:i for i in range(10) if i % 2 == 0 }
-</code></pre>
+<span style="color:#a6e22e">@check_gt_zero</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">logic</span>(x):
+    <span style="color:#66d9ef">print</span> (x)
+    <span style="color:#66d9ef">return</span> True
+</code></pre></div><p>变量交换</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">temp <span style="color:#f92672">=</span> y
+y <span style="color:#f92672">=</span> x
+x <span style="color:#f92672">=</span> temp
 
-<p>上下文管理器</p>
+<span style="color:#75715e"># Pythonic</span>
+x, y <span style="color:#f92672">=</span> y, x
+</code></pre></div><p>切片</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">array <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
 
-<pre><code class="language-python">file = open('file', 'w')
-file.write(123)
-file.close()
+l <span style="color:#f92672">=</span> len(array)
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(l<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>):
+    temp <span style="color:#f92672">=</span> array[l <span style="color:#f92672">-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>]
+    array[l <span style="color:#f92672">-</span> i <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> array[i]
+    array[i] <span style="color:#f92672">=</span> temp
 
-# Pythonic
-with open('file', 'w') as file:
-    file.write(123)
-</code></pre>
+array <span style="color:#f92672">=</span> list(reversed(array))
+<span style="color:#75715e"># Pythonic</span>
+array <span style="color:#f92672">=</span> array[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</code></pre></div><p>读取文件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">CHUNK_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">1024</span>
 
-<p>条件判断</p>
+<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;test.json&#39;</span>) <span style="color:#66d9ef">as</span> f:
+    chunk <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read(CHUNK_SIZE)
+    <span style="color:#66d9ef">while</span> chunk:
+        <span style="color:#66d9ef">if</span> chunk:
+            <span style="color:#66d9ef">print</span>(chunk)
+        chunk <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read(CHUNK_SIZE)
 
-<pre><code class="language-python">if x is True:
-    y = 1
-else:
-    y = -1
+<span style="color:#f92672">from</span> functools <span style="color:#f92672">import</span> partial
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;test.json&#39;</span>) <span style="color:#66d9ef">as</span> f:
+    <span style="color:#66d9ef">for</span> piece <span style="color:#f92672">in</span> iter(partial(f<span style="color:#f92672">.</span>read, CHUNK_SIZE), <span style="color:#e6db74">&#39;&#39;</span>):
+        <span style="color:#66d9ef">print</span> (piece)
+<span style="color:#75715e"># Lambda</span>
+<span style="color:#66d9ef">with</span> open(<span style="color:#e6db74">&#39;test.json&#39;</span>) <span style="color:#66d9ef">as</span> f:
+    <span style="color:#66d9ef">for</span> piece <span style="color:#f92672">in</span> iter(<span style="color:#66d9ef">lambda</span>: f<span style="color:#f92672">.</span>read(CHUNK_SIZE), <span style="color:#e6db74">&#39;&#39;</span>):
+        <span style="color:#66d9ef">print</span> (piece)
+</code></pre></div><p>for-else和try-else语法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">is_for_finished <span style="color:#f92672">=</span> True
 
-# Pythonic
-y = 1 if x is True else -1
-</code></pre>
+<span style="color:#66d9ef">try</span>:
+    <span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> array:
+        <span style="color:#66d9ef">print</span> (item)
+        <span style="color:#75715e"># raise Exception</span>
+<span style="color:#66d9ef">except</span>:
+    is_for_finished <span style="color:#f92672">=</span> False
 
-<p>构造矩阵</p>
-
-<pre><code class="language-python">y = [0 for _ in range(100000000)]
-# Pythonic
-y = [0] * 100000000
-</code></pre>
-
-<p>装饰器</p>
-
-<pre><code class="language-python">def logic(x):
-    if x &lt; 0:
-        return False
-    print (x)
-    return True
-
-#Pythonic
-def check_gt_zero(func):
-    def wrapper(x):
-        if x &lt; 0:
-            return False
-        return func(x)
-    return wrapper 
-
-@check_gt_zero
-def logic(x):
-    print (x)
-    return True
-</code></pre>
-
-<p>变量交换</p>
-
-<pre><code class="language-python">temp = y
-y = x
-x = temp
-
-# Pythonic
-x, y = y, x
-</code></pre>
-
-<p>切片</p>
-
-<pre><code class="language-python">array = [1, 2, 3, 4, 5]
-
-l = len(array)
-for i in range(l/2):
-    temp = array[l - i - 1]
-    array[l - i - 1] = array[i]
-    array[i] = temp
-
-array = list(reversed(array))
-# Pythonic
-array = array[::-1]
-</code></pre>
-
-<p>读取文件</p>
-
-<pre><code class="language-python">CHUNK_SIZE = 1024
-
-with open('test.json') as f:
-    chunk = f.read(CHUNK_SIZE)
-    while chunk:
-        if chunk:
-            print(chunk)
-        chunk = f.read(CHUNK_SIZE)
-
-from functools import partial
-# Pythonic
-with open('test.json') as f:
-    for piece in iter(partial(f.read, CHUNK_SIZE), ''):
-        print (piece)
-# Lambda
-with open('test.json') as f:
-    for piece in iter(lambda: f.read(CHUNK_SIZE), ''):
-        print (piece)
-</code></pre>
-
-<p>for-else和try-else语法</p>
-
-<pre><code class="language-python">is_for_finished = True
-
-try:
-    for item in array:
-        print (item)
-        # raise Exception
-except:
-    is_for_finished = False
-
-if is_for_finished is True:
-    print ('complete')
+<span style="color:#66d9ef">if</span> is_for_finished <span style="color:#f92672">is</span> True:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;complete&#39;</span>)
     
-# Pythonic
-for item in array:
-    print (item)
-    # raise Exception
-else:
-    print ('complete')
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> array:
+    <span style="color:#66d9ef">print</span> (item)
+    <span style="color:#75715e"># raise Exception</span>
+<span style="color:#66d9ef">else</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;complete&#39;</span>)
 
-try:
-    print ('try')
-    # raise Exception
-except Exception:
-    print ('exception')
-else:
-    print ('complete')
-</code></pre>
+<span style="color:#66d9ef">try</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;try&#39;</span>)
+    <span style="color:#75715e"># raise Exception</span>
+<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;exception&#39;</span>)
+<span style="color:#66d9ef">else</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;complete&#39;</span>)
+</code></pre></div><p>函数参数解压</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">draw_point</span>(x, y):
+    <span style="color:#75715e"># do some magic</span>
 
-<p>函数参数解压</p>
+point_foo <span style="color:#f92672">=</span> (<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>)
+point_bar <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;y&#39;</span>: <span style="color:#ae81ff">3</span>, <span style="color:#e6db74">&#39;x&#39;</span>: <span style="color:#ae81ff">2</span>}
 
-<pre><code class="language-python">def draw_point(x, y):
-    # do some magic
+draw_point(<span style="color:#f92672">*</span>point_foo)
+draw_point(<span style="color:#f92672">**</span>point_bar)
+</code></pre></div><p>列表/元组解压</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">first, second, <span style="color:#f92672">*</span>rest <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>)
+</code></pre></div><p>&ldquo;Print To&quot;语法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># 2.x</span>
+<span style="color:#66d9ef">print</span> <span style="color:#f92672">&gt;&gt;</span>  open(<span style="color:#e6db74">&#34;myfile&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>), <span style="color:#e6db74">&#34;hello world&#34;</span>
+<span style="color:#75715e"># 3.x</span>
+<span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#34;hello world&#34;</span>, file<span style="color:#f92672">=</span>open(<span style="color:#e6db74">&#34;myfile&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>))
+</code></pre></div><p>字典缺省值</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">d <span style="color:#f92672">=</span> {}
 
-point_foo = (3, 4)
-point_bar = {'y': 3, 'x': 2}
+<span style="color:#66d9ef">try</span>:
+    d[<span style="color:#e6db74">&#39;count&#39;</span>] <span style="color:#f92672">=</span> d[<span style="color:#e6db74">&#39;count&#39;</span>] <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">KeyError</span>:
+    d[<span style="color:#e6db74">&#39;count&#39;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+<span style="color:#75715e"># Pythonic</span>
+d[<span style="color:#e6db74">&#39;count&#39;</span>] <span style="color:#f92672">=</span> d<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;count&#39;</span>, <span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>链式比较符</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">if</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span> <span style="color:#f92672">and</span> x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+    <span style="color:#66d9ef">print</span>(x)
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">if</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>:
+    <span style="color:#66d9ef">print</span>(x)
+</code></pre></div><p>多行字符串</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">s <span style="color:#f92672">=</span> (<span style="color:#e6db74">&#34;longlongstringiii&#34;</span>
+    <span style="color:#e6db74">&#34;iiiiiiiii&#34;</span>
+    <span style="color:#e6db74">&#34;iiiiiii&#34;</span>)
 
-draw_point(*point_foo)
-draw_point(**point_bar)
-</code></pre>
+<span style="color:#66d9ef">print</span>(s)
+</code></pre></div><p>in表达式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;string&#39;</span><span style="color:#f92672">.</span>find(<span style="color:#e6db74">&#39;ring&#39;</span>) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;find&#39;</span>)
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;ring&#39;</span> <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;string&#39;</span>:
+    <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;find&#39;</span>)
 
-<p>列表/元组解压</p>
+<span style="color:#66d9ef">for</span> r <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;ring&#39;</span>, <span style="color:#e6db74">&#39;ring1&#39;</span>, <span style="color:#e6db74">&#39;ring2&#39;</span>]:
+    <span style="color:#66d9ef">if</span> r <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;ring&#39;</span>:
+        <span style="color:#66d9ef">print</span> (<span style="color:#e6db74">&#39;find&#39;</span>)
+<span style="color:#75715e"># Pythonic</span>
+<span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;ring&#39;</span> <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;ring&#39;</span>, <span style="color:#e6db74">&#39;ring1&#39;</span>, <span style="color:#e6db74">&#39;ring2&#39;</span>]:
+    <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#39;find&#39;</span>)
+</code></pre></div><p>字符串连接</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">array <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>, <span style="color:#e6db74">&#39;d&#39;</span>, <span style="color:#e6db74">&#39;e&#39;</span>]
+s <span style="color:#f92672">=</span> array[<span style="color:#ae81ff">0</span>]
+<span style="color:#66d9ef">for</span> char <span style="color:#f92672">in</span> array[<span style="color:#ae81ff">1</span>:]:
+    s <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#39;,&#39;</span> <span style="color:#f92672">+</span> char
+<span style="color:#75715e"># Pythonic</span>
+s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">.</span>join(array)
+</code></pre></div><p>列表合并字典</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">keys <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>]
+values <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
 
-<pre><code class="language-python">first, second, *rest = (1,2,3,4,5,6,7,8)
-</code></pre>
+d <span style="color:#f92672">=</span> {}
+<span style="color:#66d9ef">for</span> key, value <span style="color:#f92672">in</span> zip(keys, values):
+    d[key] <span style="color:#f92672">=</span> value
+<span style="color:#75715e"># Better</span>
+d <span style="color:#f92672">=</span> dict(zip(keys, values))
+<span style="color:#75715e"># Pythonic</span>
+d <span style="color:#f92672">=</span> {key: value <span style="color:#66d9ef">for</span> key, value <span style="color:#f92672">in</span> zip(keys, values)}
+</code></pre></div><p>all和any</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">flag <span style="color:#f92672">=</span> True
+<span style="color:#66d9ef">for</span> cond <span style="color:#f92672">in</span> conditions:
+    <span style="color:#66d9ef">if</span> cond <span style="color:#f92672">is</span> False:
+        flag <span style="color:#f92672">=</span> False
+        <span style="color:#66d9ef">break</span>
+<span style="color:#75715e"># Pythonic</span>
+flag <span style="color:#f92672">=</span> all(conditions)
 
-<p>&ldquo;Print To&rdquo;语法</p>
-
-<pre><code class="language-python"># 2.x
-print &gt;&gt;  open(&quot;myfile&quot;, &quot;w&quot;), &quot;hello world&quot;
-# 3.x
-print (&quot;hello world&quot;, file=open(&quot;myfile&quot;, &quot;w&quot;))
-</code></pre>
-
-<p>字典缺省值</p>
-
-<pre><code class="language-python">d = {}
-
-try:
-    d['count'] = d['count'] + 1
-except KeyError:
-    d['count'] = 0
-# Pythonic
-d['count'] = d.get('count', 0) + 1
-</code></pre>
-
-<p>链式比较符</p>
-
-<pre><code class="language-python">if x &lt; 100 and x &gt; 0:
-    print(x)
-# Pythonic
-if 0 &lt; x &lt; 100:
-    print(x)
-</code></pre>
-
-<p>多行字符串</p>
-
-<pre><code class="language-python">s = (&quot;longlongstringiii&quot;
-    &quot;iiiiiiiii&quot;
-    &quot;iiiiiii&quot;)
-
-print(s)
-</code></pre>
-
-<p>in表达式</p>
-
-<pre><code class="language-python">if 'string'.find('ring') &gt; 0:
-    print ('find')
-# Pythonic
-if 'ring' in 'string':
-    print ('find')
-
-for r in ['ring', 'ring1', 'ring2']:
-    if r == 'ring':
-        print ('find')
-# Pythonic
-if 'ring' in ['ring', 'ring1', 'ring2']:
-    print('find')
-</code></pre>
-
-<p>字符串连接</p>
-
-<pre><code class="language-python">array = ['a', 'b', 'c', 'd', 'e']
-s = array[0]
-for char in array[1:]:
-    s += ',' + char
-# Pythonic
-s = ','.join(array)
-</code></pre>
-
-<p>列表合并字典</p>
-
-<pre><code class="language-python">keys = ['a', 'b', 'c']
-values = [1, 2, 3]
-
-d = {}
-for key, value in zip(keys, values):
-    d[key] = value
-# Better
-d = dict(zip(keys, values))
-# Pythonic
-d = {key: value for key, value in zip(keys, values)}
-</code></pre>
-
-<p>all和any</p>
-
-<pre><code class="language-python">flag = True
-for cond in conditions:
-    if cond is False:
-        flag = False
-        break
-# Pythonic
-flag = all(conditions)
-
-flag = False
-for cond in conditions:
-    if cond is True:
-        flag = True
-        break
-# Pythonic
-flag = any(conditions)
-</code></pre>
-
-<p>or</p>
-
-<pre><code class="language-python">not_null_string = '' or 'string1' or 'string2'
-# string1
-</code></pre>
-
-<p>方法提取</p>
-
-<pre><code class="language-python">for item in ['b', 'c']:
-    array.append(item)
-# Faster
-append = array.append
-for item in ['b', 'c']:
+flag <span style="color:#f92672">=</span> False
+<span style="color:#66d9ef">for</span> cond <span style="color:#f92672">in</span> conditions:
+    <span style="color:#66d9ef">if</span> cond <span style="color:#f92672">is</span> True:
+        flag <span style="color:#f92672">=</span> True
+        <span style="color:#66d9ef">break</span>
+<span style="color:#75715e"># Pythonic</span>
+flag <span style="color:#f92672">=</span> any(conditions)
+</code></pre></div><p>or</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">not_null_string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span> <span style="color:#f92672">or</span> <span style="color:#e6db74">&#39;string1&#39;</span> <span style="color:#f92672">or</span> <span style="color:#e6db74">&#39;string2&#39;</span>
+<span style="color:#75715e"># string1</span>
+</code></pre></div><p>方法提取</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>]:
+    array<span style="color:#f92672">.</span>append(item)
+<span style="color:#75715e"># Faster</span>
+append <span style="color:#f92672">=</span> array<span style="color:#f92672">.</span>append
+<span style="color:#66d9ef">for</span> item <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;c&#39;</span>]:
     append(item)
-</code></pre>
+</code></pre></div><p>单例模式</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> [module] <span style="color:#f92672">import</span> [single_instance]
+</code></pre></div><p>让python的语法像ruby一样</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">__builtins__<span style="color:#f92672">.</span>end <span style="color:#f92672">=</span> None
 
-<p>单例模式</p>
-
-<pre><code class="language-python">from [module] import [single_instance]
-</code></pre>
-
-<p>让python的语法像ruby一样</p>
-
-<pre><code class="language-python">__builtins__.end = None
-
-def ruby_like_func(x):
-    print(x)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ruby_like_func</span>(x):
+    <span style="color:#66d9ef">print</span>(x)
 end
-</code></pre>
+</code></pre></div><p>用&lt;&gt;代替!=</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">1</span>]: <span style="color:#f92672">from</span> __future__ <span style="color:#f92672">import</span> barry_as_FLUFL
 
-<p>用&lt;&gt;代替!=</p>
+In [<span style="color:#ae81ff">2</span>]: <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+Out[<span style="color:#ae81ff">2</span>]: True
 
-<pre><code class="language-python">In [1]: from __future__ import barry_as_FLUFL
-
-In [2]: 1 == 1
-Out[2]: True
-
-In [3]: 1 != 1
-  File &quot;&lt;ipython-input-3-1ec724d2c3b1&gt;&quot;, line 1
-    1 != 1
-       ^
-SyntaxError: invalid syntax
+In [<span style="color:#ae81ff">3</span>]: <span style="color:#ae81ff">1</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>
+  File <span style="color:#e6db74">&#34;&lt;ipython-input-3-1ec724d2c3b1&gt;&#34;</span>, line <span style="color:#ae81ff">1</span>
+    <span style="color:#ae81ff">1</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>
+       <span style="color:#f92672">^</span>
+<span style="color:#a6e22e">SyntaxError</span>: invalid syntax
 
 
-In [4]: 1 &lt;&gt; 1
-Out[4]: False
-</code></pre>
-
-<p>性能排查</p>
-
+In [<span style="color:#ae81ff">4</span>]: <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#ae81ff">1</span>
+Out[<span style="color:#ae81ff">4</span>]: False
+</code></pre></div><p>性能排查</p>
 <pre><code>python -m cProfile test.py
-</code></pre>
-
-<p>格式化一个json文件</p>
-
+</code></pre><p>格式化一个json文件</p>
 <pre><code>python -m json.tool test.json
 echo '{&quot;json&quot;:&quot;obj&quot;}' | python -m json.tool # 管道
-</code></pre>
-
-<p>开启本地目录的HTTP服务器</p>
-
+</code></pre><p>开启本地目录的HTTP服务器</p>
 <pre><code>python2 -m SimpleHTTPServer 8080 # 2.x
 python3 -m http.server 8080 # 3.x
-</code></pre>
-
-<p>在Python使用花括号块</p>
-
-<pre><code class="language-python">from __future__ import braces
-</code></pre>
-
-<p>Python之禅</p>
-
+</code></pre><p>在Python使用花括号块</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> __future__ <span style="color:#f92672">import</span> braces
+</code></pre></div><p>Python之禅</p>
 <pre><code>In [1]: import this
 The Zen of Python, by Tim Peters
 
@@ -497,13 +400,9 @@ Although never is often better than *right* now.
 If the implementation is hard to explain, it's a bad idea.
 If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
-</code></pre>
-
-<p>antigravity</p>
-
-<pre><code class="language-python">import antigravity
-</code></pre>
-
+</code></pre><p>antigravity</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> antigravity
+</code></pre></div>
                 </section>
             </article>
 
@@ -517,7 +416,7 @@ Namespaces are one honking great idea -- let's do more of those!
     
     <p class="small">
     
-       © Copyright 2019 <i class="fa fa-heart" aria-hidden="true"></i> 
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
     
     </p>
     <p class="small">
@@ -536,7 +435,7 @@ Namespaces are one honking great idea -- let's do more of those!
 
 
   
-<script>
+<script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -548,8 +447,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
-
 
 
 

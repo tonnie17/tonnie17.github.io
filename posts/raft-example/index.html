@@ -7,7 +7,7 @@
 		
 		
 		
-		<meta name="generator" content="Hugo 0.44" />
+		<meta name="generator" content="Hugo 0.66.0" />
 		<title>raft-example学习笔记 &middot; 4 Fish</title>
 		<link rel="shortcut icon" href="https://tonnie17.github.io/images/favicon.ico">
 		<link rel="stylesheet" href="https://tonnie17.github.io/css/style.css">
@@ -49,7 +49,7 @@
                         raft-example学习笔记
                     </h1>
                     <h2 class="headline">
-                    Jan 21, 2019 14:08
+                    Jan 21, 2019
                     · 3475 words
                     · 7 minute read
                       <span class="tags">
@@ -66,10 +66,8 @@
                 
                 <section id="post-body">
                     <p><a href="https://github.com/etcd-io/etcd/tree/master/contrib/raftexample">raft-example</a>是etcd中raft库的一个实现示例，它包含了etcd raft库的基本用法，以及如何利用它来实现一个简单的支持HTTP API的KV存储数据库。</p>
-
 <p>首先来看这个应用的目录结构：</p>
-
-<pre><code class="language-text">.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">.
 ├── Procfile
 ├── README.md
 ├── doc.go
@@ -81,68 +79,57 @@
 ├── raft.go
 ├── raftexample
 └── raftexample_test.go
-</code></pre>
-
-<p>其中<code>main.go</code>是应用的主入口，它会解析命令行参数，初始化raft节点实例，以及启动和提供HTTP API服务；<code>httpapi.go</code>中包含了这个kv存储系统的HTTP API的处理函数实现；<code>kvstore.go</code>中则提供了kv数据库与raft节点之间交互的桥梁，包括把更新状态同步传输到其他raft节点上，以及从raft状态机中读取提交已消息应用在kv字典上，读取快照载入等等；<code>raft.go</code>中包含了raft节点的实现，它封装了与底层raft协议通信的方法，以及包含消息接收，WAL写入，快照同步，节点变更等的处理，对于应用来说只需去关心这个raft节点提供的事件通道（通过channel来收发）进行状态同步即可。</p>
-
+</code></pre></div><p>其中<code>main.go</code>是应用的主入口，它会解析命令行参数，初始化raft节点实例，以及启动和提供HTTP API服务；<code>httpapi.go</code>中包含了这个kv存储系统的HTTP API的处理函数实现；<code>kvstore.go</code>中则提供了kv数据库与raft节点之间交互的桥梁，包括把更新状态同步传输到其他raft节点上，以及从raft状态机中读取提交已消息应用在kv字典上，读取快照载入等等；<code>raft.go</code>中包含了raft节点的实现，它封装了与底层raft协议通信的方法，以及包含消息接收，WAL写入，快照同步，节点变更等的处理，对于应用来说只需去关心这个raft节点提供的事件通道（通过channel来收发）进行状态同步即可。</p>
 <p>首先看主入口<code>main.go</code>的实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#75715e">//...
+</span><span style="color:#75715e"></span>
+	<span style="color:#a6e22e">proposeC</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span>)
+	<span style="color:#66d9ef">defer</span> close(<span style="color:#a6e22e">proposeC</span>)
+	<span style="color:#a6e22e">confChangeC</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">raftpb</span>.<span style="color:#a6e22e">ConfChange</span>)
+	<span style="color:#66d9ef">defer</span> close(<span style="color:#a6e22e">confChangeC</span>)
 
-<pre><code class="language-go">func main() {
-	//...
+	<span style="color:#75715e">// raft provides a commit stream for the proposals from the http api
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">kvs</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kvstore</span>
+	<span style="color:#a6e22e">getSnapshot</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">func</span>() ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>) { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">kvs</span>.<span style="color:#a6e22e">getSnapshot</span>() }
+	<span style="color:#a6e22e">commitC</span>, <span style="color:#a6e22e">errorC</span>, <span style="color:#a6e22e">snapshotterReady</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">newRaftNode</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">cluster</span>, <span style="color:#e6db74">&#34;,&#34;</span>), <span style="color:#f92672">*</span><span style="color:#a6e22e">join</span>, <span style="color:#a6e22e">getSnapshot</span>, <span style="color:#a6e22e">proposeC</span>, <span style="color:#a6e22e">confChangeC</span>)
 
-	proposeC := make(chan string)
-	defer close(proposeC)
-	confChangeC := make(chan raftpb.ConfChange)
-	defer close(confChangeC)
+	<span style="color:#a6e22e">kvs</span> = <span style="color:#a6e22e">newKVStore</span>(<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">snapshotterReady</span>, <span style="color:#a6e22e">proposeC</span>, <span style="color:#a6e22e">commitC</span>, <span style="color:#a6e22e">errorC</span>)
 
-	// raft provides a commit stream for the proposals from the http api
-	var kvs *kvstore
-	getSnapshot := func() ([]byte, error) { return kvs.getSnapshot() }
-	commitC, errorC, snapshotterReady := newRaftNode(*id, strings.Split(*cluster, &quot;,&quot;), *join, getSnapshot, proposeC, confChangeC)
-
-	kvs = newKVStore(&lt;-snapshotterReady, proposeC, commitC, errorC)
-
-	// the key-value http handler will propose updates to raft
-	serveHttpKVAPI(kvs, *kvport, confChangeC, errorC)
+	<span style="color:#75715e">// the key-value http handler will propose updates to raft
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">serveHttpKVAPI</span>(<span style="color:#a6e22e">kvs</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">kvport</span>, <span style="color:#a6e22e">confChangeC</span>, <span style="color:#a6e22e">errorC</span>)
 }
-</code></pre>
-
-<p>略过了前面的一些参数解析的代码，它首先创建了两个channel：<code>proposeC</code>和<code>confChangeC</code>，接着根据传入参数来建立一个raft节点实例，构造函数会返回三个channel：<code>commitC</code>，<code>errorC</code>和<code>confChangeC</code>，这些channel在下面会作为参数来传入kv存储的构造函数，这些channel会作为消息通道来完成应用与raft节点之间的消息传递，后面会提到。</p>
-
+</code></pre></div><p>略过了前面的一些参数解析的代码，它首先创建了两个channel：<code>proposeC</code>和<code>confChangeC</code>，接着根据传入参数来建立一个raft节点实例，构造函数会返回三个channel：<code>commitC</code>，<code>errorC</code>和<code>confChangeC</code>，这些channel在下面会作为参数来传入kv存储的构造函数，这些channel会作为消息通道来完成应用与raft节点之间的消息传递，后面会提到。</p>
 <p>再来看<code>raft.go</code>中<code>newRaftNode</code>的实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">newRaftNode</span>(<span style="color:#a6e22e">id</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">peers</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">join</span> <span style="color:#66d9ef">bool</span>, <span style="color:#a6e22e">getSnapshot</span> <span style="color:#66d9ef">func</span>() ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>), <span style="color:#a6e22e">proposeC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span>,
+	<span style="color:#a6e22e">confChangeC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#a6e22e">raftpb</span>.<span style="color:#a6e22e">ConfChange</span>) (<span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>, <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>, <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Snapshotter</span>) {
 
-<pre><code class="language-go">func newRaftNode(id int, peers []string, join bool, getSnapshot func() ([]byte, error), proposeC &lt;-chan string,
-	confChangeC &lt;-chan raftpb.ConfChange) (&lt;-chan *string, &lt;-chan error, &lt;-chan *snap.Snapshotter) {
+	<span style="color:#a6e22e">commitC</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>)
+	<span style="color:#a6e22e">errorC</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>)
 
-	commitC := make(chan *string)
-	errorC := make(chan error)
+	<span style="color:#a6e22e">rc</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">raftNode</span>{
+		<span style="color:#a6e22e">proposeC</span>:    <span style="color:#a6e22e">proposeC</span>,
+		<span style="color:#a6e22e">confChangeC</span>: <span style="color:#a6e22e">confChangeC</span>,
+		<span style="color:#a6e22e">commitC</span>:     <span style="color:#a6e22e">commitC</span>,
+		<span style="color:#a6e22e">errorC</span>:      <span style="color:#a6e22e">errorC</span>,
+		<span style="color:#a6e22e">id</span>:          <span style="color:#a6e22e">id</span>,
+		<span style="color:#a6e22e">peers</span>:       <span style="color:#a6e22e">peers</span>,
+		<span style="color:#a6e22e">join</span>:        <span style="color:#a6e22e">join</span>,
+		<span style="color:#a6e22e">waldir</span>:      <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;raftexample-%d&#34;</span>, <span style="color:#a6e22e">id</span>),
+		<span style="color:#a6e22e">snapdir</span>:     <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprintf</span>(<span style="color:#e6db74">&#34;raftexample-%d-snap&#34;</span>, <span style="color:#a6e22e">id</span>),
+		<span style="color:#a6e22e">getSnapshot</span>: <span style="color:#a6e22e">getSnapshot</span>,
+		<span style="color:#a6e22e">snapCount</span>:   <span style="color:#a6e22e">defaultSnapshotCount</span>,
+		<span style="color:#a6e22e">stopc</span>:       make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}),
+		<span style="color:#a6e22e">httpstopc</span>:   make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}),
+		<span style="color:#a6e22e">httpdonec</span>:   make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">struct</span>{}),
 
-	rc := &amp;raftNode{
-		proposeC:    proposeC,
-		confChangeC: confChangeC,
-		commitC:     commitC,
-		errorC:      errorC,
-		id:          id,
-		peers:       peers,
-		join:        join,
-		waldir:      fmt.Sprintf(&quot;raftexample-%d&quot;, id),
-		snapdir:     fmt.Sprintf(&quot;raftexample-%d-snap&quot;, id),
-		getSnapshot: getSnapshot,
-		snapCount:   defaultSnapshotCount,
-		stopc:       make(chan struct{}),
-		httpstopc:   make(chan struct{}),
-		httpdonec:   make(chan struct{}),
-
-		snapshotterReady: make(chan *snap.Snapshotter, 1),
-		// rest of structure populated after WAL replay
-	}
-	go rc.startRaft()
-	return commitC, errorC, rc.snapshotterReady
+		<span style="color:#a6e22e">snapshotterReady</span>: make(<span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Snapshotter</span>, <span style="color:#ae81ff">1</span>),
+		<span style="color:#75715e">// rest of structure populated after WAL replay
+</span><span style="color:#75715e"></span>	}
+	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">startRaft</span>()
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">commitC</span>, <span style="color:#a6e22e">errorC</span>, <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapshotterReady</span>
 }
-</code></pre>
-
-<p>这个函数接收6个参数：</p>
-
+</code></pre></div><p>这个函数接收6个参数：</p>
 <ul>
 <li>id：raft节点的唯一标识。</li>
 <li>peers：raft集群节点的列表。</li>
@@ -151,294 +138,264 @@
 <li>proposeC：接收应用发来的提案消息（kv更新）的通道。</li>
 <li>confChangeC：接收集群配置变更消息的通道。</li>
 </ul>
-
 <p>函数会返回两个关键变量：</p>
-
 <ul>
 <li>commitC：用来通知应用准备提交的通道。</li>
 <li>errorC：接收raft节点错误的通道。</li>
 </ul>
-
 <p>然后看<code>startRaft()</code>方法的实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">raftNode</span>) <span style="color:#a6e22e">replayWAL</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">wal</span>.<span style="color:#a6e22e">WAL</span> {
+	<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;replaying WAL of member %d&#34;</span>, <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">id</span>)
+	<span style="color:#a6e22e">snapshot</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">loadSnapshot</span>()
+	<span style="color:#a6e22e">w</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">openWAL</span>(<span style="color:#a6e22e">snapshot</span>)
+	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">st</span>, <span style="color:#a6e22e">ents</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">w</span>.<span style="color:#a6e22e">ReadAll</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#e6db74">&#34;raftexample: failed to read WAL (%v)&#34;</span>, <span style="color:#a6e22e">err</span>)
+	}
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span> = <span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">NewMemoryStorage</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">snapshot</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">ApplySnapshot</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">snapshot</span>)
+	}
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">SetHardState</span>(<span style="color:#a6e22e">st</span>)
 
-<pre><code class="language-go">func (rc *raftNode) replayWAL() *wal.WAL {
-	log.Printf(&quot;replaying WAL of member %d&quot;, rc.id)
-	snapshot := rc.loadSnapshot()
-	w := rc.openWAL(snapshot)
-	_, st, ents, err := w.ReadAll()
-	if err != nil {
-		log.Fatalf(&quot;raftexample: failed to read WAL (%v)&quot;, err)
+	<span style="color:#75715e">// append to storage so raft starts at the right place in log
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">Append</span>(<span style="color:#a6e22e">ents</span>)
+	<span style="color:#75715e">// send nil once lastIndex is published so client knows commit channel is current
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">ents</span>) &gt; <span style="color:#ae81ff">0</span> {
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">lastIndex</span> = <span style="color:#a6e22e">ents</span>[len(<span style="color:#a6e22e">ents</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>].<span style="color:#a6e22e">Index</span>
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">commitC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">nil</span>
 	}
-	rc.raftStorage = raft.NewMemoryStorage()
-	if snapshot != nil {
-		rc.raftStorage.ApplySnapshot(*snapshot)
-	}
-	rc.raftStorage.SetHardState(st)
-
-	// append to storage so raft starts at the right place in log
-	rc.raftStorage.Append(ents)
-	// send nil once lastIndex is published so client knows commit channel is current
-	if len(ents) &gt; 0 {
-		rc.lastIndex = ents[len(ents)-1].Index
-	} else {
-		rc.commitC &lt;- nil
-	}
-	return w
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">w</span>
 }
 
-func (rc *raftNode) startRaft() {
-	if !fileutil.Exist(rc.snapdir) {
-		if err := os.Mkdir(rc.snapdir, 0750); err != nil {
-			log.Fatalf(&quot;raftexample: cannot create dir for snapshot (%v)&quot;, err)
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">raftNode</span>) <span style="color:#a6e22e">startRaft</span>() {
+	<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">fileutil</span>.<span style="color:#a6e22e">Exist</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapdir</span>) {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Mkdir</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapdir</span>, <span style="color:#ae81ff">0750</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#e6db74">&#34;raftexample: cannot create dir for snapshot (%v)&#34;</span>, <span style="color:#a6e22e">err</span>)
 		}
 	}
-	rc.snapshotter = snap.New(zap.NewExample(), rc.snapdir)
-	rc.snapshotterReady &lt;- rc.snapshotter
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapshotter</span> = <span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">zap</span>.<span style="color:#a6e22e">NewExample</span>(), <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapdir</span>)
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapshotterReady</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapshotter</span>
 
-	oldwal := wal.Exist(rc.waldir)
-	rc.wal = rc.replayWAL()
+	<span style="color:#a6e22e">oldwal</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wal</span>.<span style="color:#a6e22e">Exist</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">waldir</span>)
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">wal</span> = <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">replayWAL</span>()
 
-	rpeers := make([]raft.Peer, len(rc.peers))
-	for i := range rpeers {
-		rpeers[i] = raft.Peer{ID: uint64(i + 1)}
+	<span style="color:#a6e22e">rpeers</span> <span style="color:#f92672">:=</span> make([]<span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">Peer</span>, len(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">peers</span>))
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">rpeers</span> {
+		<span style="color:#a6e22e">rpeers</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">Peer</span>{<span style="color:#a6e22e">ID</span>: uint64(<span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)}
 	}
-	c := &amp;raft.Config{
-		ID:                        uint64(rc.id),
-		ElectionTick:              10,
-		HeartbeatTick:             1,
-		Storage:                   rc.raftStorage,
-		MaxSizePerMsg:             1024 * 1024,
-		MaxInflightMsgs:           256,
-		MaxUncommittedEntriesSize: 1 &lt;&lt; 30,
+	<span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">Config</span>{
+		<span style="color:#a6e22e">ID</span>:                        uint64(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">id</span>),
+		<span style="color:#a6e22e">ElectionTick</span>:              <span style="color:#ae81ff">10</span>,
+		<span style="color:#a6e22e">HeartbeatTick</span>:             <span style="color:#ae81ff">1</span>,
+		<span style="color:#a6e22e">Storage</span>:                   <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>,
+		<span style="color:#a6e22e">MaxSizePerMsg</span>:             <span style="color:#ae81ff">1024</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>,
+		<span style="color:#a6e22e">MaxInflightMsgs</span>:           <span style="color:#ae81ff">256</span>,
+		<span style="color:#a6e22e">MaxUncommittedEntriesSize</span>: <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">30</span>,
 	}
 
-	if oldwal {
-		rc.node = raft.RestartNode(c)
-	} else {
-		startPeers := rpeers
-		if rc.join {
-			startPeers = nil
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">oldwal</span> {
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span> = <span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">RestartNode</span>(<span style="color:#a6e22e">c</span>)
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">startPeers</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rpeers</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">join</span> {
+			<span style="color:#a6e22e">startPeers</span> = <span style="color:#66d9ef">nil</span>
 		}
-		rc.node = raft.StartNode(c, startPeers)
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span> = <span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">StartNode</span>(<span style="color:#a6e22e">c</span>, <span style="color:#a6e22e">startPeers</span>)
 	}
 
-	rc.transport = &amp;rafthttp.Transport{
-		Logger:      zap.NewExample(),
-		ID:          types.ID(rc.id),
-		ClusterID:   0x1000,
-		Raft:        rc,
-		ServerStats: stats.NewServerStats(&quot;&quot;, &quot;&quot;),
-		LeaderStats: stats.NewLeaderStats(strconv.Itoa(rc.id)),
-		ErrorC:      make(chan error),
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">transport</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">rafthttp</span>.<span style="color:#a6e22e">Transport</span>{
+		<span style="color:#a6e22e">Logger</span>:      <span style="color:#a6e22e">zap</span>.<span style="color:#a6e22e">NewExample</span>(),
+		<span style="color:#a6e22e">ID</span>:          <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ID</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">id</span>),
+		<span style="color:#a6e22e">ClusterID</span>:   <span style="color:#ae81ff">0x1000</span>,
+		<span style="color:#a6e22e">Raft</span>:        <span style="color:#a6e22e">rc</span>,
+		<span style="color:#a6e22e">ServerStats</span>: <span style="color:#a6e22e">stats</span>.<span style="color:#a6e22e">NewServerStats</span>(<span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>),
+		<span style="color:#a6e22e">LeaderStats</span>: <span style="color:#a6e22e">stats</span>.<span style="color:#a6e22e">NewLeaderStats</span>(<span style="color:#a6e22e">strconv</span>.<span style="color:#a6e22e">Itoa</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">id</span>)),
+		<span style="color:#a6e22e">ErrorC</span>:      make(<span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>),
 	}
 
-	rc.transport.Start()
-	for i := range rc.peers {
-		if i+1 != rc.id {
-			rc.transport.AddPeer(types.ID(i+1), []string{rc.peers[i]})
+	<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">Start</span>()
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">peers</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">id</span> {
+			<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">AddPeer</span>(<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">ID</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>), []<span style="color:#66d9ef">string</span>{<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">peers</span>[<span style="color:#a6e22e">i</span>]})
 		}
 	}
 
-	go rc.serveRaft()
-	go rc.serveChannels()
+	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">serveRaft</span>()
+	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">serveChannels</span>()
 }
-</code></pre>
-
-<p>这个方法主要实现了以下几个步骤：</p>
-
+</code></pre></div><p>这个方法主要实现了以下几个步骤：</p>
 <ol>
 <li>重放WAL日志，首先检查是否有可用快照，将快照应用到raft内存状态机中，然后读取快照之后插入的日志进行同步，并更新raft节点<code>lastIndex</code>（日志中最后一条entry的索引值），这个步骤还会设置当前raft当前的状态（Term，Commit Index等）。</li>
 <li>完成日志重放后，初始化raft配置（包括刚刚与WAL同步的内存状态机），让raft协议启动或重启一个新的节点，配置并初始化raft的传输通道。</li>
 <li>启动后台运行的goroutine，这个goroutine会持续监听来自底层raft的事件和状态变更，以及处理来自应用的更新提案。</li>
 </ol>
-
 <p><code>serveChannels()</code>方法比较长，因此分成了几个部分。</p>
-
-<pre><code class="language-go">snap, err := rc.raftStorage.Snapshot()
-if err != nil {
-    panic(err)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">snap</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">Snapshot</span>()
+<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    panic(<span style="color:#a6e22e">err</span>)
 }
-rc.confState = snap.Metadata.ConfState
-rc.snapshotIndex = snap.Metadata.Index
-rc.appliedIndex = snap.Metadata.Index
-</code></pre>
+<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">confState</span> = <span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Metadata</span>.<span style="color:#a6e22e">ConfState</span>
+<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">snapshotIndex</span> = <span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Metadata</span>.<span style="color:#a6e22e">Index</span>
+<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">appliedIndex</span> = <span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Metadata</span>.<span style="color:#a6e22e">Index</span>
+</code></pre></div><p>这个方法首先会获取raft内存状态机的快照信息，并把快照中的几个状态同步到raft节点自身上，其中<code>appliedIndex</code>即为最后应用到状态机中的日志索引位置（它被初始化为snapshot index，因为状态机要从这个位置开始同步）。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// send proposals over raft
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+	<span style="color:#a6e22e">confChangeCount</span> <span style="color:#f92672">:=</span> uint64(<span style="color:#ae81ff">0</span>)
 
-<p>这个方法首先会获取raft内存状态机的快照信息，并把快照中的几个状态同步到raft节点自身上，其中<code>appliedIndex</code>即为最后应用到状态机中的日志索引位置（它被初始化为snapshot index，因为状态机要从这个位置开始同步）。</p>
-
-<pre><code class="language-go">// send proposals over raft
-go func() {
-	confChangeCount := uint64(0)
-
-	for rc.proposeC != nil &amp;&amp; rc.confChangeC != nil {
-		select {
-		case prop, ok := &lt;-rc.proposeC:
-			if !ok {
-				rc.proposeC = nil
-			} else {
-				// blocks until accepted by raft state machine
-				rc.node.Propose(context.TODO(), []byte(prop))
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">proposeC</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">confChangeC</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">select</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">prop</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">proposeC</span>:
+			<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+				<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">proposeC</span> = <span style="color:#66d9ef">nil</span>
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#75715e">// blocks until accepted by raft state machine
+</span><span style="color:#75715e"></span>				<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Propose</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), []byte(<span style="color:#a6e22e">prop</span>))
 			}
 
-		case cc, ok := &lt;-rc.confChangeC:
-			if !ok {
-				rc.confChangeC = nil
-			} else {
-				confChangeCount++
-				cc.ID = confChangeCount
-				rc.node.ProposeConfChange(context.TODO(), cc)
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">cc</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">confChangeC</span>:
+			<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+				<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">confChangeC</span> = <span style="color:#66d9ef">nil</span>
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">confChangeCount</span><span style="color:#f92672">++</span>
+				<span style="color:#a6e22e">cc</span>.<span style="color:#a6e22e">ID</span> = <span style="color:#a6e22e">confChangeCount</span>
+				<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">ProposeConfChange</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">TODO</span>(), <span style="color:#a6e22e">cc</span>)
 			}
 		}
 	}
-	// client closed channel; shutdown raft if not already
-	close(rc.stopc)
+	<span style="color:#75715e">// client closed channel; shutdown raft if not already
+</span><span style="color:#75715e"></span>	close(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stopc</span>)
 }()
-</code></pre>
+</code></pre></div><p>接下来这部分则实现了从应用端接收提案请求（<code>proposeC</code>），并将指令提交到raft协议上，以及类似地，接收配置变更请求并提交到raft上。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// event loop on raft state machine updates
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> {
+	<span style="color:#66d9ef">select</span> {
+	<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ticker</span>.<span style="color:#a6e22e">C</span>:
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Tick</span>()
 
-<p>接下来这部分则实现了从应用端接收提案请求（<code>proposeC</code>），并将指令提交到raft协议上，以及类似地，接收配置变更请求并提交到raft上。</p>
-
-<pre><code class="language-go">// event loop on raft state machine updates
-for {
-	select {
-	case &lt;-ticker.C:
-		rc.node.Tick()
-
-	// store raft entries to wal, then publish over commit channel
-	case rd := &lt;-rc.node.Ready():
-		rc.wal.Save(rd.HardState, rd.Entries)
-		if !raft.IsEmptySnap(rd.Snapshot) {
-			rc.saveSnap(rd.Snapshot)
-			rc.raftStorage.ApplySnapshot(rd.Snapshot)
-			rc.publishSnapshot(rd.Snapshot)
+	<span style="color:#75715e">// store raft entries to wal, then publish over commit channel
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">rd</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Ready</span>():
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">wal</span>.<span style="color:#a6e22e">Save</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">HardState</span>, <span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Entries</span>)
+		<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">raft</span>.<span style="color:#a6e22e">IsEmptySnap</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Snapshot</span>) {
+			<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">saveSnap</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Snapshot</span>)
+			<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">ApplySnapshot</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Snapshot</span>)
+			<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">publishSnapshot</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Snapshot</span>)
 		}
-		rc.raftStorage.Append(rd.Entries)
-		rc.transport.Send(rd.Messages)
-		if ok := rc.publishEntries(rc.entriesToApply(rd.CommittedEntries)); !ok {
-			rc.stop()
-			return
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">raftStorage</span>.<span style="color:#a6e22e">Append</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Entries</span>)
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">Send</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">Messages</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">publishEntries</span>(<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">entriesToApply</span>(<span style="color:#a6e22e">rd</span>.<span style="color:#a6e22e">CommittedEntries</span>)); !<span style="color:#a6e22e">ok</span> {
+			<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stop</span>()
+			<span style="color:#66d9ef">return</span>
 		}
-		rc.maybeTriggerSnapshot()
-		rc.node.Advance()
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">maybeTriggerSnapshot</span>()
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">Advance</span>()
 
-	case err := &lt;-rc.transport.ErrorC:
-		rc.writeError(err)
-		return
+	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">ErrorC</span>:
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">writeError</span>(<span style="color:#a6e22e">err</span>)
+		<span style="color:#66d9ef">return</span>
 
-	case &lt;-rc.stopc:
-		rc.stop()
-		return
+	<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stopc</span>:
+		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stop</span>()
+		<span style="color:#66d9ef">return</span>
 	}
 }
-</code></pre>
-
-<p>最后程序会在一个主循环中处理消息事件，节点通过<code>Ready()</code>方法从通道中获取到Ready对象，raft节点做的事情就是把ready中的日志条目写到WAL中，检查ready中是否包括快照，若包括快照则把快照同步到自身以及应用的状态机中（分别对应<code>rc.raftStorage.ApplySnapshot(rd.Snapshot)</code>和<code>rc.publishSnapshot(rd.Snapshot)</code>），把消息发送到其他节点，接下来在<code>rc.publishEntries(rc.entriesToApply(rd.CommittedEntries))</code>这一步中，raft节点会把<code>appliedIndex</code>到<code>Commit Index</code>之间的日志提交到应用状态机上。</p>
-
+</code></pre></div><p>最后程序会在一个主循环中处理消息事件，节点通过<code>Ready()</code>方法从通道中获取到Ready对象，raft节点做的事情就是把ready中的日志条目写到WAL中，检查ready中是否包括快照，若包括快照则把快照同步到自身以及应用的状态机中（分别对应<code>rc.raftStorage.ApplySnapshot(rd.Snapshot)</code>和<code>rc.publishSnapshot(rd.Snapshot)</code>），把消息发送到其他节点，接下来在<code>rc.publishEntries(rc.entriesToApply(rd.CommittedEntries))</code>这一步中，raft节点会把<code>appliedIndex</code>到<code>Commit Index</code>之间的日志提交到应用状态机上。</p>
 <p>在<code>rc.maybeTriggerSnapshot()</code>这一步raft节点会检测<code>appliedIndex-snapshotIndex</code>的值是否大于快照的阈值（在这里是10000），如果是则调用应用提供的获取快照函数，把新的快照持久化到硬盘中，并将<code>snapshotIndex</code>设置为<code>appliedIndex</code>。</p>
-
 <p>紧接着下一步调用<code>rc.node.Advance()</code>来通知raft节点当前的ready对象已经处理完成，准备好接收下一个可用的ready对象。</p>
-
-<pre><code class="language-go">func (rc *raftNode) publishEntries(ents []raftpb.Entry) bool {
-	for i := range ents {
-		switch ents[i].Type {
-		case raftpb.EntryNormal:
-			if len(ents[i].Data) == 0 {
-				break
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">rc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">raftNode</span>) <span style="color:#a6e22e">publishEntries</span>(<span style="color:#a6e22e">ents</span> []<span style="color:#a6e22e">raftpb</span>.<span style="color:#a6e22e">Entry</span>) <span style="color:#66d9ef">bool</span> {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">ents</span> {
+		<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">ents</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Type</span> {
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">raftpb</span>.<span style="color:#a6e22e">EntryNormal</span>:
+			<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">ents</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Data</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+				<span style="color:#66d9ef">break</span>
 			}
-			s := string(ents[i].Data)
-			select {
-			case rc.commitC &lt;- &amp;s:
-			case &lt;-rc.stopc:
-				return false
+			<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> string(<span style="color:#a6e22e">ents</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Data</span>)
+			<span style="color:#66d9ef">select</span> {
+			<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">commitC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">s</span>:
+			<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stopc</span>:
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
 			}
 
-		case raftpb.EntryConfChange:
-			//...
-		}
+		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">raftpb</span>.<span style="color:#a6e22e">EntryConfChange</span>:
+			<span style="color:#75715e">//...
+</span><span style="color:#75715e"></span>		}
 
-		// after commit, update appliedIndex
-		rc.appliedIndex = ents[i].Index
+		<span style="color:#75715e">// after commit, update appliedIndex
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">appliedIndex</span> = <span style="color:#a6e22e">ents</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Index</span>
 
-		// special nil commit to signal replay has finished
-		if ents[i].Index == rc.lastIndex {
-			select {
-			case rc.commitC &lt;- nil:
-			case &lt;-rc.stopc:
-				return false
+		<span style="color:#75715e">// special nil commit to signal replay has finished
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">ents</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Index</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">lastIndex</span> {
+			<span style="color:#66d9ef">select</span> {
+			<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">commitC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">nil</span>:
+			<span style="color:#66d9ef">case</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rc</span>.<span style="color:#a6e22e">stopc</span>:
+				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
 			}
 		}
 	}
-	return true
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
 }
-</code></pre>
-
-<p><code>publishEntries()</code>的逻辑如上，raft节点通过<code>commitC</code>把commit entry的数据同步到应用状态机，并更新<code>appliedIndex</code>的值，如果出现<code>ents[i].Index == rc.lastIndex</code>（<code>lastIndex</code>在之前提到，是初始化时最后一个日志条目的索引值），说明日志重放已经完成。</p>
-
+</code></pre></div><p><code>publishEntries()</code>的逻辑如上，raft节点通过<code>commitC</code>把commit entry的数据同步到应用状态机，并更新<code>appliedIndex</code>的值，如果出现<code>ents[i].Index == rc.lastIndex</code>（<code>lastIndex</code>在之前提到，是初始化时最后一个日志条目的索引值），说明日志重放已经完成。</p>
 <p>raft节点的逻辑基本已经过完了，接下来再从<code>kvstore.go</code>中观察kv数据库是如何跟raft节点进行状态同步的。</p>
-
 <p>应用通过<code>newKVStore()</code>函数来构造一个<code>kvstore</code>对象：</p>
-
-<pre><code class="language-go">func newKVStore(snapshotter *snap.Snapshotter, proposeC chan&lt;- string, commitC &lt;-chan *string, errorC &lt;-chan error) *kvstore {
-	s := &amp;kvstore{proposeC: proposeC, kvStore: make(map[string]string), snapshotter: snapshotter}
-	// replay log into key-value map
-	s.readCommits(commitC, errorC)
-	// read commits from raft into kvStore map until error
-	go s.readCommits(commitC, errorC)
-	return s
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">newKVStore</span>(<span style="color:#a6e22e">snapshotter</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">Snapshotter</span>, <span style="color:#a6e22e">proposeC</span> <span style="color:#66d9ef">chan</span><span style="color:#f92672">&lt;-</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">commitC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">errorC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">kvstore</span> {
+	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">kvstore</span>{<span style="color:#a6e22e">proposeC</span>: <span style="color:#a6e22e">proposeC</span>, <span style="color:#a6e22e">kvStore</span>: make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>), <span style="color:#a6e22e">snapshotter</span>: <span style="color:#a6e22e">snapshotter</span>}
+	<span style="color:#75715e">// replay log into key-value map
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">readCommits</span>(<span style="color:#a6e22e">commitC</span>, <span style="color:#a6e22e">errorC</span>)
+	<span style="color:#75715e">// read commits from raft into kvStore map until error
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">go</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">readCommits</span>(<span style="color:#a6e22e">commitC</span>, <span style="color:#a6e22e">errorC</span>)
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">s</span>
 }
 
-func (s *kvstore) readCommits(commitC &lt;-chan *string, errorC &lt;-chan error) {
-	for data := range commitC {
-		if data == nil {
-			// done replaying log; new data incoming
-			// OR signaled to load snapshot
-			snapshot, err := s.snapshotter.Load()
-			if err == snap.ErrNoSnapshot {
-				return
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kvstore</span>) <span style="color:#a6e22e">readCommits</span>(<span style="color:#a6e22e">commitC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#f92672">*</span><span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">errorC</span> <span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">commitC</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#75715e">// done replaying log; new data incoming
+</span><span style="color:#75715e"></span>			<span style="color:#75715e">// OR signaled to load snapshot
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">snapshot</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">snapshotter</span>.<span style="color:#a6e22e">Load</span>()
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">snap</span>.<span style="color:#a6e22e">ErrNoSnapshot</span> {
+				<span style="color:#66d9ef">return</span>
 			}
-			if err != nil {
-				log.Panic(err)
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+				<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Panic</span>(<span style="color:#a6e22e">err</span>)
 			}
-			log.Printf(&quot;loading snapshot at term %d and index %d&quot;, snapshot.Metadata.Term, snapshot.Metadata.Index)
-			if err := s.recoverFromSnapshot(snapshot.Data); err != nil {
-				log.Panic(err)
+			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;loading snapshot at term %d and index %d&#34;</span>, <span style="color:#a6e22e">snapshot</span>.<span style="color:#a6e22e">Metadata</span>.<span style="color:#a6e22e">Term</span>, <span style="color:#a6e22e">snapshot</span>.<span style="color:#a6e22e">Metadata</span>.<span style="color:#a6e22e">Index</span>)
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">recoverFromSnapshot</span>(<span style="color:#a6e22e">snapshot</span>.<span style="color:#a6e22e">Data</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+				<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Panic</span>(<span style="color:#a6e22e">err</span>)
 			}
-			continue
+			<span style="color:#66d9ef">continue</span>
 		}
 
-		var dataKv kv
-		dec := gob.NewDecoder(bytes.NewBufferString(*data))
-		if err := dec.Decode(&amp;dataKv); err != nil {
-			log.Fatalf(&quot;raftexample: could not decode message (%v)&quot;, err)
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">dataKv</span> <span style="color:#a6e22e">kv</span>
+		<span style="color:#a6e22e">dec</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gob</span>.<span style="color:#a6e22e">NewDecoder</span>(<span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">NewBufferString</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">data</span>))
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">dec</span>.<span style="color:#a6e22e">Decode</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">dataKv</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#e6db74">&#34;raftexample: could not decode message (%v)&#34;</span>, <span style="color:#a6e22e">err</span>)
 		}
-		s.mu.Lock()
-		s.kvStore[dataKv.Key] = dataKv.Val
-		s.mu.Unlock()
+		<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Lock</span>()
+		<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">kvStore</span>[<span style="color:#a6e22e">dataKv</span>.<span style="color:#a6e22e">Key</span>] = <span style="color:#a6e22e">dataKv</span>.<span style="color:#a6e22e">Val</span>
+		<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">Unlock</span>()
 	}
-	if err, ok := &lt;-errorC; ok {
-		log.Fatal(err)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">errorC</span>; <span style="color:#a6e22e">ok</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
 	}
 }
-</code></pre>
-
-<p>在<code>newKVStore()</code>里面，调用了<code>readCommits()</code>方法来同步提交日志，程序会不断从<code>commitC</code>通道中读取数据，当<code>data</code>为nil时代表一个特殊信号，说明raft节点已经完成日志回放了或者raft节点触发应用端来进行快照同步，为什么要进行两次<code>readCommits()</code>的调用？因为第一次需要进行日志回放（之前raft节点<code>publishEntries()</code>的实现中当<code>ents[i].Index == rc.lastIndex</code>时会发送nil到<code>commitC</code>），而第二次启动一个goroutine调用<code>readCommits()</code>来持续把提交日志应用到状态机上（实测当触发snapshot后程序会阻塞在第一个<code>readCommits</code>上，因为此时会一直卡在channel的读取上而不会退出，所以此处应该是有点问题的）。程序接收到数据后用解码器反序列化为kv对象，再把变更更新到<code>kvStore</code>这个map上面。</p>
-
+</code></pre></div><p>在<code>newKVStore()</code>里面，调用了<code>readCommits()</code>方法来同步提交日志，程序会不断从<code>commitC</code>通道中读取数据，当<code>data</code>为nil时代表一个特殊信号，说明raft节点已经完成日志回放了或者raft节点触发应用端来进行快照同步，为什么要进行两次<code>readCommits()</code>的调用？因为第一次需要进行日志回放（之前raft节点<code>publishEntries()</code>的实现中当<code>ents[i].Index == rc.lastIndex</code>时会发送nil到<code>commitC</code>），而第二次启动一个goroutine调用<code>readCommits()</code>来持续把提交日志应用到状态机上（实测当触发snapshot后程序会阻塞在第一个<code>readCommits</code>上，因为此时会一直卡在channel的读取上而不会退出，所以此处应该是有点问题的）。程序接收到数据后用解码器反序列化为kv对象，再把变更更新到<code>kvStore</code>这个map上面。</p>
 <p>再回过头来看kv数据库读取和更新的实现，这时候便一目了然了：</p>
-
-<pre><code class="language-go">func (s *kvstore) Lookup(key string) (string, bool) {
-	s.mu.RLock()
-	v, ok := s.kvStore[key]
-	s.mu.RUnlock()
-	return v, ok
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kvstore</span>) <span style="color:#a6e22e">Lookup</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">bool</span>) {
+	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">RLock</span>()
+	<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">kvStore</span>[<span style="color:#a6e22e">key</span>]
+	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">mu</span>.<span style="color:#a6e22e">RUnlock</span>()
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">ok</span>
 }
 
-func (s *kvstore) Propose(k string, v string) {
-	var buf bytes.Buffer
-	if err := gob.NewEncoder(&amp;buf).Encode(kv{k, v}); err != nil {
-		log.Fatal(err)
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">kvstore</span>) <span style="color:#a6e22e">Propose</span>(<span style="color:#a6e22e">k</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">v</span> <span style="color:#66d9ef">string</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">buf</span> <span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">Buffer</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gob</span>.<span style="color:#a6e22e">NewEncoder</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">buf</span>).<span style="color:#a6e22e">Encode</span>(<span style="color:#a6e22e">kv</span>{<span style="color:#a6e22e">k</span>, <span style="color:#a6e22e">v</span>}); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
 	}
-	s.proposeC &lt;- buf.String()
+	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">proposeC</span> <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">buf</span>.<span style="color:#a6e22e">String</span>()
 }
-</code></pre>
-
+</code></pre></div>
                 </section>
             </article>
 
@@ -452,7 +409,7 @@ func (s *kvstore) Propose(k string, v string) {
     
     <p class="small">
     
-       © Copyright 2019 <i class="fa fa-heart" aria-hidden="true"></i> 
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
     
     </p>
     <p class="small">
@@ -471,7 +428,7 @@ func (s *kvstore) Propose(k string, v string) {
 
 
   
-<script>
+<script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -483,8 +440,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
-
 
 
 
