@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>notion on 4 Fish</title>
-    <link>https://tonnie17.github.io/tags/notion/</link>
+    <link>https://4fish.blue/tags/notion/</link>
     <description>Recent content in notion on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 07 Dec 2019 00:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://tonnie17.github.io/tags/notion/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://4fish.blue/tags/notion/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>我眼中最好用的编程笔记本：Notion</title>
-      <link>https://tonnie17.github.io/posts/notion/</link>
+      <link>https://4fish.blue/posts/notion/</link>
       <pubDate>Sat, 07 Dec 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://tonnie17.github.io/posts/notion/</guid>
+      <guid>https://4fish.blue/posts/notion/</guid>
       <description>最近在寻找一个工具来将以前的笔记和书签统一整理，刚好找到一款叫「Notion」的软件，使用了两天，感觉比较满足我的需求，于是打算分享我为什么</description>
     </item>
     

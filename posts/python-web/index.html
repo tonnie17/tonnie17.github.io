@@ -9,16 +9,16 @@
 		
 		<meta name="generator" content="Hugo 0.66.0" />
 		<title>从0到1，Python Web开发的进击之路 &middot; 4 Fish</title>
-		<link rel="shortcut icon" href="https://tonnie17.github.io/images/favicon.ico">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/style.css">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/highlight.css">
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/highlight.css">
 
 		
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/monosocialiconsfont.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
 		
 
 		
-		<link href="https://tonnie17.github.io/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
 		
 
 		
@@ -28,16 +28,17 @@
        <nav class="main-nav">
 	
 	
-		<a href='https://tonnie17.github.io/'> <span class="arrow">←</span>Home</a>
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
 	
-	<a href='https://tonnie17.github.io/posts'>Archive</a>
-	<a href='https://tonnie17.github.io/tags'>Tags</a>
-	<a href='https://tonnie17.github.io/about'>About</a>
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/tags'>Tags</a>
+	<a href='https://4fish.blue/about'>About</a>
 
 	
 
 	
-	<a class="cta" href="https://tonnie17.github.io/index.xml">Subscribe</a>
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
 	
 </nav>
 
@@ -56,9 +57,9 @@
                       
                       
                           
-                              <a href="https://tonnie17.github.io/tags/python">python</a>
+                              <a href="https://4fish.blue/tags/python">python</a>
                           
-                              <a href="https://tonnie17.github.io/tags/web">web</a>
+                              <a href="https://4fish.blue/tags/web">web</a>
                           
                       
                       
@@ -148,10 +149,10 @@ Date: Thu, 26 Jan 2017 05:14:36 GMT
 </code></pre></li>
 </ol>
 <p>当我们输入python server.py时，会建立一个服务器（也叫应用程序服务器，即application server）来监听请求，并把请求转给flask来处理。那么这个服务器是如何跟python程序打交道的呢？答案就是<a href="http://archimedeanco.com/wsgi-tutorial/%23">WSGI</a>(Web Server Gateway Interface)接口，它是server端（服务器）与application端（应用程序）之间的一套约定俗成的规范，使我们只要编写一个统一的接口，就能应用到不同的wsgi server上。用图表示它们的关系，就是下面这样的：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-4f9e190627003e1b56fab93afba5f3ca_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-4f9e190627003e1b56fab93afba5f3ca_1440w.png" alt="img"></p>
 <p>只要application端（flask）和server端（flask内建的server）都遵循wsgi这个规范，那么他们就能够协同工作了，关于WSGI规范，可参阅Python官方的<a href="https://www.python.org/dev/peps/pep-0333/">PEP 333</a>里的说明。</p>
 <p>目前为止，应用是下面这个样子的：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-73e7f74fc237221f65dc3fe0cb30a911_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-73e7f74fc237221f65dc3fe0cb30a911_1440w.png" alt="img"></p>
 <p>一切都很简单，现在我们要做一个Todo应用，提供添加todo，修改todo状态和删除todo的接口。</p>
 <p>先不考虑数据库，可以迅速地写出下面的代码：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> flask <span style="color:#f92672">import</span> Flask, jsonify, request, abort, Response
@@ -352,7 +353,7 @@ db <span style="color:#f92672">=</span> mongo<span style="color:#f92672">.</span
 <span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
     app<span style="color:#f92672">.</span>run(host<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;0.0.0.0&#39;</span>, port<span style="color:#f92672">=</span><span style="color:#ae81ff">8000</span>)
 </code></pre></div><p>这样一来，应用的数据便能持久化到本地了。现在，整个应用看起来是下面这样的：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-0aa027a5a04db7ac2245f42f39b94f78_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-0aa027a5a04db7ac2245f42f39b94f78_1440w.png" alt="img"></p>
 <p>现在往mongodb插入1万条数据。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
 
@@ -462,7 +463,7 @@ Transfer/sec:    458.87KB
 [2017-01-27 11:20:02 +0800] [5896] [INFO] Booting worker with pid: 5896
 [2017-01-27 11:20:02 +0800] [5897] [INFO] Booting worker with pid: 5897
 </code></pre><p>可以看到gunicorn启动了9个进程（其中1个父进程）监听请求。使用了多进程的模型看起来是下面这样的：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-7ecc8340792bd7009cd02f41e092605d_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-7ecc8340792bd7009cd02f41e092605d_1440w.png" alt="img"></p>
 <p>继续进行性能测试，可以看到吞吐量又有了很大的提升：</p>
 <pre><code>wrk -c 100 -t 12 -d 5s http://127.0.0.1:8000/todo
 Running 5s test @ http://127.0.0.1:8000/todo
@@ -533,7 +534,7 @@ Transfer/sec:      1.71MB
           }
       }
 </code></pre></div><p>现在应用的结构是这样的：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-86eb1b5263ae630d097e1173e3848032_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-86eb1b5263ae630d097e1173e3848032_1440w.png" alt="img"></p>
 <p>但仅仅是这样还是不足以应对高并发下的请求的，洪水般的请求势必是对数据库的一个重大考验，把请求数提升到1000，出现了大量了timeout：</p>
 <pre><code>wrk -c 1000 -t 12 -d 5s http://127.0.0.1:8888/todo
 Running 5s test @ http://127.0.0.1:8888/todo
@@ -583,7 +584,7 @@ Transfer/sec:      4.47MB
 </code></pre><p>上面的这个示例只展示了基础的缓存方式，并没有针对多用户的情况处理，在涉及到状态条件的影响下，应该使用更加复杂的缓存策略。</p>
 <p>现在再来考虑使用缓存不当会造成几个问题，设置缓存的时间是3600秒，当3600秒过后缓存失效，而新缓存又没完成的中间时间内，如果有大量请求到来，就会蜂拥去查询数据库，这种现象称为<strong>缓存雪崩</strong>，针对这个情况，可以对数据库请求这个动作进行加锁，只允许第一个请求访问数据库，更新缓存后其他的请求都会访问缓存，第二种方法是做二级缓存，拷贝缓存比一级缓存设置更长的过期时间。还有<strong>缓存穿透</strong>和<strong>缓存一致性</strong>等问题虽然这里没有体现，但也是缓存设计中值得思考的几个点。</p>
 <p>下面是加入缓存后的系统结构：</p>
-<p><img src="https://pic4.zhimg.com/80/v2-207c6dfdd3777b49c0a5b507ec4886fb_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-207c6dfdd3777b49c0a5b507ec4886fb_1440w.png" alt="img"></p>
 <p>目前为止还不能说完善，如果中间某个进程挂掉了，那么整个系统的稳定性就会土崩瓦解。为此，要在中间加入一个进程管理工具：supervisor来监控和重启应用进程。</p>
 <p>首先要建立supervisor的配置文件：supervisord.conf</p>
 <pre><code>[program:gunicorn]
@@ -594,12 +595,12 @@ stdout_logfile=access.log
 stderr_logfile=error.log
 </code></pre><p>然后启动supervisord作为后台进程。</p>
 <pre><code>supervisord -c supervisord.conf
-</code></pre><p><img src="https://pic1.zhimg.com/80/v2-a165341ad880a5bcb1e2bd8d6623d800_hd.png" alt="img"></p>
+</code></pre><p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-a165341ad880a5bcb1e2bd8d6623d800_1440w.png" alt="img"></p>
 <p>虽然缓存可以有效地帮我们减轻数据库的压力，但如果系统遇到大量并发的耗时任务时，进程也会阻塞在任务的处理上，影响了其他普通请求的正常响应，严重时，系统很可能会出现假死现象，为了针对对耗时任务的处理，我们的应用还需要引入一个外部作业的处理系统，当程序接收到耗时任务的请求时，交给任务的工作进程池来处理，然后再通过异步回调或消息通知等方式来获得处理结果。</p>
 <p>应用程序与任务进程的通信通常借助消息队列的方式来进行通信，简单来说，应用程序会把任务信息序列化为一条消息（message）放入（push）与特定任务进程之间的信道里（channel），消息的中间件（broker）负责把消息持久化到存储系统，此时任务进程再通过轮询的方式获取消息，处理任务，再把结果存储和返回。</p>
 <p>显然，此时我们需要一个负责分发消息和与队列打交道的调度器和一个存储消息的中间件。</p>
 <p>Celery是基于Python的一个分布式的消息队列调度系统，我们把Celery作为消息调度器，Redis作为消息存储器，那么应用看起来应该是这样的。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-38e3f9f636f1e4c80f6bdbe4093a4d0e_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-38e3f9f636f1e4c80f6bdbe4093a4d0e_1440w.png" alt="img"></p>
 <p>一般来说，这个结构已经满足大多数的小规模应用了，剩下做的就是代码和组件配置的调优了。</p>
 <p>然后还有一个很重要的点就是：测试</p>
 <p>虽然很多人不喜欢写测试（我也不喜欢），但良好的测试对调试和排错是有很大帮助的。这里指的测试不仅仅是单元测试，关于测试可以从几个方面入手：</p>
@@ -673,7 +674,7 @@ f8630d4b48d7        spotify/kafka       &quot;supervisord -n&quot;         2 wee
 <li>事务</li>
 </ul>
 <p>分布式的应用的结构是下面这样的：</p>
-<p><img src="https://pic4.zhimg.com/80/v2-8a8fd9da3b83b31a331105ce3b81f75b_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-8a8fd9da3b83b31a331105ce3b81f75b_1440w.png" alt="img"></p>
 <p>展开来说还有很多，服务架构，自动化运维，自动化部署，版本控制、前端，接口设计等，不过我认为到这里，作为后端的基本职责就算是完成了。除了基本功，帮你走得更远的是内功：<strong>操作系统、数据结构、计算机网络、设计模式、数据库</strong>这些能力能帮助你设计出更加完好的程序。</p>
 
                 </section>
@@ -699,9 +700,9 @@ f8630d4b48d7        spotify/kafka       &quot;supervisord -n&quot;         2 wee
 
         </section>
 
-        <script src="https://tonnie17.github.io/js/jquery-3.3.1.min.js"></script>
-<script src="https://tonnie17.github.io/js/main.js"></script>
-<script src="https://tonnie17.github.io/js/highlight.min.js"></script>
+        <script src="https://4fish.blue/js/jquery-3.3.1.min.js"></script>
+<script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 

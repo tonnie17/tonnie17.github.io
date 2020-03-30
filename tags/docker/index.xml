@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>docker on 4 Fish</title>
-    <link>https://tonnie17.github.io/tags/docker/</link>
+    <link>https://4fish.blue/tags/docker/</link>
     <description>Recent content in docker on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 12 Oct 2019 00:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://tonnie17.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://4fish.blue/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>20分钟极简入门Docker</title>
-      <link>https://tonnie17.github.io/posts/docker-quickstart/</link>
+      <link>https://4fish.blue/posts/docker-quickstart/</link>
       <pubDate>Sat, 12 Oct 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://tonnie17.github.io/posts/docker-quickstart/</guid>
+      <guid>https://4fish.blue/posts/docker-quickstart/</guid>
       <description>什么是Docker 首先来介绍一下什么是Docker，Docker是早于2013年发布的开源项目，它借助操作系统的虚拟化技术来实现应用间的资源</description>
     </item>
     
     <item>
       <title>用Docker部署一个Web应用</title>
-      <link>https://tonnie17.github.io/posts/docker-web/</link>
+      <link>https://4fish.blue/posts/docker-web/</link>
       <pubDate>Tue, 18 Apr 2017 00:00:00 +0800</pubDate>
       
-      <guid>https://tonnie17.github.io/posts/docker-web/</guid>
+      <guid>https://4fish.blue/posts/docker-web/</guid>
       <description>首先，什么是Docker?根据官网描述，我们可以得知，Docker是一个软件/容器平台，使用了虚拟化技术(cgroups，namespace</description>
     </item>
     

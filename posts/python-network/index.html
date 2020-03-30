@@ -9,16 +9,16 @@
 		
 		<meta name="generator" content="Hugo 0.66.0" />
 		<title>从0到1，Python网络编程的入门之路 &middot; 4 Fish</title>
-		<link rel="shortcut icon" href="https://tonnie17.github.io/images/favicon.ico">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/style.css">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/highlight.css">
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/highlight.css">
 
 		
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/monosocialiconsfont.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
 		
 
 		
-		<link href="https://tonnie17.github.io/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
 		
 
 		
@@ -28,16 +28,17 @@
        <nav class="main-nav">
 	
 	
-		<a href='https://tonnie17.github.io/'> <span class="arrow">←</span>Home</a>
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
 	
-	<a href='https://tonnie17.github.io/posts'>Archive</a>
-	<a href='https://tonnie17.github.io/tags'>Tags</a>
-	<a href='https://tonnie17.github.io/about'>About</a>
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/tags'>Tags</a>
+	<a href='https://4fish.blue/about'>About</a>
 
 	
 
 	
-	<a class="cta" href="https://tonnie17.github.io/index.xml">Subscribe</a>
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
 	
 </nav>
 
@@ -56,9 +57,9 @@
                       
                       
                           
-                              <a href="https://tonnie17.github.io/tags/python">python</a>
+                              <a href="https://4fish.blue/tags/python">python</a>
                           
-                              <a href="https://tonnie17.github.io/tags/web">web</a>
+                              <a href="https://4fish.blue/tags/web">web</a>
                           
                       
                       
@@ -135,7 +136,7 @@ python3.4 1128 tonnie    4u  IPv4 0x17036ae156ec58cf      0t0  TCP *:irdmi (LIST
 <li>服务器端经过<strong>2MSL</strong>时间后进入<strong>CLOSED</strong>状态，此时连接关闭。</li>
 </ol>
 <p>至于客户端，在每个阶段也有各自的状态，下图表示了TCP状态迁移的过程：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-11a83cab93a101daf0b0db542aca7588_hd.jpg" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-11a83cab93a101daf0b0db542aca7588_1440w.jpg" alt="img"></p>
 <p>下面来看TCP/IP的四层模型：</p>
 <ol>
 <li>应用层，在这一层上的有HTTP、DNS、FTP、SSH等。</li>
@@ -143,7 +144,7 @@ python3.4 1128 tonnie    4u  IPv4 0x17036ae156ec58cf      0t0  TCP *:irdmi (LIST
 <li>网络层，在这一层上的有IP、ARP等。</li>
 <li>网络接口层，在这一层上的有以太网、PPP等。</li>
 </ol>
-<p><img src="https://pic3.zhimg.com/80/v2-9cbae2cc1ed58a9afb3a8341ee4ca952_hd.jpg" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-9cbae2cc1ed58a9afb3a8341ee4ca952_1440w.jpg" alt="img"></p>
 <p>在上面的程序中，客户端与服务器端的通信都要经过这四个层来打交道。那么这段Python程序是如何操作连接的建立和关闭以及数据的传输呢？答案是通过socket提供的一系列方法。</p>
 <p>socket是一种IPC方法，它使得同一主机或不同主机的应用程序能交换数据，socket在上图中处于第三层和第四层之间，所以可以把socket理解为在传输层和应用层之间的一组通信接口，或者是一个抽象的通信设备，应用程序借助socket就能方便地与其他应用程序进行交流。</p>
 <p>现在把客户端的代码简化为用socket表现的最简形式：</p>
@@ -187,12 +188,12 @@ sock<span style="color:#f92672">.</span>listen(<span style="color:#ae81ff">5</sp
 <li>调用sock.close关闭连接。</li>
 </ol>
 <p>socket的数据是通过内核维护的读写缓冲区来获取的，如下图中的表示：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-eb72f0fd73e6e431303cd98fbe31ec09_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-eb72f0fd73e6e431303cd98fbe31ec09_1440w.png" alt="img"></p>
 <p>每次从缓冲区写入或读入数据都会发起标准的系统调用，如：</p>
 <pre><code>int read(fd, buf, bufsize);
 int write(fd, buf, bufwrite);
 </code></pre><p>来进行数据的写或读。当然对于大文件来说，执行多次read、write等系统调用的耗费是相当可观的，这时候就要用到<strong>sendfile</strong>系统调用：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-cda12ad85cda92b63ac25b486c00b8d1_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-cda12ad85cda92b63ac25b486c00b8d1_1440w.png" alt="img"></p>
 <p><strong>socket的域</strong></p>
 <p>在上面的程序中我们建立socket对象都是使用了AF_INET这个参数，它表示这个socket是通过IPV4的方式进行通信的。</p>
 <p>这种socket也被叫做<strong>Internet Domain Socket</strong>，它定义的地址形式是这样的：</p>
@@ -461,7 +462,7 @@ Serving HTTP on 0.0.0.0 port 8000 ...
 </ul>
 <p>在实际开发中要注意他们的区别，知道边缘触发为什么可能产生socket饥饿问题，怎么解决。</p>
 <p>用一张图总结5个IO模型是这样的：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-7e2c42ee86f13913646d13bc65582436_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-7e2c42ee86f13913646d13bc65582436_1440w.png" alt="img"></p>
 <p>使用多路IO复用模型能有效提高网络编程的质量。</p>
 <p><strong>HTTP</strong></p>
 <p>现在再来看HTTP，HTTP是在TCP之上的无状态的协议，处于四层模型中的应用层，HTTP使用TCP来传输报文数据。</p>
@@ -552,7 +553,7 @@ parser<span style="color:#f92672">.</span>feed(<span style="color:#e6db74">&#39;
 <p>推荐阅读：《HTTP权威指南》</p>
 <p><strong>DNS</strong></p>
 <p>主机到IP的转换通常要经过DNS查询，DNS是一个庞大的分布式数据库，它将主机名组织在一个层级的空间中，一个节点的域名由该节点到根的路径所有节点组成的名字连接而成。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-4575b995a28ba241392f8058cb7c4c9e_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-4575b995a28ba241392f8058cb7c4c9e_1440w.png" alt="img"></p>
 <p>使用dnspython包可以方便地进行dns查询：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> dns.resolver
 
@@ -645,9 +646,9 @@ multi<span style="color:#f92672">.</span>add(<span style="color:#ae81ff">1</span
 
         </section>
 
-        <script src="https://tonnie17.github.io/js/jquery-3.3.1.min.js"></script>
-<script src="https://tonnie17.github.io/js/main.js"></script>
-<script src="https://tonnie17.github.io/js/highlight.min.js"></script>
+        <script src="https://4fish.blue/js/jquery-3.3.1.min.js"></script>
+<script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 

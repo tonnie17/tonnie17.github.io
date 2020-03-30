@@ -9,16 +9,16 @@
 		
 		<meta name="generator" content="Hugo 0.66.0" />
 		<title>用Docker部署一个Web应用 &middot; 4 Fish</title>
-		<link rel="shortcut icon" href="https://tonnie17.github.io/images/favicon.ico">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/style.css">
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/highlight.css">
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/highlight.css">
 
 		
-		<link rel="stylesheet" href="https://tonnie17.github.io/css/monosocialiconsfont.css">
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
 		
 
 		
-		<link href="https://tonnie17.github.io/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
 		
 
 		
@@ -28,16 +28,17 @@
        <nav class="main-nav">
 	
 	
-		<a href='https://tonnie17.github.io/'> <span class="arrow">←</span>Home</a>
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
 	
-	<a href='https://tonnie17.github.io/posts'>Archive</a>
-	<a href='https://tonnie17.github.io/tags'>Tags</a>
-	<a href='https://tonnie17.github.io/about'>About</a>
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/tags'>Tags</a>
+	<a href='https://4fish.blue/about'>About</a>
 
 	
 
 	
-	<a class="cta" href="https://tonnie17.github.io/index.xml">Subscribe</a>
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
 	
 </nav>
 
@@ -56,9 +57,9 @@
                       
                       
                           
-                              <a href="https://tonnie17.github.io/tags/python">python</a>
+                              <a href="https://4fish.blue/tags/python">python</a>
                           
-                              <a href="https://tonnie17.github.io/tags/docker">docker</a>
+                              <a href="https://4fish.blue/tags/docker">docker</a>
                           
                       
                       
@@ -82,7 +83,7 @@ Docker version 17.04.0-ce, build 4845c56
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                         NAMES
 a89d281829f9        nginx:latest        &quot;nginx -g 'daemon ...&quot;   8 minutes ago       Up 8 minutes        0.0.0.0:80-&gt;80/tcp, 443/tcp   web
 </code></pre><p>现在访问宿主机地址的80端口，看到nginx的欢迎页面。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-5739f27ff72eb5d169ac722f4a3d4985_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-5739f27ff72eb5d169ac722f4a3d4985_1440w.jpg" alt="img"></p>
 <p>Docker容器本质上是一个运行的进程以及它需要的一些依赖，而Docker镜像则是定义这个容器的一个&quot;模版&rdquo;。</p>
 <p>使用docker images能看到目前的镜像：</p>
 <pre><code>$ docker images
@@ -137,7 +138,7 @@ docker0   Link encap:Ethernet  HWaddr 02:42:a4:e4:10:80
           collisions:0 txqueuelen:0
           RX bytes:4033 (4.0 KB)  TX bytes:3741 (3.7 KB)
 </code></pre><p>我找了一张图，可以很好地表示veth对的存在方式：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-ddb10d3a0d4382769c65ec58aba34cb8_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-ddb10d3a0d4382769c65ec58aba34cb8_1440w.jpg" alt="img"></p>
 <p>而真正实现端口转发的魔法的是nat规则。如果容器使用-p指定映射的端口时，docker会通过iptables创建一条nat规则，把宿主机打到映射端口的数据包通过转发到docker0的网关，docker0再通过广播找到对应ip的目标容器，把数据包转发到容器的端口上。反过来，如果docker要跟外部的网络进行通信，也是通过docker0和iptables的nat进行转发，再由宿主机的物理网卡进行处理，使得外部可以不知道容器的存在。</p>
 <p>使用iptables -t nat命令可以看到添加的nat规则：</p>
 <pre><code>$ iptables -t nat -xvL
@@ -297,14 +298,14 @@ accesslog <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;
 </code></pre><p>接着就可以根据这个镜像来创建和运行容器了：</p>
 <pre><code>$ docker run -d --name=app -p 8080:8000 -v /code:/usr/src/app --link=redis:db test/app
 </code></pre><p>目前为止，项目的应用结构图如下：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-cb0504f8687aeb519702220aee5e9f98_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-cb0504f8687aeb519702220aee5e9f98_1440w.jpg" alt="img"></p>
 <p>现在，如果Redis这个节点出现故障的话会怎么样？</p>
 <p>答案是，整个服务都会不可用了，更糟糕的是，数据备份和恢复同步成为了更棘手的问题。</p>
 <p>很明显，我们不能只依赖一个节点，还要通过建立主从节点防止数据的丢失。再创建两个redis容器，通过slaveof指令为Redis建立两个副本。</p>
 <pre><code>$ docker run -d --name=redis_slave_1 -p 6380:6379 --link=redis:master redis redis-server --slaveof master 6379
 $ docker run -d --name=redis_slave_2 -p 6381:6379 --link=redis:master redis redis-server --slaveof master 6379
 </code></pre><p>现在写入到Redis主节点的数据都会在从节点上备份一份数据。</p>
-<p><img src="https://pic3.zhimg.com/80/v2-b97bbd401b2f169c36a3b660206c1abe_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-b97bbd401b2f169c36a3b660206c1abe_1440w.jpg" alt="img"></p>
 <p>现在看起来好多了，然而当Redis master挂掉之后，服务仍然会变的不可用，所以当master宕机时还需要通过选举的方式把新的master节点推上去（故障迁移），Redis Sentinel正是一个合适的方式，我们建立Sentinel集群来监控Redis master节点，当master节点不可用了，再由Sentinel集群根据投票选举出slave节点作为新的master。</p>
 <p>下面为Sentinel编写Dockerfile，在redis镜像的基础上作改动：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> redis:latest</span><span style="color:#960050;background-color:#1e0010">
@@ -337,7 +338,7 @@ exec redis-server /etc/sentinel.conf --sentinel
 $ docker run -d --name=sentinel_2 --link=redis:redis-master [build_sentinel_image]
 $ docker run -d --name=sentinel_3 --link=redis:redis-master [build_sentinel_image]
 </code></pre><p>这下Sentinel的容器也搭建起来了，应用的结构图如下：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-998b4229612939a15a00ec1905698ce4_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-998b4229612939a15a00ec1905698ce4_1440w.jpg" alt="img"></p>
 <p>简单验证一下当redis主节点挂掉后sentinel怎么处理：</p>
 <pre><code>$ docker pause redis-master
 $ docker logs -f --tail=100 sentinel_1
@@ -362,12 +363,12 @@ master0:name=master,status=ok,address=192.168.32.5:6379,slaves=2,sentinels=3
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">sentinel <span style="color:#f92672">=</span> Sentinel([(<span style="color:#e6db74">&#39;sentinel&#39;</span>, <span style="color:#ae81ff">26379</span>)])
 rds <span style="color:#f92672">=</span> sentinel<span style="color:#f92672">.</span>master_for(<span style="color:#e6db74">&#39;master&#39;</span>)
 </code></pre></div><p>下面再来考虑这种情况：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-82883b356a1e23e3b00e2c48874c6b05_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-82883b356a1e23e3b00e2c48874c6b05_1440w.jpg" alt="img"></p>
 <p>假设我们对django_app容器进行伸缩，扩展出三个一模一样的django应用容器，这时候怎么办，该访问哪个？显然，这时候需要一个负载均衡的工具作为web应用的前端，做反向代理。</p>
 <p>nginx是一个非常流行的web服务器，用它完成这个当然没问题，这里不说了。</p>
 <p>下面说一说个人尝试过的两种选择：</p>
 <p><strong>LVS</strong>（Linux Virtual Server）作为最外层的服务，负责对系统到来的请求做负载均衡，转发到后端的服务器（Real Server）上，DR（Direct Route）算法是指对请求报文的数据链路层进行修改mac地址的方式，转发到后端的一台服务器上，后端的服务器集群只需要配置和负载均衡服务器一样的虚拟IP（VIP），请求就会落到对应mac地址的服务器上，跟NAT模式相比，DR模式不需要修改目的IP地址，因此在返回响应时，服务器可以直接将报文发送给客户端，而无须转发回负载均衡服务器，因此这种模式也叫做三角传输模式。</p>
-<p><img src="https://pic1.zhimg.com/80/v2-7304eb955fbba3f6d7fa9e68ae9b295c_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-7304eb955fbba3f6d7fa9e68ae9b295c_1440w.jpg" alt="img"></p>
 <p><strong>Haproxy</strong>是一个基于TCP/HTTP的负载均衡工具，在负载均衡上有许多精细的控制。下面简单地使用Haproxy来完成上面的负载均衡和转发。</p>
 <p>首先把haproxy的官方镜像下载下来：</p>
 <pre><code>$ docker pull haproxy
@@ -408,7 +409,7 @@ backend webserver
 </code></pre><p>这里的app即web应用容器的主机名，运行haproxy容器时用link连接三个web应用容器，绑定到宿主机的80端口。</p>
 <pre><code>$ docker run -d --name=lb -p 80:6301 --link app1:app1 --link app2:app2 --link app3:app3  [build_haproxy_image]
 </code></pre><p>这时候访问宿主机的80端口后，haproxy就会接管请求，用roundrobin方式轮询代理到后端的三个容器上，实现健康检测和负载均衡。</p>
-<p><img src="https://pic1.zhimg.com/80/v2-d062d1fdf14599bbc9ecfe079f187e90_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-d062d1fdf14599bbc9ecfe079f187e90_1440w.jpg" alt="img"></p>
 <p>现在又有一个问题了，每次我们想增加或者减少web应用的数量时，都要修改haproxy的配置并重启haproxy，十分的不方便。</p>
 <p>理想的方式是haproxy能自动检测到后端服务器的运行状况并相应调整配置，好在这种方式不难，我们可以使用etcd作为后端服务器的服务发现工具，把服务器的信息写入到etcd的数据库中，再由confd来间隔一段时间去访问etcd的api，将服务器的信息写入到模版配置中，并更新haproxy的文件以及重启haproxy进程。</p>
 <p>按官方的说法，etcd是一个可靠的分布式的KV存储系统，而confd则是使用模版和数据管理应用配置的一个工具，关于他俩我还没太多了解，所以不多说，下面把他们集成到上面的应用中。</p>
@@ -486,9 +487,9 @@ exec /docker-entrypoint.sh haproxy -f /usr/local/etc/haproxy/haproxy.cfg
 &lt;5&gt;haproxy-systemd-wrapper: re-executing on SIGHUP.
 &lt;7&gt;haproxy-systemd-wrapper: executing /usr/local/sbin/haproxy -p /run/haproxy.pid -f /usr/local/etc/haproxy/haproxy.cfg -Ds -sf 15 16 17 18
 </code></pre><p>最终的应用结构图如下：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-88b388de097ea2f544c8a410a9968d19_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-88b388de097ea2f544c8a410a9968d19_1440w.jpg" alt="img"></p>
 <p>运行在机器上的服务时刻有可能有意外发生，因此我们需要一个服务来监控机器的运行情况和容器的资源占用。netdata是服务器的一个实时监测工具，利用它可以直观简洁地了解到服务器的运行情况。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-2ea958637a9cb150a8e17ba8a173e401_hd.png" alt="img"></p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-2ea958637a9cb150a8e17ba8a173e401_1440w.jpg" alt="img"></p>
 <p>当docker镜像和容器数量增多的情况下，手工去运行和定义docker容器以及其相关依赖无疑是非常繁琐和易错的工作。Docker Compose是由Docker官方提供的一个容器编排和部署工具，我们只需要定义好docker容器的配置文件，用compose的一条命令即可自动分析出容器的启动顺序和依赖，快速的部署和启动容器。</p>
 <p>下面编写好compose的文件：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">version</span>: <span style="color:#e6db74">&#39;2.1&#39;</span>
@@ -594,9 +595,9 @@ INDEX<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
 
         </section>
 
-        <script src="https://tonnie17.github.io/js/jquery-3.3.1.min.js"></script>
-<script src="https://tonnie17.github.io/js/main.js"></script>
-<script src="https://tonnie17.github.io/js/highlight.min.js"></script>
+        <script src="https://4fish.blue/js/jquery-3.3.1.min.js"></script>
+<script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 
