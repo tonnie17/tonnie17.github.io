@@ -75,8 +75,8 @@
 </ul>
 <h3 id="索引与匹配列过滤列">索引与匹配列/过滤列</h3>
 <p>存在索引</p>
-<pre><code>(A, B, C, D)
-</code></pre><p>查询</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">(</span>A, B, C, D<span style="color:#f92672">)</span>
+</code></pre></div><p>查询</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">WHERE</span> A <span style="color:#f92672">=</span> :A
 	<span style="color:#66d9ef">AND</span> B <span style="color:#f92672">&gt;</span> :B
 	<span style="color:#66d9ef">AND</span> <span style="color:#66d9ef">C</span> <span style="color:#f92672">=</span> :<span style="color:#66d9ef">C</span>
@@ -99,8 +99,8 @@
 <p>过滤因子决定了索引片的厚度。</p>
 <h3 id="选择率">选择率</h3>
 <p>选择率公式</p>
-<pre><code>选择率 = 100 x (某个键值对应的行数)/表的总记录数
-</code></pre><p>举例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">选择率 <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span> x <span style="color:#f92672">(</span>某个键值对应的行数<span style="color:#f92672">)</span>/表的总记录数
+</code></pre></div><p>举例：</p>
 <p>如果CUST表有1,000,000行记录，列<code>CITY</code>为HELSINKI的行数为200,000行，那么HELSINKI的选择率为20%。</p>
 <h3 id="不合适的索引">不合适的索引</h3>
 <p>QUERY</p>
@@ -166,30 +166,30 @@
 <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> FNAME
 </code></pre></div><p>索引列为（ZIP，LNAME，FNAME）</p>
 <p>假如ZIP=30103的地区有1000位名为Joneses的客户：</p>
-<pre><code>索引	ZIP, LNAME, FNAME	TR = 1		TS = 1000
-表	    CUST				TR = 1	    TS = 999
-提取 1000 x 0.1 ms
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引	ZIP, LNAME, FNAME	TR <span style="color:#f92672">=</span> 1		TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+表	    CUST				TR <span style="color:#f92672">=</span> 1	    TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">999</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT			TR = 2	  	TS = 1999
-			2 x 10 ms   1999 x 0.01 ms
-			20 ms + 20 ms + 100 ms = 140 ms
-</code></pre><p>非聚簇索引访问：</p>
-<pre><code>索引	ZIP, LNAME, FNAME	TR = 1		TS = 1000
-表	    CUST				TR = 1000   TS = 0
-提取 1000 x 0.1 ms
+LRT			TR <span style="color:#f92672">=</span> 2	  	TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1999</span>
+			<span style="color:#ae81ff">2</span> x <span style="color:#ae81ff">10</span> ms   <span style="color:#ae81ff">1999</span> x 0.01 ms
+			<span style="color:#ae81ff">20</span> ms + <span style="color:#ae81ff">20</span> ms + <span style="color:#ae81ff">100</span> ms <span style="color:#f92672">=</span> <span style="color:#ae81ff">140</span> ms
+</code></pre></div><p>非聚簇索引访问：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引	ZIP, LNAME, FNAME	TR <span style="color:#f92672">=</span> 1		TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+表	    CUST				TR <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>   TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT				TR = 1001	  	 TS = 1000
-				1001 x 10 ms   1000 x 0.01 ms
-				10 s + 10 ms + 100 ms = 10s
-</code></pre><p>添加聚簇列<code>CNO</code>使索引变成三星索引：</p>
-<pre><code>索引	ZIP, LNAME, FNAME, CNO	TR = 1		TS = 1000
-表	CUST					 TR = 0   	 TS = 0
-提取 1000 x 0.1 ms
+LRT				TR <span style="color:#f92672">=</span> 1001	  	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+				<span style="color:#ae81ff">1001</span> x <span style="color:#ae81ff">10</span> ms   <span style="color:#ae81ff">1000</span> x 0.01 ms
+				<span style="color:#ae81ff">10</span> s + <span style="color:#ae81ff">10</span> ms + <span style="color:#ae81ff">100</span> ms <span style="color:#f92672">=</span> 10s
+</code></pre></div><p>添加聚簇列<code>CNO</code>使索引变成三星索引：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引	ZIP, LNAME, FNAME, CNO	TR <span style="color:#f92672">=</span> 1		TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+表	CUST					 TR <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>   	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT				TR = 1	  	 TS = 1000
-				1 x 10 ms    1000 x 0.01 ms
-				10 ms + 10 ms + 100 ms = 120ms
-</code></pre><p>对于查询：</p>
+LRT				TR <span style="color:#f92672">=</span> 1	  	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+				<span style="color:#ae81ff">1</span> x <span style="color:#ae81ff">10</span> ms    <span style="color:#ae81ff">1000</span> x 0.01 ms
+				<span style="color:#ae81ff">10</span> ms + <span style="color:#ae81ff">10</span> ms + <span style="color:#ae81ff">100</span> ms <span style="color:#f92672">=</span> 120ms
+</code></pre></div><p>对于查询：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span>	CNO, FNAME
 <span style="color:#66d9ef">FROM</span>	CUST
 <span style="color:#66d9ef">WHERE</span>	LNAME <span style="color:#f92672">=</span> :LNAME
@@ -198,29 +198,29 @@ LRT				TR = 1	  	 TS = 1000
 <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> FNAME
 </code></pre></div><p>QUBE分析如下：</p>
 <p>三星索引：</p>
-<pre><code>索引 CITY, LNAME, FNAME, CNO	TR = 1		TS = 1% x 10% x 1000000
-提取 1000 x 0.1 ms
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引 CITY, LNAME, FNAME, CNO	TR <span style="color:#f92672">=</span> 1		TS <span style="color:#f92672">=</span> 1% x 10% x <span style="color:#ae81ff">1000000</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT				TR = 1	  	 TS = 1000
-				1 x 10 ms    1000 x 0.01 ms
-				10 ms + 10 ms + 100 ms = 120ms
-</code></pre><p>半宽索引</p>
-<pre><code>索引 CITY, LNAME, FNAME, CNO	TR = 1		      TS = 1% x 1000000
-表   CUST					 	TR = 10% x 10000  TS = 0
-提取 1000 x 0.1 ms
+LRT				TR <span style="color:#f92672">=</span> 1	  	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>
+				<span style="color:#ae81ff">1</span> x <span style="color:#ae81ff">10</span> ms    <span style="color:#ae81ff">1000</span> x 0.01 ms
+				<span style="color:#ae81ff">10</span> ms + <span style="color:#ae81ff">10</span> ms + <span style="color:#ae81ff">100</span> ms <span style="color:#f92672">=</span> 120ms
+</code></pre></div><p>半宽索引</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引 CITY, LNAME, FNAME, CNO	TR <span style="color:#f92672">=</span> 1		      TS <span style="color:#f92672">=</span> 1% x <span style="color:#ae81ff">1000000</span>
+表   CUST					 	TR <span style="color:#f92672">=</span> 10% x <span style="color:#ae81ff">10000</span>  TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT				TR = 1001	  	 TS = 10000
-				1001 x 10 ms     10000 x 0.01 ms
-				10 s + 0.1 s + 0.1 s = 10s
-</code></pre><p>宽索引</p>
-<pre><code>索引 LNAME, FNAME, CITY, CNO	TR = 1		      TS = 1% x 1000000
-表   CUST					    TR = 0			  TS = 0
-提取 1000 x 0.1 ms
+LRT				TR <span style="color:#f92672">=</span> 1001	  	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">10000</span>
+				<span style="color:#ae81ff">1001</span> x <span style="color:#ae81ff">10</span> ms     <span style="color:#ae81ff">10000</span> x 0.01 ms
+				<span style="color:#ae81ff">10</span> s + 0.1 s + 0.1 s <span style="color:#f92672">=</span> 10s
+</code></pre></div><p>宽索引</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">索引 LNAME, FNAME, CITY, CNO	TR <span style="color:#f92672">=</span> 1		      TS <span style="color:#f92672">=</span> 1% x <span style="color:#ae81ff">1000000</span>
+表   CUST					    TR <span style="color:#f92672">=</span> 0			  TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+提取 <span style="color:#ae81ff">1000</span> x 0.1 ms
 
-LRT				TR = 1	  	 TS = 10000
-				1 x 10 ms    10000 x 0.01 ms
-				10 ms + 0.1 s + 0.1 s = 0.2s
-</code></pre><h3 id="分页查询的优化">分页查询的优化</h3>
+LRT				TR <span style="color:#f92672">=</span> 1	  	 TS <span style="color:#f92672">=</span> <span style="color:#ae81ff">10000</span>
+				<span style="color:#ae81ff">1</span> x <span style="color:#ae81ff">10</span> ms    <span style="color:#ae81ff">10000</span> x 0.01 ms
+				<span style="color:#ae81ff">10</span> ms + 0.1 s + 0.1 s <span style="color:#f92672">=</span> 0.2s
+</code></pre></div><h3 id="分页查询的优化">分页查询的优化</h3>
 <ul>
 <li>覆盖索引</li>
 <li>通过索引消除排序</li>

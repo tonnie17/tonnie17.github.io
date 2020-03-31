@@ -100,8 +100,8 @@
 server <span style="color:#f92672">=</span> HTTPServer((<span style="color:#e6db74">&#39;&#39;</span>, <span style="color:#ae81ff">59900</span>), MyRequestHandler)
 server<span style="color:#f92672">.</span>serve_forever()
 </code></pre></div><p>查看服务器端的http响应头，会发现以下字段：</p>
-<pre><code>Set-Cookie: id=some_value_42
-</code></pre><p><strong>而在Django中，可以用如下的方式获取或设置Cookie：</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Set-Cookie: id<span style="color:#f92672">=</span>some_value_42
+</code></pre></div><p><strong>而在Django中，可以用如下的方式获取或设置Cookie：</strong></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_cookie</span>(request):
     <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;id&#39;</span> <span style="color:#f92672">in</span> request<span style="color:#f92672">.</span>COOKIES:
         cookie_id <span style="color:#f92672">=</span> request<span style="color:#f92672">.</span>COOKIES[<span style="color:#e6db74">&#39;id&#39;</span>]
@@ -147,11 +147,11 @@ server<span style="color:#f92672">.</span>serve_forever()
         <span style="color:#66d9ef">return</span> HttpResponse(<span style="color:#e6db74">&#39;No count in session. Setting to 1&#39;</span>)
 </code></pre></div><p>它用session实现了一个计数器，当每一个请求到来时，就为计数器加一，把新的结果更新到session中。</p>
 <p>查看http的响应头，会得到类似下面的信息。</p>
-<pre><code>Set-Cookie:sessionid=a92d67e44a9b92d7dafca67e507985c0;
-           expires=Thu, 07-Jul-2011 04:16:28 GMT;
-           Max-Age=1209600;
-           Path=/
-</code></pre><p>里面包含了session_id以及过期时间等信息。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Set-Cookie:sessionid<span style="color:#f92672">=</span>a92d67e44a9b92d7dafca67e507985c0;
+           expires<span style="color:#f92672">=</span>Thu, 07-Jul-2011 04:16:28 GMT;
+           Max-Age<span style="color:#f92672">=</span>1209600;
+           Path<span style="color:#f92672">=</span>/
+</code></pre></div><p>里面包含了session_id以及过期时间等信息。</p>
 <p>那么服务器端是如何保存session的呢？</p>
 <p>在django中，默认会把session保存在setting指定的数据库中，除此之外，也可以通过指定session engine，使session保存在文件(file)，内存(cache)中。</p>
 <p>如果保存在数据库中，django会在数据库中创建一个如下的session表。</p>
@@ -168,11 +168,11 @@ sess <span style="color:#f92672">=</span> Session<span style="color:#f92672">.</
 <span style="color:#66d9ef">print</span>(sess<span style="color:#f92672">.</span>session_data)
 <span style="color:#66d9ef">print</span>(sess<span style="color:#f92672">.</span>get_decoded())
 </code></pre></div><p>输出</p>
-<pre><code>ZmEyNDVhNTBhMTk2ZmRjNzVlYzQ4NTFjZDk2Y2UwODc3YmVjNWVjZjqAAn1xAVUFY291bnRxAksG
-cy4=
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ZmEyNDVhNTBhMTk2ZmRjNzVlYzQ4NTFjZDk2Y2UwODc3YmVjNWVjZjqAAn1xAVUFY291bnRxAksG
+cy4<span style="color:#f92672">=</span>
 
-{'count': 6}
-</code></pre><p>回看第一个例子，我们是通过<code>request.session</code>来获取session的，为什么请求对象会附带一个session对象呢，这其中做了什么呢？</p>
+<span style="color:#f92672">{</span><span style="color:#e6db74">&#39;count&#39;</span>: 6<span style="color:#f92672">}</span>
+</code></pre></div><p>回看第一个例子，我们是通过<code>request.session</code>来获取session的，为什么请求对象会附带一个session对象呢，这其中做了什么呢？</p>
 <p>这就引出了下面要说的django里的中间件技术。</p>
 <h2 id="session-middleware">Session middleware</h2>
 <p>关于中间件，<code>&lt;&lt;the Django Book&gt;&gt;</code>是这样解释的：</p>
@@ -247,8 +247,8 @@ cy4=
         <span style="color:#66d9ef">return</span> HttpResponse(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%s</span><span style="color:#e6db74"> is not logged in&#39;</span> <span style="color:#f92672">%</span> user_str)
 </code></pre></div><p>其实<code>request.user</code>的实现也借助到了session。</p>
 <p>在这个例子中，成功登录后，session表会保存类似下面的信息，里面记录了用户的id，以后进行验证时，便会到这个表中获取用户的信息。</p>
-<pre><code>{'_auth_user_id': 1, '_auth_user_backend': 'django.contrib.auth.backends.ModelBackend'}
-</code></pre><p>跟上面提到的Session中间件相似，用户验证也有一个中间件：AuthenticationMiddleware，在<code>process_request</code>中，通过<code>request.__class__.user = LazyUser()</code>在request设置了一个全局的可缓存的用户对象。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">{</span><span style="color:#e6db74">&#39;_auth_user_id&#39;</span>: 1, <span style="color:#e6db74">&#39;_auth_user_backend&#39;</span>: <span style="color:#e6db74">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>跟上面提到的Session中间件相似，用户验证也有一个中间件：AuthenticationMiddleware，在<code>process_request</code>中，通过<code>request.__class__.user = LazyUser()</code>在request设置了一个全局的可缓存的用户对象。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LazyUser</span>(object):
     <span style="color:#66d9ef">def</span> __get__(self, request, obj_type<span style="color:#f92672">=</span>None):
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> hasattr(request, <span style="color:#e6db74">&#39;_cached_user&#39;</span>):

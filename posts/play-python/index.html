@@ -68,12 +68,12 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">In [<span style="color:#ae81ff">1</span>]: <span style="color:#f92672">import</span> __hello__
 Hello world<span style="color:#960050;background-color:#1e0010">!</span>
 </code></pre></div><p>查看API手册</p>
-<pre><code>~ python
-11/17 17:02:27 2016
-Python 2.7.12 (default, Jun 29 2016, 14:05:02)
-[GCC 4.2.1 Compatible Apple LLVM 7.3.0 (clang-703.0.31)] on darwin
-Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
-&gt;&gt;&gt; help()
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">~ python
+11/17 17:02:27 <span style="color:#ae81ff">2016</span>
+Python 2.7.12 <span style="color:#f92672">(</span>default, Jun <span style="color:#ae81ff">29</span> 2016, 14:05:02<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>GCC 4.2.1 Compatible Apple LLVM 7.3.0 <span style="color:#f92672">(</span>clang-703.0.31<span style="color:#f92672">)]</span> on darwin
+Type <span style="color:#e6db74">&#34;help&#34;</span>, <span style="color:#e6db74">&#34;copyright&#34;</span>, <span style="color:#e6db74">&#34;credits&#34;</span> or <span style="color:#e6db74">&#34;license&#34;</span> <span style="color:#66d9ef">for</span> more information.
+&gt;&gt;&gt; help<span style="color:#f92672">()</span>
 
 Welcome to Python 2.7!  This is the online help utility.
 
@@ -82,12 +82,12 @@ the tutorial on the Internet at http://docs.python.org/2.7/tutorial/.
 
 Enter the name of any module, keyword, or topic to get help on writing
 Python programs and using Python modules.  To quit this help utility and
-return to the interpreter, just type &quot;quit&quot;.
+<span style="color:#66d9ef">return</span> to the interpreter, just type <span style="color:#e6db74">&#34;quit&#34;</span>.
 
-To get a list of available modules, keywords, or topics, type &quot;modules&quot;,
-&quot;keywords&quot;, or &quot;topics&quot;.  Each module also comes with a one-line summary
+To get a list of available modules, keywords, or topics, type <span style="color:#e6db74">&#34;modules&#34;</span>,
+<span style="color:#e6db74">&#34;keywords&#34;</span>, or <span style="color:#e6db74">&#34;topics&#34;</span>.  Each module also comes with a one-line summary
 of what it does; to list the modules whose summaries contain a given word
-such as &quot;spam&quot;, type &quot;modules spam&quot;.
+such as <span style="color:#e6db74">&#34;spam&#34;</span>, type <span style="color:#e6db74">&#34;modules spam&#34;</span>.
 
 help&gt; os.path
 
@@ -95,26 +95,26 @@ help&gt;
 
 --------- ipython ----------
 
-In [1]: import os
+In <span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>: import os
 
-In [2]: os.path?
+In <span style="color:#f92672">[</span>2<span style="color:#f92672">]</span>: os.path?
 Type:        module
-String form: &lt;module 'posixpath' from '/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/posixpath.py'&gt;
+String form: &lt;module <span style="color:#e6db74">&#39;posixpath&#39;</span> from <span style="color:#e6db74">&#39;/usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/posixpath.py&#39;</span>&gt;
 File:        /usr/local/Cellar/python3/3.6.0/Frameworks/Python.framework/Versions/3.6/lib/python3.6/posixpath.py
 Docstring:
 Common operations on Posix pathnames.
 
 Instead of importing this module directly, import os and refer to
-this module as os.path.  The &quot;os.path&quot; name is an alias for this
-module on Posix systems; on other systems (e.g. Mac, Windows),
+this module as os.path.  The <span style="color:#e6db74">&#34;os.path&#34;</span> name is an alias <span style="color:#66d9ef">for</span> this
+module on Posix systems; on other systems <span style="color:#f92672">(</span>e.g. Mac, Windows<span style="color:#f92672">)</span>,
 os.path provides the same operations in a manner specific to that
-platform, and is an alias to another module (e.g. macpath, ntpath).
+platform, and is an alias to another module <span style="color:#f92672">(</span>e.g. macpath, ntpath<span style="color:#f92672">)</span>.
 
 Some of this can actually be useful on non-Posix systems too, e.g.
-for manipulation of the pathname component of URLs.
+<span style="color:#66d9ef">for</span> manipulation of the pathname component of URLs.
 
-In [3]: os.path??
-</code></pre><p>遍历列表</p>
+In <span style="color:#f92672">[</span>3<span style="color:#f92672">]</span>: os.path??
+</code></pre></div><p>遍历列表</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">array <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>]
 
 <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(array)):
@@ -367,17 +367,17 @@ In [<span style="color:#ae81ff">3</span>]: <span style="color:#ae81ff">1</span> 
 In [<span style="color:#ae81ff">4</span>]: <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#ae81ff">1</span>
 Out[<span style="color:#ae81ff">4</span>]: False
 </code></pre></div><p>性能排查</p>
-<pre><code>python -m cProfile test.py
-</code></pre><p>格式化一个json文件</p>
-<pre><code>python -m json.tool test.json
-echo '{&quot;json&quot;:&quot;obj&quot;}' | python -m json.tool # 管道
-</code></pre><p>开启本地目录的HTTP服务器</p>
-<pre><code>python2 -m SimpleHTTPServer 8080 # 2.x
-python3 -m http.server 8080 # 3.x
-</code></pre><p>在Python使用花括号块</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">python -m cProfile test.py
+</code></pre></div><p>格式化一个json文件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">python -m json.tool test.json
+echo <span style="color:#e6db74">&#39;{&#34;json&#34;:&#34;obj&#34;}&#39;</span> | python -m json.tool <span style="color:#75715e"># 管道</span>
+</code></pre></div><p>开启本地目录的HTTP服务器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">python2 -m SimpleHTTPServer <span style="color:#ae81ff">8080</span> <span style="color:#75715e"># 2.x</span>
+python3 -m http.server <span style="color:#ae81ff">8080</span> <span style="color:#75715e"># 3.x</span>
+</code></pre></div><p>在Python使用花括号块</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> __future__ <span style="color:#f92672">import</span> braces
 </code></pre></div><p>Python之禅</p>
-<pre><code>In [1]: import this
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">In <span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>: import this
 The Zen of Python, by Tim Peters
 
 Beautiful is better than ugly.
@@ -387,19 +387,19 @@ Complex is better than complicated.
 Flat is better than nested.
 Sparse is better than dense.
 Readability counts.
-Special cases aren't special enough to break the rules.
-Although practicality beats purity.
-Errors should never pass silently.
-Unless explicitly silenced.
-In the face of ambiguity, refuse the temptation to guess.
-There should be one-- and preferably only one --obvious way to do it.
-Although that way may not be obvious at first unless you're Dutch.
+Special cases aren<span style="color:#e6db74">&#39;t special enough to break the rules.
+</span><span style="color:#e6db74">Although practicality beats purity.
+</span><span style="color:#e6db74">Errors should never pass silently.
+</span><span style="color:#e6db74">Unless explicitly silenced.
+</span><span style="color:#e6db74">In the face of ambiguity, refuse the temptation to guess.
+</span><span style="color:#e6db74">There should be one-- and preferably only one --obvious way to do it.
+</span><span style="color:#e6db74">Although that way may not be obvious at first unless you&#39;</span>re Dutch.
 Now is better than never.
 Although never is often better than *right* now.
-If the implementation is hard to explain, it's a bad idea.
-If the implementation is easy to explain, it may be a good idea.
-Namespaces are one honking great idea -- let's do more of those!
-</code></pre><p>antigravity</p>
+If the implementation is hard to explain, it<span style="color:#e6db74">&#39;s a bad idea.
+</span><span style="color:#e6db74">If the implementation is easy to explain, it may be a good idea.
+</span><span style="color:#e6db74">Namespaces are one honking great idea -- let&#39;</span>s <span style="color:#66d9ef">do</span> more of those!
+</code></pre></div><p>antigravity</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> antigravity
 </code></pre></div>
                 </section>

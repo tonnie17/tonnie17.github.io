@@ -49,7 +49,7 @@
                     </h1>
                     <h2 class="headline">
                     Mar 15, 2017
-                    · 10988 words
+                    · 10987 words
                     · 22 minute read
                       <span class="tags">
                       
@@ -81,13 +81,12 @@
 <p><strong>SO_BROADCAST</strong>：允许广播</p>
 <p><strong>SO_KEPPALIVE</strong>：周期性测试连接存活</p>
 <p><strong>SO_LINGER</strong>：若有数据报发送则延迟关闭</p>
-<pre><code> l_onoff=0：发送完发送缓冲区的数据并发送FIN。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">l_onoff<span style="color:#f92672">=</span>0：发送完发送缓冲区的数据并发送FIN。
 
- l_onoff=1，l_linger=0：那么当close某个连接时TCP将终止该连接，丢弃发送缓冲区和接收缓冲区的数据并发送一个RST到对端，避免了TIME_WAIT。
+l_onoff<span style="color:#f92672">=</span>1，l_linger<span style="color:#f92672">=</span>0：那么当close某个连接时TCP将终止该连接，丢弃发送缓冲区和接收缓冲区的数据并发送一个RST到对端，避免了TIME_WAIT。
 
- l_onoff=1，l_linger!=0：发送完发送缓冲区的数据并发送FIN，丢弃接收缓冲区的数据，如果在CLOSED前延滞时间到，返回EWOULDBLOCK错误。
-</code></pre>
-<p><strong>SO_RCVBUF</strong>：接收缓冲区大小</p>
+l_onoff<span style="color:#f92672">=</span>1，l_linger!<span style="color:#f92672">=</span>0：发送完发送缓冲区的数据并发送FIN，丢弃接收缓冲区的数据，如果在CLOSED前延滞时间到，返回EWOULDBLOCK错误。
+</code></pre></div><p><strong>SO_RCVBUF</strong>：接收缓冲区大小</p>
 <p><strong>SO_SNDBUF</strong>：发送缓冲区大小</p>
 <p><strong>SO_RCVLOWAT</strong>：接收缓冲区低水平标记</p>
 <p><strong>SO_SNDLOWAT</strong>：发送缓冲区低水平标记</p>
@@ -104,17 +103,16 @@
 <h2 id="套接字编程简介">套接字编程简介</h2>
 <p>新的通用套接字地址结构sockaddr_storage。</p>
 <p><strong>字节操纵函数</strong></p>
-<pre><code>bzero: void bzero(void *dest, size_t nbyte)
-</code></pre><p>把目标字节串指定书目的字节置为0。</p>
-<pre><code>memset: void memset(void *dest, int c, size_t len)
-</code></pre><p>把目标字节串指定书目的字节置c。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">bzero: void bzero<span style="color:#f92672">(</span>void *dest, size_t nbyte<span style="color:#f92672">)</span>
+</code></pre></div><p>把目标字节串指定书目的字节置为0。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">memset: void memset<span style="color:#f92672">(</span>void *dest, int c, size_t len<span style="color:#f92672">)</span>
+</code></pre></div><p>把目标字节串指定书目的字节置c。</p>
 <p><strong>地址转换函数</strong></p>
-<pre><code>- inet_aton: int inet_aton(const char *strptr, in_addr *addrptr) // 点分十进制-&gt;32位网络子节串二进制
-- inet_ntoa: char* inet_ntoa(struct in_addr addr) // 32位网络子节串二进制-&gt;点分十进制
-</code></pre><pre><code>- inet_pton: int inet_pton(int family, const char *strptr, void *addrptr) // 点分十进制-&gt;32位网络子节串二进制
-- inet_
-: char* inet_ntop(int family, const void *addrptr, char *strptr, size_t len) // 32位网络子节串二进制-&gt;点分十进制
-</code></pre><p><strong>read, write</strong>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#f92672">-</span> inet_aton: <span style="color:#66d9ef">int</span> inet_aton(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>strptr, in_addr <span style="color:#f92672">*</span>addrptr) <span style="color:#75715e">// 点分十进制-&gt;32位网络子节串二进制
+</span><span style="color:#75715e"></span><span style="color:#f92672">-</span> inet_ntoa: <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> inet_ntoa(<span style="color:#66d9ef">struct</span> in_addr addr) <span style="color:#75715e">// 32位网络子节串二进制-&gt;点分十进制
+</span><span style="color:#75715e"></span><span style="color:#f92672">-</span> inet_pton: <span style="color:#66d9ef">int</span> inet_pton(<span style="color:#66d9ef">int</span> family, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>strptr, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>addrptr) <span style="color:#75715e">// 点分十进制-&gt;32位网络子节串二进制
+</span><span style="color:#75715e"></span><span style="color:#f92672">-</span> inet_ntop: <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> inet_ntop(<span style="color:#66d9ef">int</span> family, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>addrptr, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>strptr, size_t len) <span style="color:#75715e">// 32位网络子节串二进制-&gt;点分十进制
+</span></code></pre></div><p><strong>read, write</strong>
 字节流套接字调用read和write输入或输出的字节数可能比请求的字节数少，这个现象出现的原因是内核中缓冲区已达到极限。</p>
 <p><strong>为什么诸如套接字地址结构长度的值-结果参数要用指针来传递?</strong></p>
 <p>指针和指针长度的内容传递给内核，内核知道到底需要从进程复制多少数据进来。<strong>原因</strong>：当函数被调用时，结构大小是一个值，它告诉内核该结构大小，这样内核在写的时候不至于越界。当函数返回时，结构大小又是一个结果，它告诉进程内核在该地址结构存储了多少信息。这种类型的参数称为<strong>值－结果</strong>参数。(既是输入参数又是输出参数)</p>
@@ -129,40 +127,40 @@
 <li>close(),关闭socket。</li>
 </ul>
 <h3 id="创建一个socket-socket">创建一个socket: socket()</h3>
-<pre><code>int socket(int domain, int type, int protocol);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int socket<span style="color:#f92672">(</span>int domain, int type, int protocol<span style="color:#f92672">)</span>;
  - domain：与socket通信的domain。
  - type：socket类型，SOCK_STREAM（TCP），SOCK_DGRAM（UDP）。
  - protocol：通常指定为0，在RAW_SOCKET中为IPPROTO_RAW。
- return: 新创建socket的文件描述符。
-</code></pre><h3 id="将socket绑定到地址bind">将socket绑定到地址：bind()</h3>
-<pre><code>int bind(int sockfd, const struct sockaddr* addr, socklen_t addrlen);
- - sockfd：在socket()调用取得的文件描述符。
+ <span style="color:#66d9ef">return</span>: 新创建socket的文件描述符。
+</code></pre></div><h3 id="将socket绑定到地址bind">将socket绑定到地址：bind()</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int bind<span style="color:#f92672">(</span>int sockfd, const struct sockaddr* addr, socklen_t addrlen<span style="color:#f92672">)</span>;
+ - sockfd：在socket<span style="color:#f92672">()</span>调用取得的文件描述符。
  - addr：要socket绑定到的地址。
  - addrlen：制定了地址结构的大小。
- return：-1为绑定失败。
-</code></pre><h4 id="通用socket地址结构struct-sockaddr">通用socket地址结构struct sockaddr</h4>
-<pre><code>struct sockaddr {
+ <span style="color:#66d9ef">return</span>：-1为绑定失败。
+</code></pre></div><h4 id="通用socket地址结构struct-sockaddr">通用socket地址结构struct sockaddr</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">struct sockaddr <span style="color:#f92672">{</span>
      sa_family_t sa_family;     //地址族
-     char sa_data[14];     //socket地址
-};
-</code></pre><h3 id="监听接入连接listen">监听接入连接：listen()</h3>
-<pre><code>int listen(int sockfd, int backlog);
+     char sa_data<span style="color:#f92672">[</span>14<span style="color:#f92672">]</span>;     //socket地址
+<span style="color:#f92672">}</span>;
+</code></pre></div><h3 id="监听接入连接listen">监听接入连接：listen()</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int listen<span style="color:#f92672">(</span>int sockfd, int backlog<span style="color:#f92672">)</span>;
  - sockfd：socket文件描述符。
- - backlog：限制未决连接的数量（在调用accept()前收到connect()的连接）。
-return: -1为监听失败。
-</code></pre><h3 id="接受连接accept">接受连接：accept()</h3>
-<pre><code>int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+ - backlog：限制未决连接的数量（在调用accept<span style="color:#f92672">()</span>前收到connect<span style="color:#f92672">()</span>的连接）。
+<span style="color:#66d9ef">return</span>: -1为监听失败。
+</code></pre></div><h3 id="接受连接accept">接受连接：accept()</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int accept<span style="color:#f92672">(</span>int sockfd, struct sockaddr *addr, socklen_t *addrlen<span style="color:#f92672">)</span>;
  - sockfd：socket文件描述符。
  - addr：对端socket的地址结构。
  - addrlen：对端socket地址结构的长度。
-return：和对端连接的文件描述符。
-</code></pre><p>当调用accept()时，会创建一个新的socket，并且由这个新创建的socket来与执行connect()的对等socket进行连接。（这个socket并不绑定到新的端口号上，而是复制监听socket的地址和端口号，在tcp四元祖中记录主机和对端socket的地址信息）。</p>
+<span style="color:#66d9ef">return</span>：和对端连接的文件描述符。
+</code></pre></div><p>当调用accept()时，会创建一个新的socket，并且由这个新创建的socket来与执行connect()的对等socket进行连接。（这个socket并不绑定到新的端口号上，而是复制监听socket的地址和端口号，在tcp四元祖中记录主机和对端socket的地址信息）。</p>
 <h3 id="连接到对等socketconnect">连接到对等socket：connect()</h3>
-<pre><code>int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int connect<span style="color:#f92672">(</span>int sockfd, const struct sockaddr *addr, socklen_t addrlen<span style="color:#f92672">)</span>;
  - sockfd：socket文件描述符。
  - addr：要连接到socket的地址。
  - addrlen：地址结构的长度。
-</code></pre><h3 id="流socket-io">流socket i/o</h3>
+</code></pre></div><h3 id="流socket-io">流socket i/o</h3>
 <p><img src="https://s1.ax2x.com/2018/04/16/kLuvG.png" alt=""></p>
 <p>一个socket可以使用close()系统调用来关闭或在应用程序终止后关闭，当对端读取完缓冲区的数据后，试图继续读取数据时会收到文件结束，试图写数据会收到SIGPIPE信号，系统调用产生EPIPE的错误。</p>
 <h4 id="连接终止close">连接终止：close()</h4>
@@ -172,11 +170,11 @@ int read(fd, buf, bufsize);
 int write(fd, buf, bufwrite);</p>
 <p><strong>unix domain socket</strong>
 <strong>unix domain socket地址：struct sockaddr_un</strong></p>
-<pre><code>struct sockaddr_un {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">struct sockaddr_un <span style="color:#f92672">{</span>
      sa_family_t sun_family;     //AF_UNIX
-     char sun_path[108];     //socket路径名
-};
-</code></pre><p>当用来bind() UNIX DOMAIN SOCKET的时候，会在文件系统中创建一个条目（所在目录需要可读和可写）。</p>
+     char sun_path<span style="color:#f92672">[</span>108<span style="color:#f92672">]</span>;     //socket路径名
+<span style="color:#f92672">}</span>;
+</code></pre></div><p>当用来bind() UNIX DOMAIN SOCKET的时候，会在文件系统中创建一个条目（所在目录需要可读和可写）。</p>
 <ul>
 <li>无法将socket绑定到既有路径名。</li>
 <li>socket和路径名为一对一关系。</li>
@@ -188,24 +186,24 @@ int write(fd, buf, bufwrite);</p>
 <li>默认创建的socket赋予user,group,other权限，可用unmask()修改。</li>
 </ul>
 <h2 id="创建互联socket对socketpair">创建互联socket对：socketpair()</h2>
-<pre><code>int socketpair(int domain, int type, int protocol, int sockfd[2]);
-</code></pre><p>一个进程创建socket对，fork()出来的子进程复制socket对的文件描述符的副本，与父进程的socket队进行通信。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">int socketpair<span style="color:#f92672">(</span>int domain, int type, int protocol, int sockfd<span style="color:#f92672">[</span>2<span style="color:#f92672">])</span>;
+</code></pre></div><p>一个进程创建socket对，fork()出来的子进程复制socket对的文件描述符的副本，与父进程的socket队进行通信。</p>
 <p>与手工创建socket对相比：不会绑定到任意地址上。</p>
 <p><strong>Internet Domain Socket</strong></p>
 <p>Socket的readline实现：</p>
 <p><img src="https://s1.ax2x.com/2018/04/16/kL4kn.png" alt=""></p>
 <h3 id="internet-domain-socket地址">Internet Domain Socket地址：</h3>
 <p><em>ipv4</em>：struct sockaddr_in</p>
-<pre><code>struct in_addr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">struct in_addr <span style="color:#f92672">{</span>
      in_addr_t s_addr;     //32位无符号整数。
-};
-struct sockaddr_in {
+<span style="color:#f92672">}</span>;
+struct sockaddr_in <span style="color:#f92672">{</span>
      sa_family_t sin_family;     //地址族
      in_port_t sin_port;     //端口号
      struct in_addr sin_addr;     //ipv4地址
-     unsigned char __pad[X];
-};
-</code></pre><h3 id="ip地址的格式转换inet_pton和inet_ntop">ip地址的格式转换：inet_pton()和inet_ntop()</h3>
+     unsigned char __pad<span style="color:#f92672">[</span>X<span style="color:#f92672">]</span>;
+<span style="color:#f92672">}</span>;
+</code></pre></div><h3 id="ip地址的格式转换inet_pton和inet_ntop">ip地址的格式转换：inet_pton()和inet_ntop()</h3>
 <h3 id="dns">dns：</h3>
 <ul>
 <li>将主机名组织在一个层级的空间中。</li>
@@ -219,35 +217,35 @@ A：A记录把主机名映射为一个32位的IPV4地址。
 CNAME：为常用的服务（FTP，WWW）指定CNAME记录。
 静态主机文件：/etc/hosts</p>
 <h3 id="getaddrinfo将主机名和服务名转换为ip名和端口号">getaddrinfo()：将主机名和服务名转换为ip名和端口号</h3>
-<pre><code>int getaddrinfo(const char *host, const char *service, const struct addrinfo *hints, struct addrinfo *result);
- - host：主机名
- - service：服务名
- - hints：为如何选择getaddrinfo()返回的socket地址结构指定了更多的标准。
- - return: 0为成功，失败为非零值。
-</code></pre><p>addrinfo细节：</p>
-<pre><code>struct addrinfo {
-     int     ai_flags;
-     int     ai_family;
-     int     ai_protocol;
-     int     ai_socktype;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getaddrinfo</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>host, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>service, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> addrinfo <span style="color:#f92672">*</span>hints, <span style="color:#66d9ef">struct</span> addrinfo <span style="color:#f92672">*</span>result);
+ <span style="color:#f92672">-</span> host<span style="color:#960050;background-color:#1e0010">：主机名</span>
+ <span style="color:#f92672">-</span> service<span style="color:#960050;background-color:#1e0010">：服务名</span>
+ <span style="color:#f92672">-</span> hints<span style="color:#960050;background-color:#1e0010">：为如何选择</span>getaddrinfo()<span style="color:#960050;background-color:#1e0010">返回的</span>socket地址结构指定了更多的标准<span style="color:#960050;background-color:#1e0010">。</span>
+ <span style="color:#f92672">-</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">为成功，失败为非零值。</span>
+</code></pre></div><p>addrinfo细节：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> addrinfo {
+     <span style="color:#66d9ef">int</span>     ai_flags;
+     <span style="color:#66d9ef">int</span>     ai_family;
+     <span style="color:#66d9ef">int</span>     ai_protocol;
+     <span style="color:#66d9ef">int</span>     ai_socktype;
      size_t     ai_addrlen;
-     char     *ai_cannoname;
-     struct sockaddr *ai_addr;
-     struct addrinfo *ai_next;
+     <span style="color:#66d9ef">char</span>     <span style="color:#f92672">*</span>ai_cannoname;
+     <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>ai_addr;
+     <span style="color:#66d9ef">struct</span> addrinfo <span style="color:#f92672">*</span>ai_next;
 }
-</code></pre><p>释放addrinfo列表：freeaddrinfo()</p>
-<pre><code>void freeaddrinfo(struct addrinfo *result);
-</code></pre><h3 id="getnameinfo给定一个socket地址结构返回主机和服务名">getnameinfo()：给定一个socket地址结构，返回主机和服务名。</h3>
-<pre><code>getnameinfo(const struct sockaddr *addr, socklen_t addrlen, char *host, size_t hostlen, char *service, size_t servlen, int flags);
- - addr：socket地址
- - addrlen：地址长度
- - host：主机名
- - hostlen：主机名长度
- - service：服务名
- - servlen：服务名长度
- - flags：其他参数
- - return: 0为成功，失败为非零值。
-</code></pre><p>UNIX DOMAIN SOCKET与INET DOMAIN SOCKET比较：</p>
+</code></pre></div><p>释放addrinfo列表：freeaddrinfo()</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">freeaddrinfo</span>(<span style="color:#66d9ef">struct</span> addrinfo <span style="color:#f92672">*</span>result);
+</code></pre></div><h3 id="getnameinfo给定一个socket地址结构返回主机和服务名">getnameinfo()：给定一个socket地址结构，返回主机和服务名。</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">getnameinfo(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, socklen_t addrlen, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>host, size_t hostlen, <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>service, size_t servlen, <span style="color:#66d9ef">int</span> flags);
+ <span style="color:#f92672">-</span> addr<span style="color:#960050;background-color:#1e0010">：</span>socket地址
+ <span style="color:#f92672">-</span> addrlen<span style="color:#960050;background-color:#1e0010">：地址长度</span>
+ <span style="color:#f92672">-</span> host<span style="color:#960050;background-color:#1e0010">：主机名</span>
+ <span style="color:#f92672">-</span> hostlen<span style="color:#960050;background-color:#1e0010">：主机名长度</span>
+ <span style="color:#f92672">-</span> service<span style="color:#960050;background-color:#1e0010">：服务名</span>
+ <span style="color:#f92672">-</span> servlen<span style="color:#960050;background-color:#1e0010">：服务名长度</span>
+ <span style="color:#f92672">-</span> flags<span style="color:#960050;background-color:#1e0010">：其他参数</span>
+ <span style="color:#f92672">-</span> <span style="color:#66d9ef">return</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">为成功，失败为非零值。</span>
+</code></pre></div><p>UNIX DOMAIN SOCKET与INET DOMAIN SOCKET比较：</p>
 <ul>
 <li>一些实现上，UNIX DOMAIN SOCKET快于INET DOMAIN SOCKET。</li>
 <li>可以使用目录权限来控制UNIX DOMAIN SOCKET的访问。</li>
@@ -261,8 +259,8 @@ CNAME：为常用的服务（FTP，WWW）指定CNAME记录。
 <li>若客户端发出的SYN在中间路由器引发了一个destination unreachableICMP错误，则应把保存的信息作为EHOSTUNREACH或ENETUNREACH错误返回给进程。</li>
 </ul>
 <p><strong>listen</strong></p>
-<pre><code>int listen(int sockfd, int backlog)
-</code></pre><p><strong>内核为任何一个监听套接字维护两个队列</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> listen(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">int</span> backlog)
+</code></pre></div><p><strong>内核为任何一个监听套接字维护两个队列</strong></p>
 <ol>
 <li>未完成连接队列（SYN_RCVD）。</li>
 <li>已完成连接队列（ESTABLISHED）。
@@ -326,27 +324,27 @@ init进程给所有进程发送SIGTERM信号，等待固定时间（5～20秒）
 <h3 id="流式套接字的部分读和部分写">流式套接字的部分读和部分写：</h3>
 <p>readn()和writen()，循环启用系统调用，确保请求的字节数总是能够得到全部的传输。</p>
 <h4 id="shutdown">shutdown</h4>
-<pre><code>int shutdown(int sockfd, int how);
- - sockfd：socket的文件描述符。
- - how：关闭方式
-   SHUT_RD：关闭连接的读端。
-   SHUT_WR：关闭连接的写端。通过文件结尾告诉对端本地写端关闭。
-   SHUT_RDWR：先执行SHUT_RD，后执行SHUT_WR。
-</code></pre><p>与close()区别：有额外文件描述符引用的时候也会真正的关闭套接字。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">shutdown</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">int</span> how);
+ <span style="color:#f92672">-</span> sockfd<span style="color:#960050;background-color:#1e0010">：</span>socket的文件描述符<span style="color:#960050;background-color:#1e0010">。</span>
+ <span style="color:#f92672">-</span> how<span style="color:#960050;background-color:#1e0010">：关闭方式</span>
+   SHUT_RD<span style="color:#960050;background-color:#1e0010">：关闭连接的读端。</span>
+   SHUT_WR<span style="color:#960050;background-color:#1e0010">：关闭连接的写端。通过文件结尾告诉对端本地写端关闭。</span>
+   SHUT_RDWR<span style="color:#960050;background-color:#1e0010">：先执行</span>SHUT_RD<span style="color:#960050;background-color:#1e0010">，后执行</span>SHUT_WR<span style="color:#960050;background-color:#1e0010">。</span>
+</code></pre></div><p>与close()区别：有额外文件描述符引用的时候也会真正的关闭套接字。</p>
 <h3 id="套接字的系统调用recv和send">套接字的系统调用：recv()和send()</h3>
-<pre><code>ssize_t recv(int sockfd, void *buffer, size_t length, int flags);
-ssize_t send(int sockfd, const void *buffer, size_t length, int flags);
-部分flags参数：
- - MSG_DONTWAIT：非阻塞方式运行，如果没有数据可用，立即返回，错误码EAGAIN，通过fcntl()可以把套接字设置为非阻塞模式（O_NONBLOCK）。
- - MSG_WAITALL：阻塞方式运行。
- - MSG_NOSIGNAL：对端连接关闭时，不产生SIGPIPE信号。
-</code></pre><h3 id="sendfile系统调用">sendfile()系统调用</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">ssize_t <span style="color:#a6e22e">recv</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buffer, size_t length, <span style="color:#66d9ef">int</span> flags);
+ssize_t <span style="color:#a6e22e">send</span>(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>buffer, size_t length, <span style="color:#66d9ef">int</span> flags);
+<span style="color:#960050;background-color:#1e0010">部分</span>flags参数<span style="color:#960050;background-color:#1e0010">：</span>
+ <span style="color:#f92672">-</span> MSG_DONTWAIT<span style="color:#960050;background-color:#1e0010">：非阻塞方式运行，如果没有数据可用，立即返回，错误码</span>EAGAIN<span style="color:#960050;background-color:#1e0010">，通过</span>fcntl()<span style="color:#960050;background-color:#1e0010">可以把套接字设置为非阻塞模式（</span>O_NONBLOCK<span style="color:#960050;background-color:#1e0010">）。</span>
+ <span style="color:#f92672">-</span> MSG_WAITALL<span style="color:#960050;background-color:#1e0010">：阻塞方式运行。</span>
+ <span style="color:#f92672">-</span> MSG_NOSIGNAL<span style="color:#960050;background-color:#1e0010">：对端连接关闭时，不产生</span>SIGPIPE信号<span style="color:#960050;background-color:#1e0010">。</span>
+</code></pre></div><h3 id="sendfile系统调用">sendfile()系统调用</h3>
 <p>避免了内核空间的上下文切换，将文件内容直接传送到套接字上。</p>
 <p><img src="https://s1.ax2x.com/2018/04/16/kLcCS.png" alt=""></p>
 <h3 id="获取套接字地址getsockname和getpeername">获取套接字地址getsockname()和getpeername()</h3>
-<pre><code>getsockname(int sockfd, struct sockaddr *addr, socklen_t addrlen)：返回本地socket地址
-getpeername(int sockfd, struct sockaddr *addr, socklen_t addrlen)：返回对端socket地址
-</code></pre><h3 id="tcp状态迁移图">TCP状态迁移图</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">getsockname(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, socklen_t addrlen)<span style="color:#960050;background-color:#1e0010">：返回本地</span>socket地址
+getpeername(<span style="color:#66d9ef">int</span> sockfd, <span style="color:#66d9ef">struct</span> sockaddr <span style="color:#f92672">*</span>addr, socklen_t addrlen)<span style="color:#960050;background-color:#1e0010">：返回对端</span>socket地址
+</code></pre></div><h3 id="tcp状态迁移图">TCP状态迁移图</h3>
 <p><img src="https://s1.ax2x.com/2018/04/16/kLhsQ.png" alt=""></p>
 <h3 id="监视套接字netstat">监视套接字：netstat</h3>
 <h3 id="监视tcp流量tcpdump">监视tcp流量：tcpdump</h3>
@@ -389,11 +387,11 @@ SO_LINGER：close立即返回，但是当发送缓冲区中还有一部分数据
 </ol>
 <p><strong>当某个套接字上发生错误时，它将select标记为可读且可写</strong></p>
 <p>fd_set</p>
-<pre><code>FD_ZERO(&amp;set); /*将set清零使集合中不含任何fd*/
-FD_SET(fd, &amp;set); /*将fd加入set集合*/
-FD_CLR(fd, &amp;set); /*将fd从set集合中清除*/
-FD_ISSET(fd, &amp;set); /*在调用select()函数后，用FD_ISSET来检测fd是否在set集合中，当检测到fd在set中则返回真，否则，返回假（0）*/
-</code></pre><h3 id="io多路复用">IO多路复用</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c">FD_ZERO(<span style="color:#f92672">&amp;</span>set); <span style="color:#75715e">/*将set清零使集合中不含任何fd*/</span>
+FD_SET(fd, <span style="color:#f92672">&amp;</span>set); <span style="color:#75715e">/*将fd加入set集合*/</span>
+FD_CLR(fd, <span style="color:#f92672">&amp;</span>set); <span style="color:#75715e">/*将fd从set集合中清除*/</span>
+FD_ISSET(fd, <span style="color:#f92672">&amp;</span>set); <span style="color:#75715e">/*在调用select()函数后，用FD_ISSET来检测fd是否在set集合中，当检测到fd在set中则返回真，否则，返回假（0）*/</span>
+</code></pre></div><h3 id="io多路复用">IO多路复用</h3>
 <p>运行进程同时检查多个文件描述符以找出它们任意一个是否可以进行io操作，系统调用select()和poll()进行多路复用。</p>
 <h3 id="水平触发和边缘出发">水平触发和边缘出发</h3>
 <p>EPOLLLT——水平触发
@@ -406,31 +404,31 @@ EPOLLET——边缘触发</p>
 <p>原因：文件描述符存在大量输入，一次次读取不完，由于边缘触发只在状态变化时进行通知，因此socket可能发生长时间的等待而导致饥饿。</p>
 <p>解决方案：让应用程序维护一个列表，存放着已被标记为就绪态的文件描述符，通过一个循环的方式不断处理，直至出现EAGAIN或EWOULDBLOCK。</p>
 <h4 id="select">select()</h4>
-<pre><code>int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
- - readfds: 输入就绪的文件描述符集合。
- - writefds: 输出就绪的文件描述符集合。
- - exceptfds: 异常发生的文件描述符集合。
-return: 就绪的文件描述符数量。
-</code></pre><p>timeout参数</p>
-<pre><code>struct timeval {
-    time_t    tv_sec;        //秒
-    suseconds_t tv_usec;    //微秒
-};
-</code></pre><p>timeval参数：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">select</span>(<span style="color:#66d9ef">int</span> nfds, fd_set <span style="color:#f92672">*</span>readfds, fd_set <span style="color:#f92672">*</span>writefds, fd_set <span style="color:#f92672">*</span>exceptfds, <span style="color:#66d9ef">struct</span> timeval <span style="color:#f92672">*</span>timeout);
+ <span style="color:#f92672">-</span> readfds: <span style="color:#960050;background-color:#1e0010">输入就绪的文件描述符集合。</span>
+ <span style="color:#f92672">-</span> writefds: <span style="color:#960050;background-color:#1e0010">输出就绪的文件描述符集合。</span>
+ <span style="color:#f92672">-</span> exceptfds: <span style="color:#960050;background-color:#1e0010">异常发生的文件描述符集合。</span>
+<span style="color:#66d9ef">return</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">就绪的文件描述符数量。</span>
+</code></pre></div><p>timeout参数</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> timeval {
+    time_t    tv_sec;        <span style="color:#75715e">//秒
+</span><span style="color:#75715e"></span>    suseconds_t tv_usec;    <span style="color:#75715e">//微秒
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p>timeval参数：</p>
 <ul>
 <li>0: 非阻塞</li>
 <li>NULL: 阻塞</li>
 </ul>
 <h4 id="poll">poll()</h4>
-<pre><code>int poll(struct pollfd fds[], nfds_t nfds, int timeout);
-return: 就绪的文件描述符数量。
-</code></pre><p><strong>pollfd结构</strong></p>
-<pre><code>struct pollfd {
-    int fd;        //文件描述符
-    short events;    //请求事件
-    short revents;    //返回事件
-};
-</code></pre><p><img src="https://s1.ax2x.com/2018/04/16/kLv12.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">poll</span>(<span style="color:#66d9ef">struct</span> pollfd fds[], nfds_t nfds, <span style="color:#66d9ef">int</span> timeout);
+<span style="color:#66d9ef">return</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">就绪的文件描述符数量。</span>
+</code></pre></div><p><strong>pollfd结构</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> pollfd {
+    <span style="color:#66d9ef">int</span> fd;        <span style="color:#75715e">//文件描述符
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">short</span> events;    <span style="color:#75715e">//请求事件
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">short</span> revents;    <span style="color:#75715e">//返回事件
+</span><span style="color:#75715e"></span>};
+</code></pre></div><p><img src="https://s1.ax2x.com/2018/04/16/kLv12.png" alt=""></p>
 <p>select()和poll()在套接字上通知的事件</p>
 <p><img src="https://s1.ax2x.com/2018/04/16/kLyqa.png" alt=""></p>
 <h4 id="select和poll的比较">select()和poll()的比较</h4>
@@ -446,30 +444,30 @@ return: 就绪的文件描述符数量。
 <h4 id="epoll">epoll()</h4>
 <p>在文件描述符上注册事件函数，由系统监视这些文件描述符，当在文件描述符可就绪时，内核通知应用进程。</p>
 <h5 id="创建epoll实例epoll_create">创建epoll实例epoll_create()</h5>
-<pre><code>int epoll_create(int size);
- - size：制定了我们想要通过epoll检查的文件描述符个数。
-</code></pre><h5 id="修改epoll的兴趣列表-epoll_ctl">修改epoll的兴趣列表 epoll_ctl()</h5>
-<pre><code>int epoll_ctl(int epfd, int op, int fd, struct epoll_event *ev);
- - epfd：要修改的文件描述符
- - op：执行的操作
- - fd：
-     EPOLL_CTR_ADD：把fd添加到epfd的兴趣列表中。
-     EPOLL_CTR_MOD：修改fd上设置的事件。
-     EPOLL_CTR_DEL：将fd从epfd中移除。
- - ev: 指向结构体epoll_event的指针，设置关注事件。
-</code></pre><p>epoll_event定义</p>
-<pre><code>struct epoll_event {
-    uint32_t    events;        //epoll事件
-    epoll_data_t    data;    //用户数据
-};
-</code></pre><h5 id="事件等待epoll_wait">事件等待epoll_wait()</h5>
-<pre><code>int epoll_wait(int epfd, struct epoll_event *evlist, int maxevents, int timeout);
- - epfd：文件描述符。
- - evlist：包含就绪文件描述符信息(epoll_event)的数组。
- - maxevents：最大事件数量。
- - timeout：超时设定，-1阻塞，0非阻塞，&gt;0等待。
-return: 就绪的文件描述符数量。
-</code></pre><p>epoll与信号驱动</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">epoll_create</span>(<span style="color:#66d9ef">int</span> size);
+ <span style="color:#f92672">-</span> size<span style="color:#960050;background-color:#1e0010">：制定了我们想要通过</span>epoll检查的文件描述符个数<span style="color:#960050;background-color:#1e0010">。</span>
+</code></pre></div><h5 id="修改epoll的兴趣列表-epoll_ctl">修改epoll的兴趣列表 epoll_ctl()</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">epoll_ctl</span>(<span style="color:#66d9ef">int</span> epfd, <span style="color:#66d9ef">int</span> op, <span style="color:#66d9ef">int</span> fd, <span style="color:#66d9ef">struct</span> epoll_event <span style="color:#f92672">*</span>ev);
+ <span style="color:#f92672">-</span> epfd<span style="color:#960050;background-color:#1e0010">：要修改的文件描述符</span>
+ <span style="color:#f92672">-</span> op<span style="color:#960050;background-color:#1e0010">：执行的操作</span>
+ <span style="color:#f92672">-</span> fd<span style="color:#960050;background-color:#1e0010">：</span>
+     EPOLL_CTR_ADD<span style="color:#960050;background-color:#1e0010">：把</span>fd添加到epfd的兴趣列表中<span style="color:#960050;background-color:#1e0010">。</span>
+     EPOLL_CTR_MOD<span style="color:#960050;background-color:#1e0010">：修改</span>fd上设置的事件<span style="color:#960050;background-color:#1e0010">。</span>
+     EPOLL_CTR_DEL<span style="color:#960050;background-color:#1e0010">：将</span>fd从epfd中移除<span style="color:#960050;background-color:#1e0010">。</span>
+ <span style="color:#f92672">-</span> ev: <span style="color:#960050;background-color:#1e0010">指向结构体</span>epoll_event的指针<span style="color:#960050;background-color:#1e0010">，设置关注事件。</span>
+</code></pre></div><p>epoll_event定义</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> epoll_event {
+    uint32_t    events;        <span style="color:#75715e">//epoll事件
+</span><span style="color:#75715e"></span>    epoll_data_t    data;    <span style="color:#75715e">//用户数据
+</span><span style="color:#75715e"></span>};
+</code></pre></div><h5 id="事件等待epoll_wait">事件等待epoll_wait()</h5>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">epoll_wait</span>(<span style="color:#66d9ef">int</span> epfd, <span style="color:#66d9ef">struct</span> epoll_event <span style="color:#f92672">*</span>evlist, <span style="color:#66d9ef">int</span> maxevents, <span style="color:#66d9ef">int</span> timeout);
+ <span style="color:#f92672">-</span> epfd<span style="color:#960050;background-color:#1e0010">：文件描述符。</span>
+ <span style="color:#f92672">-</span> evlist<span style="color:#960050;background-color:#1e0010">：包含就绪文件描述符信息</span>(epoll_event)<span style="color:#960050;background-color:#1e0010">的数组。</span>
+ <span style="color:#f92672">-</span> maxevents<span style="color:#960050;background-color:#1e0010">：最大事件数量。</span>
+ <span style="color:#f92672">-</span> timeout<span style="color:#960050;background-color:#1e0010">：超时设定，</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span><span style="color:#960050;background-color:#1e0010">阻塞，</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">非阻塞，</span><span style="color:#f92672">&gt;</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">等待。</span>
+<span style="color:#66d9ef">return</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">就绪的文件描述符数量。</span>
+</code></pre></div><p>epoll与信号驱动</p>
 <ul>
 <li>避免了信号处理的繁琐。</li>
 <li>可以检查指定的事件类型（读就绪和写就绪）。</li>

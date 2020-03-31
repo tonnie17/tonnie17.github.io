@@ -72,30 +72,30 @@
 <p>如果领域逻辑非常简单并且类和表十分一致，使用简单的Active Record就足够了。如果领域逻辑比较复杂，Data Mapper则可能是需要的。</p>
 <h1 id="orm中的active-record和data-mapper">ORM中的Active Record和Data Mapper</h1>
 <p>Ruby和Laravel的ORM都采取了Active Record的模式，因此它们ORM可能像下面这样：</p>
-<pre><code> $user = new User;
-$user-&gt;username = 'philipbrown';
-$user-&gt;save();
-</code></pre><p>领域对象直接对应着数据库中的一个表：</p>
-<pre><code>+----+-------------+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"> $user <span style="color:#f92672">=</span> new User;
+$user-&gt;username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;philipbrown&#39;</span>;
+$user-&gt;save<span style="color:#f92672">()</span>;
+</code></pre></div><p>领域对象直接对应着数据库中的一个表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">+----+-------------+
 | id | username    |
 +----+-------------+
-| 1  | philipbrown |
+| <span style="color:#ae81ff">1</span>  | philipbrown |
 +----+-------------+
-</code></pre><p>我们再来看使用Data Mapper的ORM是怎样的：</p>
-<pre><code>$user = new User;
-$user-&gt;username = 'philipbrown';
-EntityManager::persist($user);
-</code></pre><p>现在我们察看到了它们最基本的区别：在Active Record中，领域对象有一个save()方法，领域对象通常会继承一个ActiveRecord的基类来实现。而在Data Mapper模式中，领域对象<strong>不存在</strong>save()方法，持久化操作由一个中间类来实现。</p>
+</code></pre></div><p>我们再来看使用Data Mapper的ORM是怎样的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$user <span style="color:#f92672">=</span> new User;
+$user-&gt;username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;philipbrown&#39;</span>;
+EntityManager::persist<span style="color:#f92672">(</span>$user<span style="color:#f92672">)</span>;
+</code></pre></div><p>现在我们察看到了它们最基本的区别：在Active Record中，领域对象有一个save()方法，领域对象通常会继承一个ActiveRecord的基类来实现。而在Data Mapper模式中，领域对象<strong>不存在</strong>save()方法，持久化操作由一个中间类来实现。</p>
 <h1 id="结构映射">结构映射</h1>
 <h2 id="关系映射">关系映射</h2>
 <p>在ORM中，通常还要关注关系映射的问题，譬如回到上面的例子，一个User可能有一些Post，而且它们往往在其他的表中，这就需要处理跨表的映射关系。</p>
-<pre><code>$posts = $user-&gt;posts;
-</code></pre><pre><code>+----+---------+-------+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$posts <span style="color:#f92672">=</span> $user-&gt;posts;
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">+----+---------+-------+
 | id | user_id | title |
 +----+---------+-------+
-| 1  | 2       | &quot;...&quot; |
+| <span style="color:#ae81ff">1</span>  | <span style="color:#ae81ff">2</span>       | <span style="color:#e6db74">&#34;...&#34;</span> |
 +----+---------+-------+
-</code></pre><p>就上面这种一对多的关系来说，我们可以通过对象中的一个标识域来保持对象之间的关系特性，这种标识域在数据表中直接的体现就是外键，通过外键来得到对象间的引用。</p>
+</code></pre></div><p>就上面这种一对多的关系来说，我们可以通过对象中的一个标识域来保持对象之间的关系特性，这种标识域在数据表中直接的体现就是外键，通过外键来得到对象间的引用。</p>
 <p>而在多对多的关系中，因为两边都存在着集合，就用学生－课程来说，一个学生可能有多门课程，而一个课程可能被多个学生选择，这个时候，用一个关联对象抽取出原来的外键则是更好的选择，这种关联对象在数据库中扮演着一个<strong>关联表</strong>。</p>
 <h2 id="继承">继承</h2>
 <p>在SQL里没有用于继承的标准方法，所以处理领域对象的继承时要十分留意，对于任何继承结构一般有三种选择：<strong>单表继承</strong>：为一个层次所有的类建立一个表，<strong>具体表继承</strong>：为每个具体类建立一个表，<strong>类表继承</strong>：为这个层次的每一个类建立一个表。</p>

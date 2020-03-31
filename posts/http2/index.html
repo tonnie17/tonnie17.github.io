@@ -75,107 +75,107 @@
 <h2 id="安装nginx">安装nginx</h2>
 <p><a href="http://nginx.org/en/docs/install.html">Installing nginx</a></p>
 <p>为了支持http2，nginx需要安装http_v2_module这个扩展，执行nginx -V来检查你的nginx是否已经安装了这个扩展：</p>
-<pre><code>nginx version: nginx/1.10.3
-built by gcc 5.3.0 (Alpine 5.3.0)
-built with OpenSSL 1.0.2k  26 Jan 2017
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">nginx version: nginx/1.10.3
+built by gcc 5.3.0 <span style="color:#f92672">(</span>Alpine 5.3.0<span style="color:#f92672">)</span>
+built with OpenSSL 1.0.2k  <span style="color:#ae81ff">26</span> Jan <span style="color:#ae81ff">2017</span>
 TLS SNI support enabled
-configure arguments: --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --modules-path=/usr/lib/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-http_ssl_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_random_index_module --with-http_secure_link_module --with-http_stub_status_module --with-http_auth_request_module --with-http_xslt_module=dynamic --with-http_image_filter_module=dynamic --with-http_geoip_module=dynamic --with-http_perl_module=dynamic --with-threads --with-stream --with-stream_ssl_module --with-http_slice_module --with-mail --with-mail_ssl_module --with-file-aio --with-http_v2_module --with-ipv6
-</code></pre><p>可以看到最后一行显示nginx已经安装了http2的扩展，nginx从1.9.5版本后就开始支持http_v2module这个扩展*，*如果你没有这个扩展，可以下载新的nginx源码包，编译时加入&ndash;with-http_v2_module这个参数：</p>
-<pre><code>./configure --prefix=/etc/nginx \
---sbin-path=/usr/sbin/nginx \
---modules-path=/usr/lib/nginx/modules \
---conf-path=/etc/nginx/nginx.conf \
---error-log-path=/var/log/nginx/error.log \
---http-log-path=/var/log/nginx/access.log \
---pid-path=/var/run/nginx.pid \
---lock-path=/var/run/nginx.lock \
---http-client-body-temp-path=/var/cache/nginx/client_temp \
---http-proxy-temp-path=/var/cache/nginx/proxy_temp \
---http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
---http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
---http-scgi-temp-path=/var/cache/nginx/scgi_temp \
---user=nginx \
---group=nginx \
---with-http_ssl_module \
---with-http_realip_module \
---with-http_addition_module \
---with-http_sub_module \
---with-http_dav_module \
---with-http_flv_module \
---with-http_mp4_module \
---with-http_gunzip_module \
---with-http_gzip_static_module \
---with-http_random_index_module \
---with-http_secure_link_module \
---with-http_stub_status_module \
---with-http_auth_request_module \
---with-http_xslt_module=dynamic \
---with-http_image_filter_module=dynamic \
---with-http_geoip_module=dynamic \
---with-http_perl_module=dynamic \
---with-threads \
---with-stream \
---with-stream_ssl_module \
---with-http_slice_module \
---with-mail \
---with-mail_ssl_module \
---with-file-aio \
---with-ipv6 \
---with-http_v2_module \
-</code></pre><p>除此以外，由于ALPN逐渐取代NPN成为当前主流的http2协商协议，而OpenSSL 1.0.2 才开始支持 ALPN，要支持http2，你还需要把openssl的版本升级到1.0.2之上。</p>
+configure arguments: --prefix<span style="color:#f92672">=</span>/etc/nginx --sbin-path<span style="color:#f92672">=</span>/usr/sbin/nginx --modules-path<span style="color:#f92672">=</span>/usr/lib/nginx/modules --conf-path<span style="color:#f92672">=</span>/etc/nginx/nginx.conf --error-log-path<span style="color:#f92672">=</span>/var/log/nginx/error.log --http-log-path<span style="color:#f92672">=</span>/var/log/nginx/access.log --pid-path<span style="color:#f92672">=</span>/var/run/nginx.pid --lock-path<span style="color:#f92672">=</span>/var/run/nginx.lock --http-client-body-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/client_temp --http-proxy-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/proxy_temp --http-fastcgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/uwsgi_temp --http-scgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/scgi_temp --user<span style="color:#f92672">=</span>nginx --group<span style="color:#f92672">=</span>nginx --with-http_ssl_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_random_index_module --with-http_secure_link_module --with-http_stub_status_module --with-http_auth_request_module --with-http_xslt_module<span style="color:#f92672">=</span>dynamic --with-http_image_filter_module<span style="color:#f92672">=</span>dynamic --with-http_geoip_module<span style="color:#f92672">=</span>dynamic --with-http_perl_module<span style="color:#f92672">=</span>dynamic --with-threads --with-stream --with-stream_ssl_module --with-http_slice_module --with-mail --with-mail_ssl_module --with-file-aio --with-http_v2_module --with-ipv6
+</code></pre></div><p>可以看到最后一行显示nginx已经安装了http2的扩展，nginx从1.9.5版本后就开始支持http_v2module这个扩展*，*如果你没有这个扩展，可以下载新的nginx源码包，编译时加入&ndash;with-http_v2_module这个参数：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">./configure --prefix<span style="color:#f92672">=</span>/etc/nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--sbin-path<span style="color:#f92672">=</span>/usr/sbin/nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--modules-path<span style="color:#f92672">=</span>/usr/lib/nginx/modules <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--conf-path<span style="color:#f92672">=</span>/etc/nginx/nginx.conf <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--error-log-path<span style="color:#f92672">=</span>/var/log/nginx/error.log <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-log-path<span style="color:#f92672">=</span>/var/log/nginx/access.log <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--pid-path<span style="color:#f92672">=</span>/var/run/nginx.pid <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--lock-path<span style="color:#f92672">=</span>/var/run/nginx.lock <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-client-body-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/client_temp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-proxy-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/proxy_temp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-fastcgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/fastcgi_temp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-uwsgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/uwsgi_temp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--http-scgi-temp-path<span style="color:#f92672">=</span>/var/cache/nginx/scgi_temp <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--user<span style="color:#f92672">=</span>nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--group<span style="color:#f92672">=</span>nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_ssl_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_realip_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_addition_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_sub_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_dav_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_flv_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_mp4_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_gunzip_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_gzip_static_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_random_index_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_secure_link_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_stub_status_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_auth_request_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_xslt_module<span style="color:#f92672">=</span>dynamic <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_image_filter_module<span style="color:#f92672">=</span>dynamic <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_geoip_module<span style="color:#f92672">=</span>dynamic <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_perl_module<span style="color:#f92672">=</span>dynamic <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-threads <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-stream <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-stream_ssl_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_slice_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-mail <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-mail_ssl_module <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-file-aio <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-ipv6 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--with-http_v2_module <span style="color:#ae81ff">\
+</span></code></pre></div><p>除此以外，由于ALPN逐渐取代NPN成为当前主流的http2协商协议，而OpenSSL 1.0.2 才开始支持 ALPN，要支持http2，你还需要把openssl的版本升级到1.0.2之上。</p>
 <p>要升级openssl，你需要把openssl 1.0.2的源码包下载下来重新编译：</p>
-<pre><code>wget https://www.openssl.org/source/openssl-1.0.2-latest.tar.gz
-</code></pre><p>执行openssl version查看openssl当前版本，已经为1.0.2了：</p>
-<pre><code>openssl version
-OpenSSL 1.0.2k  26 Jan 2017
-</code></pre><p>如果你对以上安装nginx和升级openssl的步骤感到麻烦，你也可以通过docker下载nginx alpine版本的镜像，里面已经内置了openssl的最新版本以及支持httpv2的nginx，只需要把证书和网站目录映射到nginx容器内部，运行docker容器：</p>
-<pre><code>docker run -d \
---name=nginx \
---net=host \
---privileged=true \
--v /etc/nginx:/etc/nginx \
--v /var/www:/var/www \
--v /etc/letsencrypt:/etc/letsencrypt \
-nginx:stable-alpine
-</code></pre><h2 id="配置https">配置HTTPS</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">wget https://www.openssl.org/source/openssl-1.0.2-latest.tar.gz
+</code></pre></div><p>执行openssl version查看openssl当前版本，已经为1.0.2了：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">openssl version
+OpenSSL 1.0.2k  <span style="color:#ae81ff">26</span> Jan <span style="color:#ae81ff">2017</span>
+</code></pre></div><p>如果你对以上安装nginx和升级openssl的步骤感到麻烦，你也可以通过docker下载nginx alpine版本的镜像，里面已经内置了openssl的最新版本以及支持httpv2的nginx，只需要把证书和网站目录映射到nginx容器内部，运行docker容器：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">docker run -d <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--name<span style="color:#f92672">=</span>nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--net<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>--privileged<span style="color:#f92672">=</span>true <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>-v /etc/nginx:/etc/nginx <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>-v /var/www:/var/www <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>-v /etc/letsencrypt:/etc/letsencrypt <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>nginx:stable-alpine
+</code></pre></div><h2 id="配置https">配置HTTPS</h2>
 <p><strong>Let&rsquo;s Encrypt</strong>是一个提供免费SSL/TLS证书的数字证书认证机构，下面使用Let&rsquo;s Encrypt来为网站建立数字证书。</p>
 <p><strong>certbot</strong>是一个部署Let&rsquo;s Encrypt项目的自动化工具，打开<a href="https://certbot.eff.org/">certbot</a>的官方页面，看到如下图的选择框：</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-d085c5d17e66127ef1bbebef7e57fc03_1440w.png" alt="img"></p>
 <p>选择自己机器上使用的服务器（如Nginx，Apache&hellip;）以及操作系统，即可得到对应的操作步骤，例如我的是nginx+debian，官方给出了下面的安装和使用命令：</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-e577b4e75f082472a6a056316eaa7098_1440w.png" alt="img"></p>
 <p>安装certbot：</p>
-<pre><code>sudo apt-get install certbot
-</code></pre><p>接着使用certbot来部署证书，输入certbot certonly进入命令行的向导：</p>
-<pre><code>$ certbot certonly
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">sudo apt-get install certbot
+</code></pre></div><p>接着使用certbot来部署证书，输入certbot certonly进入命令行的向导：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ certbot certonly
 
 How would you like to authenticate with the ACME CA?
 -------------------------------------------------------------------------------
-1: Spin up a temporary webserver (standalone)
-2: Place files in webroot directory (webroot)
-</code></pre><p>certbot提供了两种验证方式：</p>
+1: Spin up a temporary webserver <span style="color:#f92672">(</span>standalone<span style="color:#f92672">)</span>
+2: Place files in webroot directory <span style="color:#f92672">(</span>webroot<span style="color:#f92672">)</span>
+</code></pre></div><p>certbot提供了两种验证方式：</p>
 <ul>
 <li><strong>standalone</strong>模式，certbot会在机器上建立一个临时的服务器来进行验证。</li>
 <li><strong>webroot</strong>模式，这个模式需要你有一个运行的服务器，certbot会在服务器的隐藏路径创建一个文件来让Let&rsquo;s Encrypt服务端进行验证，以确定你对网站的拥有权。</li>
 </ul>
 <p>官方推荐的是webroot模式，于是选择webroot模式。</p>
 <p>在webroot模式下我们需要在web server配置一个路径以供Let&rsquo;s Encrypt进行验证，下面修改nginx的配置，目录/var/www/le即为Let&rsquo;s Encrypt进行验证的目录：</p>
-<pre><code>location ^~ /.well-known/acme-challenge/ {
-  default_type &quot;text/plain&quot;;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">location ^~ /.well-known/acme-challenge/ <span style="color:#f92672">{</span>
+  default_type <span style="color:#e6db74">&#34;text/plain&#34;</span>;
   root /var/www/le;
-}
+<span style="color:#f92672">}</span>
 
-location = /.well-known/acme-challenge/ {
-  return 404;
-}
-</code></pre><p>下一步输入你网站的域名：</p>
-<pre><code>Please enter in your domain name(s) (comma and/or space separated)  (Enter 'c'
-to cancel):liangwentao.cc
-</code></pre><p>然后下一步输入webroot的路径，就是之前nginx中root指令指向的目录：</p>
-<pre><code>Input the webroot for test.testnode.com: (Enter 'c' to cancel):/var/www/le
-</code></pre><p>最后certbot验证成功，生成证书：</p>
-<pre><code>Waiting for verification...
+location <span style="color:#f92672">=</span> /.well-known/acme-challenge/ <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">return</span> 404;
+<span style="color:#f92672">}</span>
+</code></pre></div><p>下一步输入你网站的域名：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Please enter in your domain name<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>comma and/or space separated<span style="color:#f92672">)</span>  <span style="color:#f92672">(</span>Enter <span style="color:#e6db74">&#39;c&#39;</span>
+to cancel<span style="color:#f92672">)</span>:liangwentao.cc
+</code></pre></div><p>然后下一步输入webroot的路径，就是之前nginx中root指令指向的目录：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Input the webroot <span style="color:#66d9ef">for</span> test.testnode.com: <span style="color:#f92672">(</span>Enter <span style="color:#e6db74">&#39;c&#39;</span> to cancel<span style="color:#f92672">)</span>:/var/www/le
+</code></pre></div><p>最后certbot验证成功，生成证书：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Waiting <span style="color:#66d9ef">for</span> verification...
 Cleaning up challenges
-Generating key (2048 bits): /etc/letsencrypt/keys/0000_key-certbot.pem
+Generating key <span style="color:#f92672">(</span><span style="color:#ae81ff">2048</span> bits<span style="color:#f92672">)</span>: /etc/letsencrypt/keys/0000_key-certbot.pem
 Creating CSR: /etc/letsencrypt/csr/0000_csr-certbot.pem
  
 IMPORTANT NOTES:
@@ -183,33 +183,33 @@ IMPORTANT NOTES:
    /etc/letsencrypt/live/liangwentao.cc/fullchain.pem. Your cert
    will expire on 2017-06-18. To obtain a new or tweaked version of
    this certificate in the future, simply run certbot again. To
-   non-interactively renew *all* of your certificates, run &quot;certbot
-   renew&quot;
+   non-interactively renew *all* of your certificates, run <span style="color:#e6db74">&#34;certbot
+</span><span style="color:#e6db74">   renew&#34;</span>
  - If you like Certbot, please consider supporting our work by:
  
-   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
-</code></pre><p>执行certbot certificates可以发现证书和私钥都已经在/etc/letsencrypt/live这个目录下了。</p>
-<pre><code>$ certbot certificates
+   Donating to ISRG / Let<span style="color:#960050;background-color:#1e0010">&#39;</span>s Encrypt:   https://letsencrypt.org/donate
+</code></pre></div><p>执行certbot certificates可以发现证书和私钥都已经在/etc/letsencrypt/live这个目录下了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ certbot certificates
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 
 -------------------------------------------------------------------------------
 Found the following certs:
   Certificate Name: liangwentao.cc
     Domains: liangwentao.cc
-    Expiry Date: 2017-06-18 04:09:00+00:00 (VALID: 87 days)
+    Expiry Date: 2017-06-18 04:09:00+00:00 <span style="color:#f92672">(</span>VALID: <span style="color:#ae81ff">87</span> days<span style="color:#f92672">)</span>
     Certificate Path: /etc/letsencrypt/live/liangwentao.cc/fullchain.pem
     Private Key Path: /etc/letsencrypt/live/liangwentao.cc/privkey.pem
 -------------------------------------------------------------------------------
-</code></pre><p>最后还要在nginx上添加配置，使用刚才生成的证书：</p>
-<pre><code>server {
-  listen 443 ssl;
-  listen [::]:443 ssl ipv6only=on;
+</code></pre></div><p>最后还要在nginx上添加配置，使用刚才生成的证书：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">server <span style="color:#f92672">{</span>
+  listen <span style="color:#ae81ff">443</span> ssl;
+  listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:443 ssl ipv6only<span style="color:#f92672">=</span>on;
   server_name liangwentao.cc;
   ssl_certificate /etc/letsencrypt/live/liangwentao.cc/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/liangwentao.cc/privkey.pem;
   ssl_trusted_certificate /etc/letsencrypt/live/liangwentao.cc/chain.pem;
-}
-</code></pre><p>打开网页，发现左边有了把绿色的小锁了，说明https证书已经被正确安装了：</p>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>打开网页，发现左边有了把绿色的小锁了，说明https证书已经被正确安装了：</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-fede2a570c2416e0119b4070213fca09_1440w.png" alt="img"></p>
 <p>对一个https网站进行抓包可以看到tls的通信过程：</p>
 <ol>
@@ -240,15 +240,15 @@ Found the following certs:
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-5494cfdf7447b12f70a98f0a0cfea938_1440w.png" alt="img"></p>
 <h2 id="启用http2">启用http2</h2>
 <p>要启用http2，我们修改刚才nginx的配置，在监听的端口后面加上http2参数：</p>
-<pre><code>server {
-  listen 443 http2 ssl;
-  listen [::]:443 http2 ssl ipv6only=on;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">server <span style="color:#f92672">{</span>
+  listen <span style="color:#ae81ff">443</span> http2 ssl;
+  listen <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:443 http2 ssl ipv6only<span style="color:#f92672">=</span>on;
   server_name liangwentao.cc;
   ssl_certificate /etc/letsencrypt/live/liangwentao.cc/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/liangwentao.cc/privkey.pem;
   ssl_trusted_certificate /etc/letsencrypt/live/liangwentao.cc/chain.pem;
-}
-</code></pre><p>重启nginx服务，打开网页，此时通过chrome的控制台可以看到协议一列的值为h2，说明网站使用http2协议进行通信：</p>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>重启nginx服务，打开网页，此时通过chrome的控制台可以看到协议一列的值为h2，说明网站使用http2协议进行通信：</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-0ecf1d166a77f4967865d5b36fd2721d_1440w.png" alt="img"></p>
 <p>在chrome地址栏输入chrome://net-internals/#http2，可以看到当前http2的会话信息，点击session id，我们可以观察到这个会话的传输信息：</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-a3e362ad9b7ee7875f61070e581321c6_1440w.png" alt="img"></p>

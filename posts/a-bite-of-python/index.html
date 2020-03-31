@@ -478,7 +478,7 @@ sys<span style="color:#f92672">.</span>version_info
 version_info
 <span style="color:#75715e"># sys.version_info(major=3, minor=6, micro=1, releaselevel=&#39;final&#39;, serial=0)</span>
 </code></pre></div><p>相对导入一般可以用<code>from &lt;&gt; import</code>的语法来完成，在PEP 328中有一个例子，假设当前的目录结构如下：</p>
-<pre><code>package/
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">package/
     __init__.py
     subpackage1/
         __init__.py
@@ -488,7 +488,7 @@ version_info
         __init__.py
         moduleZ.py
     moduleA.py
-</code></pre><p>而当前文件是<code>moduleX.py</code>或者<code>subpackage1/__init__.py</code>，以下的相对导入的语法都是合法的：</p>
+</code></pre></div><p>而当前文件是<code>moduleX.py</code>或者<code>subpackage1/__init__.py</code>，以下的相对导入的语法都是合法的：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> .moduleY <span style="color:#f92672">import</span> spam
 <span style="color:#f92672">from</span> .moduleY <span style="color:#f92672">import</span> spam <span style="color:#66d9ef">as</span> ham
 <span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> moduleY
@@ -851,41 +851,41 @@ code_str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;d
 res <span style="color:#f92672">=</span> parser<span style="color:#f92672">.</span>suite(code_str)
 pprint(res<span style="color:#f92672">.</span>tolist())
 </code></pre></div><p>不难看出，这个结果列表是一个树状结构：</p>
-<pre><code>[257,
- [269,
-  [295,
-   [263,
-    [1, 'def'],
-    [1, 'add'],
-    [264,
-     [7, '('],
-     [265, [266, [1, 'a']], [12, ','], [266, [1, 'b']]],
-     [8, ')']],
-    [11, ':'],
-    [304,
-     [270,
-      [271,
-       [278,
-        [281,
-         [1, 'return'],
-         [331,
-          [305,
-           [309,
-            [310,
-             [311,
-              [312,
-               [315,
-                [316,
-                 [317,
-                  [318,
-                   [319,
-                    [320, [321, [322, [323, [324, [1, 'a']]]]]],
-                    [14, '+'],
-                    [320, [321, [322, [323, [324, [1, 'b']]]]]]]]]]]]]]]]]]]],
-      [4, '']]]]]],
- [4, ''],
- [0, '']]
-</code></pre><p>但列表里面大部分都是让人看不懂的数字，其实每个数字都代表了一个符号或者令牌，分别象征着不同的含义，它们对应的含义可以在CPython源码的<code>Include/graminit.h</code>和<code>Include/token.h</code>文件中找到。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#f92672">[</span>257,
+ <span style="color:#f92672">[</span>269,
+  <span style="color:#f92672">[</span>295,
+   <span style="color:#f92672">[</span>263,
+    <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;def&#39;</span><span style="color:#f92672">]</span>,
+    <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;add&#39;</span><span style="color:#f92672">]</span>,
+    <span style="color:#f92672">[</span>264,
+     <span style="color:#f92672">[</span>7, <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">]</span>,
+     <span style="color:#f92672">[</span>265, <span style="color:#f92672">[</span>266, <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]]</span>, <span style="color:#f92672">[</span>12, <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">]</span>, <span style="color:#f92672">[</span>266, <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;b&#39;</span><span style="color:#f92672">]]]</span>,
+     <span style="color:#f92672">[</span>8, <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">]]</span>,
+    <span style="color:#f92672">[</span>11, <span style="color:#e6db74">&#39;:&#39;</span><span style="color:#f92672">]</span>,
+    <span style="color:#f92672">[</span>304,
+     <span style="color:#f92672">[</span>270,
+      <span style="color:#f92672">[</span>271,
+       <span style="color:#f92672">[</span>278,
+        <span style="color:#f92672">[</span>281,
+         <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;return&#39;</span><span style="color:#f92672">]</span>,
+         <span style="color:#f92672">[</span>331,
+          <span style="color:#f92672">[</span>305,
+           <span style="color:#f92672">[</span>309,
+            <span style="color:#f92672">[</span>310,
+             <span style="color:#f92672">[</span>311,
+              <span style="color:#f92672">[</span>312,
+               <span style="color:#f92672">[</span>315,
+                <span style="color:#f92672">[</span>316,
+                 <span style="color:#f92672">[</span>317,
+                  <span style="color:#f92672">[</span>318,
+                   <span style="color:#f92672">[</span>319,
+                    <span style="color:#f92672">[</span>320, <span style="color:#f92672">[</span>321, <span style="color:#f92672">[</span>322, <span style="color:#f92672">[</span>323, <span style="color:#f92672">[</span>324, <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]]]]]]</span>,
+                    <span style="color:#f92672">[</span>14, <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">]</span>,
+                    <span style="color:#f92672">[</span>320, <span style="color:#f92672">[</span>321, <span style="color:#f92672">[</span>322, <span style="color:#f92672">[</span>323, <span style="color:#f92672">[</span>324, <span style="color:#f92672">[</span>1, <span style="color:#e6db74">&#39;b&#39;</span><span style="color:#f92672">]]]]]]]]]]]]]]]]]]]]</span>,
+      <span style="color:#f92672">[</span>4, <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">]]]]]]</span>,
+ <span style="color:#f92672">[</span>4, <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">]</span>,
+ <span style="color:#f92672">[</span>0, <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">]]</span>
+</code></pre></div><p>但列表里面大部分都是让人看不懂的数字，其实每个数字都代表了一个符号或者令牌，分别象征着不同的含义，它们对应的含义可以在CPython源码的<code>Include/graminit.h</code>和<code>Include/token.h</code>文件中找到。</p>
 <p>下面是对上面列表翻译后的一个树状结构，可以看到原来的代码都被翻译成一颗工整的语法树结构了。</p>
 <p><img src="https://github.com/tonnie17/a_bite_of_python/raw/master/img/1.5.1.png" alt=""></p>
 <h3 id="162-指令栈">1.6.2 指令栈</h3>
@@ -900,29 +900,29 @@ pprint(res<span style="color:#f92672">.</span>tolist())
 <span style="color:#f92672">import</span> dis
 dis<span style="color:#f92672">.</span>dis(loop)
 </code></pre></div><p>下面输出的字节码的指令含义都可以在<a href="https://docs.python.org/3/library/dis.html">library/dis</a>中找到。</p>
-<pre><code>  2           0 LOAD_CONST               1 (1)
-              2 STORE_FAST               0 (x)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">  <span style="color:#ae81ff">2</span>           <span style="color:#ae81ff">0</span> LOAD_CONST               <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
+              <span style="color:#ae81ff">2</span> STORE_FAST               <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">)</span>
 
-  3           4 SETUP_LOOP              28 (to 34)
-        &gt;&gt;    6 LOAD_FAST                0 (x)
-              8 LOAD_CONST               2 (5)
-             10 COMPARE_OP               0 (&lt;)
-             12 POP_JUMP_IF_FALSE       32
+  <span style="color:#ae81ff">3</span>           <span style="color:#ae81ff">4</span> SETUP_LOOP              <span style="color:#ae81ff">28</span> <span style="color:#f92672">(</span>to 34<span style="color:#f92672">)</span>
+        &gt;&gt;    <span style="color:#ae81ff">6</span> LOAD_FAST                <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">)</span>
+              <span style="color:#ae81ff">8</span> LOAD_CONST               <span style="color:#ae81ff">2</span> <span style="color:#f92672">(</span>5<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">10</span> COMPARE_OP               <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>&lt;<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">12</span> POP_JUMP_IF_FALSE       <span style="color:#ae81ff">32</span>
 
-  4          14 LOAD_FAST                0 (x)
-             16 LOAD_CONST               1 (1)
-             18 INPLACE_ADD
-             20 STORE_FAST               0 (x)
+  <span style="color:#ae81ff">4</span>          <span style="color:#ae81ff">14</span> LOAD_FAST                <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">16</span> LOAD_CONST               <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">18</span> INPLACE_ADD
+             <span style="color:#ae81ff">20</span> STORE_FAST               <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">)</span>
 
-  5          22 LOAD_GLOBAL              0 (print)
-             24 LOAD_FAST                0 (x)
-             26 CALL_FUNCTION            1
-             28 POP_TOP
-             30 JUMP_ABSOLUTE            6
-        &gt;&gt;   32 POP_BLOCK
-        &gt;&gt;   34 LOAD_CONST               0 (None)
-             36 RETURN_VALUE
-</code></pre><p>有了上面的基础，再来看下面这个例子：</p>
+  <span style="color:#ae81ff">5</span>          <span style="color:#ae81ff">22</span> LOAD_GLOBAL              <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>print<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">24</span> LOAD_FAST                <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>x<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">26</span> CALL_FUNCTION            <span style="color:#ae81ff">1</span>
+             <span style="color:#ae81ff">28</span> POP_TOP
+             <span style="color:#ae81ff">30</span> JUMP_ABSOLUTE            <span style="color:#ae81ff">6</span>
+        &gt;&gt;   <span style="color:#ae81ff">32</span> POP_BLOCK
+        &gt;&gt;   <span style="color:#ae81ff">34</span> LOAD_CONST               <span style="color:#ae81ff">0</span> <span style="color:#f92672">(</span>None<span style="color:#f92672">)</span>
+             <span style="color:#ae81ff">36</span> RETURN_VALUE
+</code></pre></div><p>有了上面的基础，再来看下面这个例子：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> timeit <span style="color:#f92672">import</span> timeit
 timeit(<span style="color:#e6db74">&#39;[]&#39;</span>)
 <span style="color:#75715e"># 0.027015632018446922</span>
@@ -1001,10 +1001,10 @@ outside() <span style="color:#75715e"># G</span>
 D()<span style="color:#f92672">.</span>f()
 </code></pre></div><p>以上的输出在Python 2.7和3.6会有不同的输出，</p>
 <p>其中2.7输出的是：</p>
-<pre><code>A
-</code></pre><p>而3.6输出的是：</p>
-<pre><code>C
-</code></pre><p>导致结果的差异是因为在旧式类（old-style class）和新式类（new-style class）中，MRO的规则有所不同。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">A
+</code></pre></div><p>而3.6输出的是：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">C
+</code></pre></div><p>导致结果的差异是因为在旧式类（old-style class）和新式类（new-style class）中，MRO的规则有所不同。</p>
 <p>执行以下语句：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">D<span style="color:#f92672">.</span>__mro__
 </code></pre></div><p>可以看到在旧式类中，方法的查找顺序为D-&gt;B-&gt;A-&gt;C：</p>
@@ -1125,12 +1125,12 @@ cat test.json | python3 -m json.tool
 </code></pre></div><p><code>__init__.py</code>和<code>__all__</code></p>
 <p>在文件夹中定义一个名为<code>__init__.py</code>的文件意思是告诉解释器把目录当成一个Python模块。</p>
 <p>例如现在定义了下面的一个目录：</p>
-<pre><code>├── __init__.py
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">├── __init__.py
 ├── l1.py
 └── sub_package
     ├── __init__.py
     └── l2.py
-</code></pre><p>l1.py</p>
+</code></pre></div><p>l1.py</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> sub_package.l2 <span style="color:#f92672">import</span> l2_f
 
 l2_f()
@@ -2277,9 +2277,9 @@ In [<span style="color:#ae81ff">3</span>]: <span style="color:#ae81ff">1</span> 
 In [<span style="color:#ae81ff">4</span>]: <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&gt;</span> <span style="color:#ae81ff">1</span>
 Out[<span style="color:#ae81ff">4</span>]: False
 </code></pre></div><p>格式化一个json文件</p>
-<pre><code>python -m json.tool test.json
-echo '{&quot;json&quot;:&quot;obj&quot;}' | python -m json.tool # 管道
-</code></pre><p>开启本地目录的HTTP服务器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">python -m json.tool test.json
+echo <span style="color:#e6db74">&#39;{&#34;json&#34;:&#34;obj&#34;}&#39;</span> | python -m json.tool <span style="color:#75715e"># 管道</span>
+</code></pre></div><p>开启本地目录的HTTP服务器</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">python3 <span style="color:#f92672">-</span>m http<span style="color:#f92672">.</span>server <span style="color:#ae81ff">8080</span>
 </code></pre></div><h2 id="43-陷阱">4.3 陷阱</h2>
 <h3 id="431-可变的默认参数">4.3.1 可变的默认参数</h3>
@@ -2309,14 +2309,14 @@ my_other_list <span style="color:#f92672">=</span> append_to(<span style="color:
 <span style="color:#75715e"># 8</span>
 </code></pre></div><h2 id="44-小整数缓存">4.4 小整数缓存</h2>
 <p>在下面这个例子中， 两个值相等的整形变量在两次比较地址时出现了不一样的情况，原因时因为Python会把频繁使用的小整数放在内存池中，因此在Python中使用范围在[-5,256]的数字时都会得到相同的内存地址。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">a <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>
-b <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>
-id(a) <span style="color:#f92672">==</span> id(b)
-<span style="color:#75715e"># True</span>
-a <span style="color:#f92672">=</span> <span style="color:#ae81ff">257</span>
-b <span style="color:#f92672">=</span> <span style="color:#ae81ff">257</span>
-id(a) <span style="color:#f92672">==</span> id(b)
-<span style="color:#75715e"># False</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"> a <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>
+ b <span style="color:#f92672">=</span> <span style="color:#ae81ff">256</span>
+ id(a) <span style="color:#f92672">==</span> id(b)
+ <span style="color:#75715e"># True</span>
+ a <span style="color:#f92672">=</span> <span style="color:#ae81ff">257</span>
+ b <span style="color:#f92672">=</span> <span style="color:#ae81ff">257</span>
+ id(a) <span style="color:#f92672">==</span> id(b)
+ <span style="color:#75715e"># False</span>
 </code></pre></div><h2 id="45-gil">4.5 GIL</h2>
 <p>受制于GIL(Global Interpreter Lock，全局解释锁）的存在，Python进程中的多线程无法利用多核的计算资源，同一时间内只有一个线程可以持有全局解释锁，执行代码指令。</p>
 <p>根据Python虚拟机中的执行机制，每当线程执行若干条虚拟指令后，时间片就会调度给另一个线程。这个间隔时间可以用<code>sys</code>模块的<code>getswitchinterval</code>函数看到：</p>

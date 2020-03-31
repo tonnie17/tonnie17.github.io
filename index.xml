@@ -116,7 +116,7 @@
       <pubDate>Tue, 01 May 2018 22:15:31 +0800</pubDate>
       
       <guid>https://4fish.blue/posts/python-deadlock/</guid>
-      <description>某日，在排查线上问题时，在dump线程后发现了一些“诡异”的异常： File &amp;quot;/usr/local/lib/python3.5/logging/__init__.py&amp;quot;, line 1838, in info root.info(msg, *args, **kwargs) File &amp;quot;/usr/local/lib/python3.5/logging/__init__.py&amp;quot;, line 1271, in info Log &#39;msg % args&#39; with severity &#39;INFO&#39;. File &amp;quot;/usr/local/lib/python3.5/logging/__init__.py&amp;quot;, line 1279, in info self._log(INFO, msg, args, **kwargs) File &amp;quot;/usr/local/lib/python3.5/logging/__init__.py&amp;quot;, line 1415, in</description>
+      <description>某日，在排查线上问题时，在dump线程后发现了一些“诡异”的异常： File &amp;#34;/usr/local/lib/python3.5/logging/__init__.py&amp;#34;, line 1838, in info root.info(msg, *args, **kwargs) File &amp;#34;/usr/local/lib/python3.5/logging/__init__.py&amp;#34;, line 1271, in info Log &amp;#39;msg % args&amp;#39; with severity &amp;#39;INFO&amp;#39;. File &amp;#34;/usr/local/lib/python3.5/logging/__init__.py&amp;#34;, line 1279, in info self._log(INFO, msg, args, **kwargs) File &amp;#34;/usr/local/lib/python3.5/logging/__init__.py&amp;#34;, line 1415, in</description>
     </item>
     
     <item>
@@ -242,7 +242,7 @@
       <pubDate>Thu, 09 Mar 2017 00:00:00 +0800</pubDate>
       
       <guid>https://4fish.blue/posts/play-python/</guid>
-      <description>Hello World In [1]: import __hello__ Hello world! 查看API手册 ~ python 11/17 17:02:27 2016 Python 2.7.12 (default, Jun 29 2016, 14:05:02) [GCC 4.2.1 Compatible Apple LLVM 7.3.0 (clang-703.0.31)] on darwin Type &amp;quot;help&amp;quot;, &amp;quot;copyright&amp;quot;, &amp;quot;credits&amp;quot; or &amp;quot;license&amp;quot; for more information. &amp;gt;&amp;gt;&amp;gt; help() Welcome to Python 2.7! This is the online help utility. If this is your first time using Python, you should definitely check out</description>
+      <description>Hello World In [1]: import __hello__ Hello world! 查看API手册 ~ python 11/17 17:02:27 2016 Python 2.7.12 (default, Jun 29 2016, 14:05:02) [GCC 4.2.1 Compatible Apple LLVM 7.3.0 (clang-703.0.31)] on darwin Type &amp;#34;help&amp;#34;, &amp;#34;copyright&amp;#34;, &amp;#34;credits&amp;#34; or &amp;#34;license&amp;#34; for more information. &amp;gt;&amp;gt;&amp;gt; help() Welcome to Python 2.7! This is the online help utility. If this is your first time using Python, you should definitely check out</description>
     </item>
     
     <item>

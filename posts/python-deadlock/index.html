@@ -65,23 +65,23 @@
                 
                 <section id="post-body">
                     <p>某日，在排查线上问题时，在dump线程后发现了一些“诡异”的异常：</p>
-<pre><code>  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1838, in info
-    root.info(msg, *args, **kwargs)
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1271, in info
-    Log 'msg % args' with severity 'INFO'.
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1279, in info
-    self._log(INFO, msg, args, **kwargs)
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1415, in _log
-    self.handle(record)
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1425, in handle
-    self.callHandlers(record)
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 1487, in callHandlers
-    hdlr.handle(record)
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 853, in handle
-    self.acquire()
-  File &quot;/usr/local/lib/python3.5/logging/__init__.py&quot;, line 804, in acquire
-    self.lock.acquire()
-</code></pre><p>异常的表现是logging模块在打日志的时候卡在了获取锁这个地方，并且一直处于阻塞的状态。众所周知，Python的logging模块是线程安全的，因为logging模块在输出日志时，都要获取一把锁，而这把锁是一把可重入锁，对于不同的线程，在打日志前都要等待这把锁变为可用状态，才能持有这把锁并执行提交逻辑，最典型的例子就像如下所示：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1838, in info
+    root.info<span style="color:#f92672">(</span>msg, *args, **kwargs<span style="color:#f92672">)</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1271, in info
+    Log <span style="color:#e6db74">&#39;msg % args&#39;</span> with severity <span style="color:#e6db74">&#39;INFO&#39;</span>.
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1279, in info
+    self._log<span style="color:#f92672">(</span>INFO, msg, args, **kwargs<span style="color:#f92672">)</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1415, in _log
+    self.handle<span style="color:#f92672">(</span>record<span style="color:#f92672">)</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1425, in handle
+    self.callHandlers<span style="color:#f92672">(</span>record<span style="color:#f92672">)</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 1487, in callHandlers
+    hdlr.handle<span style="color:#f92672">(</span>record<span style="color:#f92672">)</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 853, in handle
+    self.acquire<span style="color:#f92672">()</span>
+  File <span style="color:#e6db74">&#34;/usr/local/lib/python3.5/logging/__init__.py&#34;</span>, line 804, in acquire
+    self.lock.acquire<span style="color:#f92672">()</span>
+</code></pre></div><p>异常的表现是logging模块在打日志的时候卡在了获取锁这个地方，并且一直处于阻塞的状态。众所周知，Python的logging模块是线程安全的，因为logging模块在输出日志时，都要获取一把锁，而这把锁是一把可重入锁，对于不同的线程，在打日志前都要等待这把锁变为可用状态，才能持有这把锁并执行提交逻辑，最典型的例子就像如下所示：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle</span>(self, record):
     <span style="color:#e6db74">&#34;&#34;&#34;
 </span><span style="color:#e6db74">    Conditionally emit the specified logging record.
@@ -128,11 +128,11 @@ p<span style="color:#f92672">.</span>start()
 g()
 </code></pre></div><p>主进程起了个新进程，调用f函数，打印日志“2”，接着并行调用g函数，打印日志“1”，为了看清楚问题，在logging handler获取锁后会sleep 0.1秒。</p>
 <p>可以看到输出并没有问题：</p>
-<pre><code>1
-2
-1
-2
-</code></pre><p>现在做一些修改，把主线程的g函数的调用修改为在主进程新建一个线程来执行：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#ae81ff">1</span>
+<span style="color:#ae81ff">2</span>
+<span style="color:#ae81ff">1</span>
+<span style="color:#ae81ff">2</span>
+</code></pre></div><p>现在做一些修改，把主线程的g函数的调用修改为在主进程新建一个线程来执行：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> logging
 <span style="color:#f92672">import</span> multiprocessing
 <span style="color:#f92672">import</span> sys
@@ -161,10 +161,10 @@ p <span style="color:#f92672">=</span> multiprocessing<span style="color:#f92672
 t<span style="color:#f92672">.</span>start()
 p<span style="color:#f92672">.</span>start()
 </code></pre></div><p>执行输出，在程序输出两个2之后就立马阻塞住了：</p>
-<pre><code>2
-2
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#ae81ff">2</span>
+<span style="color:#ae81ff">2</span>
 阻塞...
-</code></pre><p>为什么两个相似的例子中会出现不一样的结果呢？</p>
+</code></pre></div><p>为什么两个相似的例子中会出现不一样的结果呢？</p>
 <p>仔细观察，在这个例子中，线程先于进程开始调用，那么假设线程先执行，换而言之这时候root logger的锁便被线程池持有了，按照逻辑，线程马上进入睡眠0.1秒，而进程这个时候也想要输出日志，它也想要获取这把锁，却一直获取不到，甚至直到线程退出了进程也一直在阻塞着。</p>
 <p>这一切表象背后的实际原因，实际上可以从上面推敲出，当进程被fork时，线程实际上已经持出这把锁了，所以说子进程在复制地址空间后它认为这把锁还在占用状态，于是就一直等着，但它不知道这把锁永远不会被释放了&hellip;</p>
 <p>而为什么在前一个例子中却没有任何异常呢？事实上，再根据之前说的，这把锁时一把可重入锁（RLock），它是属于线程级别的锁，即是这把锁在哪个线程acquire就一定要在哪个线程被release，再来看第一个例子，虽然主进程中起了一个子进程，但实际上这两个进程所处于的线程都是一样的（主线程），而第二个例子中，f和g函数是处于完全不同的线程当中，就是f想要释放掉这把锁，它也无能为力，因为这把锁由g创建，只能被g释放，并且由于线程相异，g没有办法把锁释放。</p>
@@ -265,14 +265,14 @@ f <span style="color:#ae81ff">140735977362240</span>
         logging<span style="color:#f92672">.</span>_releaseLock()
 </code></pre></div><p>确保了在fork子进程之后，锁是处于release状态的。</p>
 <p>而在Python 3.7版本之后，官方也给出了标准库的方法实现相同的功能：</p>
-<pre><code>os.register_at_fork(*, before=None, after_in_parent=None, after_in_child=None)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">os.register_at_fork<span style="color:#f92672">(</span>*, before<span style="color:#f92672">=</span>None, after_in_parent<span style="color:#f92672">=</span>None, after_in_child<span style="color:#f92672">=</span>None<span style="color:#f92672">)</span>
 
-Register callables to be executed when a new child process is forked using os.fork() or similar process cloning APIs. The parameters are optional and keyword-only. Each specifies a different call point.
+Register callables to be executed when a new child process is forked using os.fork<span style="color:#f92672">()</span> or similar process cloning APIs. The parameters are optional and keyword-only. Each specifies a different call point.
 
- - before is a function called before forking a child process.
- - after_in_parent is a function called from the parent process after forking a child process.
- - after_in_child is a function called from the child process.
-</code></pre>
+ - before is a <span style="color:#66d9ef">function</span> called before forking a child process.
+ - after_in_parent is a <span style="color:#66d9ef">function</span> called from the parent process after forking a child process.
+ - after_in_child is a <span style="color:#66d9ef">function</span> called from the child process.
+</code></pre></div>
                 </section>
             </article>
 

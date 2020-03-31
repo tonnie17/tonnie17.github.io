@@ -87,19 +87,19 @@ reduce  (k2,list(v2))      → list(v2)
 $$</p>
 <h2 id="mapreduce例子单词计数">MapReduce例子：单词计数</h2>
 <p>一个程序需要对一个包括许多文档的集合中计算出每个单词出现的数量，伪代码如下：</p>
-<pre><code> map(String key, String value):
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"> map<span style="color:#f92672">(</span>String key, String value<span style="color:#f92672">)</span>:
     // key: document name
     // value: document contents
-    for each word w in value:
-      EmitIntermediate(w, &quot;1&quot;);
-  reduce(String key, Iterator values):
+    <span style="color:#66d9ef">for</span> each word w in value:
+      EmitIntermediate<span style="color:#f92672">(</span>w, <span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">)</span>;
+  reduce<span style="color:#f92672">(</span>String key, Iterator values<span style="color:#f92672">)</span>:
     // key: a word
     // values: a list of counts
-    int result = 0;
-    for each v in values:
-      result += ParseInt(v);
-    Emit(AsString(result));
-</code></pre><p>map函数对文档中出现的每个单词提交了中间键值对，其中key为单词本身，value为1，即单词出现的次数。reduce函数对于每个key，把它包括的值列表进行累加，提交这个key最终的归并结果。</p>
+    int result <span style="color:#f92672">=</span> 0;
+    <span style="color:#66d9ef">for</span> each v in values:
+      result <span style="color:#f92672">+=</span> ParseInt<span style="color:#f92672">(</span>v<span style="color:#f92672">)</span>;
+    Emit<span style="color:#f92672">(</span>AsString<span style="color:#f92672">(</span>result<span style="color:#f92672">))</span>;
+</code></pre></div><p>map函数对文档中出现的每个单词提交了中间键值对，其中key为单词本身，value为1，即单词出现的次数。reduce函数对于每个key，把它包括的值列表进行累加，提交这个key最终的归并结果。</p>
 <h2 id="mapreduce的执行过程">MapReduce的执行过程</h2>
 <p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fyee133qhgj317z0u079z.jpg" alt="MapReduce"></p>
 <p>如图展示了MapReduce的基本执行过程，其中实体的定义如下：</p>
