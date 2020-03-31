@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://4fish.blue/notes/</loc>
+    <lastmod>2020-03-31T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://4fish.blue/notes/notes/</loc>
+    <lastmod>2020-03-31T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://4fish.blue/posts/</loc>
     <lastmod>2020-01-06T00:00:00+08:00</lastmod>
   </url>

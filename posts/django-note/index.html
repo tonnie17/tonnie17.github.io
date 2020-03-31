@@ -7,7 +7,7 @@
 		
 		
 		
-		<meta name="generator" content="Hugo 0.66.0" />
+		<meta name="generator" content="Hugo 0.69.0-DEV" />
 		<title>Django实践笔记 &middot; 4 Fish</title>
 		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
 		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
@@ -303,9 +303,9 @@ handler500 = 'views.server_err'
 <h1 id="表单">表单</h1>
 <p>表单使用原则：</p>
 <ol>
-<li>使用clean或clean_<!-- raw HTML omitted -->方法来验证表单字段。</li>
+<li>使用clean或clean_<field>方法来验证表单字段。</li>
 <li>当表单与model有耦合时，使用ModelForm。</li>
-<li>不要忘记在模版中的<!-- raw HTML omitted -->里添加{% csrf_token %}标签。</li>
+<li>不要忘记在模版中的<form>里添加{% csrf_token %}标签。</li>
 <li>用form.field.errors代替自定义的错误显示。</li>
 <li>用form.is_valid()来验证表单的合法性。</li>
 <li>当ModelForm的模型涉及关联字段时，通过form.save(commit=False)来保存模型，再在模型上添加关联信息。</li>
@@ -347,7 +347,7 @@ handler500 = 'views.server_err'
 <pre><code>python manage.py makemigrations
 python manage.py migrate
 </code></pre><h1 id="fixture">Fixture</h1>
-<p>在测试和部署项目时，会想用到一些初始化的假数据，这时候fixture就排得上用场了，使用manage.py dumpdata命令可以从数据库中把数据导出并硬编码为json、yaml等文件，使用manage.py loaddata <!-- raw HTML omitted -->命令则可以从fixture中读取数据并把数据迁移到数据库。</p>
+<p>在测试和部署项目时，会想用到一些初始化的假数据，这时候fixture就排得上用场了，使用manage.py dumpdata命令可以从数据库中把数据导出并硬编码为json、yaml等文件，使用manage.py loaddata <fixturename>命令则可以从fixture中读取数据并把数据迁移到数据库。</p>
 <h1 id="异步任务">异步任务</h1>
 <p>在Web开发中有时会遇到一些耗时任务，但我们又不能让用户等待，那么异步任务队列就是一个不错的选择，具体做法是把耗时任务放进消息队列中，交给后台进程处理，web应用程序返回响应给用户。</p>
 <p><strong>Celery</strong>Celery是一个分布式任务队列系统，它是一个专注于实时处理的任务队列，同时也支持任务调度。使用celery还需要一个BROKER，可以是RabbitMQ或者Redis等。在django使用Celery需要作一些配置：</p>

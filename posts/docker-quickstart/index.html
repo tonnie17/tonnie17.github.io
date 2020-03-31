@@ -7,7 +7,7 @@
 		
 		
 		
-		<meta name="generator" content="Hugo 0.66.0" />
+		<meta name="generator" content="Hugo 0.69.0-DEV" />
 		<title>20分钟极简入门Docker &middot; 4 Fish</title>
 		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
 		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
@@ -51,7 +51,7 @@
                     </h1>
                     <h2 class="headline">
                     Oct 12, 2019
-                    · 2986 words
+                    · 2980 words
                     · 6 minute read
                       <span class="tags">
                       
@@ -105,20 +105,20 @@
 <h2 id="docker容器操作">Docker容器操作</h2>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-42ce3802d2915cb7663a1a869f93f9cf_1440w.jpg" alt="img"></p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-5bffeb705fe4c4249d34bfdfcd223681_1440w.jpg" alt="img"></p>
-<p><a href="https://www.zhihu.com/video/1166455714251264000">https://www.zhihu.com/video/1166455714251264000</a></p>
+<p><a href="https://www.zhihu.com/video/1166455714251264000"><img src="https://pica.zhimg.com/v2-30d1cdc57785771c8a5faf27506168af.jpg" alt="Docker容器操作" title=""></a></p>
 <p>创建一个Docker容器</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-f4ac2c4a46c00f66a24af7dbd7cda6f7_1440w.jpg" alt="img"></p>
 <h2 id="dockerfile">Dockerfile</h2>
 <p>Dockerfile是一个用以构建镜像的文本文件，它包括了一系列的执行用来表示当前应用的描述、依赖以及该如何运行这个应用，Docker Engine通过解析Dockerfile里的指令，来构建一个Docker镜像。</p>
 <p>执行docker build命令会从顶层开始解析Dockerfile中的指令并逐行执行。而对每一条指令，Docker都会检查缓存中是否已经有与该指令对应的镜像层。</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-53e9c534942ca4cf9890a29917e3f334_1440w.jpg" alt="img"></p>
-<p><a href="https://www.zhihu.com/video/1166455944463732736">https://www.zhihu.com/video/1166455944463732736</a></p>
+<p><a href="https://www.zhihu.com/video/1166455944463732736"><img src="https://pic2.zhimg.com/v2-cb087b98a105d86955c50f91166bf4ed.jpg" alt="Dockerfile" title=""></a></p>
 <p>编写一个Dockerfile</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-f44259f9f250b8b864659e732e73636f_1440w.jpg" alt="img"></p>
 <h2 id="多阶段构建">多阶段构建</h2>
 <p>当Dockerfile中包含多个FROM语句时，触发多阶段构建。使用多阶段构建可以文件从另一个阶段复制到另一个阶段，生成的镜像将会是最后一个阶段构建的结果。</p>
 <p>这个功能在某些情况下会十分有用，比如我们在编译应用时需要用到许多依赖，但想要保持镜像尽可能地小，这时候就可以通过多阶段构建来将编译环境和运行环境分离，在最终生成的镜像中只保留编译好的可执行文件。</p>
-<p><a href="https://www.zhihu.com/video/1166456122667143168">https://www.zhihu.com/video/1166456122667143168</a></p>
+<p><a href="https://www.zhihu.com/video/1166456122667143168"><img src="https://pic3.zhimg.com/v2-bd585d61bb1549226444e7764914e83e.jpg" alt="多阶段构建" title=""></a></p>
 <p>Dockerfile多阶段构建</p>
 <h2 id="应用容器化">应用容器化</h2>
 <p>这时候归纳一下应用容器化的过程：</p>
@@ -151,7 +151,7 @@
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-a2fb956b5667a8afdc212e55b4c50b51_1440w.jpg" alt="img"></p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-5680b4b84c80472bdb9023fbc8389ba4_1440w.jpg" alt="img"></p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-45e784fd6922ec933374811f62c07b4c_1440w.jpg" alt="img"></p>
-<p><a href="https://www.zhihu.com/video/1166460676783669248">https://www.zhihu.com/video/1166460676783669248</a></p>
+<p><a href="https://www.zhihu.com/video/1166460676783669248"><img src="https://pic2.zhimg.com/v2-3f05b793e9b8a5be85ad7a5c648cb7fd.jpg" alt="Docker DNS" title=""></a></p>
 <p>Docker DNS</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-3a0380d3c29b8c34ea04a2c4d2c1af23_1440w.jpg" alt="img"></p>
 <h2 id="docker-machine">Docker Machine</h2>
@@ -159,7 +159,7 @@
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-250ed063fb326807967063a314d49aeb_1440w.jpg" alt="img"></p>
 <h2 id="docker-compose">Docker Compose</h2>
 <p>Docker Compose是一个定义和运行多容器应用的工具，通过编写Compose文件来定义和配置应用，只需要用docker-compose一条命令就可以一次把所有定义好的服务启动起来。</p>
-<p><a href="https://www.zhihu.com/video/1166457477158903808">https://www.zhihu.com/video/1166457477158903808</a></p>
+<p><a href="https://www.zhihu.com/video/1166457477158903808"><img src="https://pic3.zhimg.com/v2-0bfe18b9c18a397079dd69a3e726a55e.jpg" alt="Docker Compose" title=""></a></p>
 <p>Docker Compose部署应用</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-e6877502c5843b97c6cfa4f850e6f14f_1440w.jpg" alt="img"></p>
 <h2 id="docker-swarm">Docker Swarm</h2>
@@ -168,7 +168,7 @@
 <p>在Swarm中有几个概念，Node代表着Swarm集群中的一个Docker主机，其中每个主机可以是Manager或者Worker两个角色，他们分别代表管理节点和工作节点。Task可以理解为一个Docker容器以及其运行的命令，Service是一组Task的集合与定义，即运行在Node上的服务。</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-459ac5eb2cfd2f39854fa4f71a34f860_1440w.jpg" alt="img"></p>
 <p>Docker Swarm提供了多种调度策略，来按需选择将容器分配到不同的节点上。</p>
-<p><a href="https://www.zhihu.com/video/1166463996525010944">https://www.zhihu.com/video/1166463996525010944</a></p>
+<p><a href="https://www.zhihu.com/video/1166463996525010944"><img src="https://picb.zhimg.com/v2-e7e51b242e9c50cbf4474a298cc39787.jpg" alt="Docker Swarm" title=""></a></p>
 <p>使用Swarm部署应用</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-cee51446cd5698befab219bd78fdc9dd_1440w.jpg" alt="img"></p>
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Notes on 4 Fish</title>
+    <link>https://4fish.blue/notes/</link>
+    <description>Recent content in Notes on 4 Fish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 31 Mar 2020 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://4fish.blue/notes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>迁移博客图片到腾讯云</title>
+      <link>https://4fish.blue/notes/notes/</link>
+      <pubDate>Tue, 31 Mar 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/notes/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

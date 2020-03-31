@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>迁移博客图片到腾讯云</title>
+      <link>https://4fish.blue/notes/notes/</link>
+      <pubDate>Tue, 31 Mar 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/notes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>基于Prometheus的监控系统实践</title>
       <link>https://4fish.blue/posts/prometheus/</link>
       <pubDate>Mon, 06 Jan 2020 00:00:00 +0800</pubDate>

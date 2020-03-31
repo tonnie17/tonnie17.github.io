@@ -7,7 +7,7 @@
 		
 		
 		
-		<meta name="generator" content="Hugo 0.66.0" />
+		<meta name="generator" content="Hugo 0.69.0-DEV" />
 		<title>Flask 10天开发一个网站 &middot; 4 Fish</title>
 		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
 		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
@@ -140,12 +140,12 @@
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-79fa201635784f4f659ab743bd637f38_1440w.jpg" alt="img"></p>
 <p>4.编写主体视图。</p>
 <p>这里定义了首页（／）和比较页（／pk）的对应视图，在index中，我们把之前定义的PkForm表单实例化，作为渲染模版函数render_template的上下文参数传入到模版中渲染。在pk视图中，它接受来自index表单中post提交的数据，因此要在它的装饰器的methods参数中加上&rsquo;POST属性（默认只有GET），注意要把request.form作为表单的构造函数的参数传入，否则表单将不能接收到任何数据，然后我们用表单到validate_on_submit方法来判断表单的数据是否合法，若正确，则把输入框的两个数据拿出，渲染到比较页中，否则，便简单地返回一个显示错误的响应。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1762' height='962'></svg>)</p>
 <p>5.编写模版。</p>
 <p>这里简单地在模版定义一个表单，它指向之前定义的pk视图，当然了，只有这么简单的显示是远远不够的，在static中定义css样式文件，在页面的头部的link标签的href属性指定用url_for()反向解析得到的静态文件路径（这里要感谢强大的jinjia2模版:））。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1920' height='964'></svg>)</p>
 <p>这里的效果大概如下：</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1648'></svg>)</p>
 <p>接着编写比较页的模版。</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-8ac0c8141d3c0d6b54d74ad67081595b_1440w.jpg" alt="img"></p>
 <p>6.定义配置文件。</p>
@@ -169,11 +169,11 @@
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-4a3f1626cac713c25a5955741c72d335_1440w.jpg" alt="img"></p>
 <p>2.测试数据库</p>
 <p>在app模块的初始化中，我们创建了MongoDB的连接实例，但这个实例是还没有绑定到当前的应用上下文的，因此还要在create_app中为mongo实例用创建出来的app添加到连接实例的init_app方法，这时候，MongoDB就正式可以在应用中工作了，只需要在其他文件中导入app模块的mongo实例<code>（ from app import mongo）</code>。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1466' height='924'></svg>)</p>
 <p>接下来，在mongo shell中新建一个存放条目的集合，插入一条数据。。</p>
 <p>3.编写工具函数（utils）。</p>
 <p>这里的两个工具函数（bson_to_json，bson_obj_id）是待会在编写API视图的时候要用到的，其作用分别是把MongoDB的BSON（文档的数据格式）转换为JSON和把id转换为MongoDB中的ObjectId形式，因为这两个功能都难以用python内置的函数实现，而pymongo为我们提供的bson模块提供了很好用的json_util，使得我们很方便地去实现MongoDB和Python之间的数据格式转换。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1504' height='878'></svg>)</p>
 <p>一张图就能解释其中的流程。</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-3541e400ca47cec48813119348a8f757_1440w.jpg" alt="img"></p>
 <p>4.编写REST API。</p>
@@ -226,11 +226,11 @@
 <p>生成一个带有过期验证的访问令牌。</p>
 <p>4）verify_auth_token(token)</p>
 <p>验证访问令牌，若成功，返回用户信息。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1674'></svg>)</p>
 <p>3.初始化LoginManager。</p>
 <p>在应用模块中新建Flask-Login的LoginManager的实例，用它当前绑定应用，指定用户登录的视图（这里是&rsquo;users.login&rsquo;）。你必须提供一个 user_loader回调。这个回调用于从会话中存储的用户 ID 重新加载用户对象。它应该接受一个用户的ID 作为参数，并且返回相应的用户对象。</p>
 <p><a href="https://link.zhihu.com/?target=https%3A//flask-login.readthedocs.org/en/latest/">https://flask-login.readthedocs.org/en/latest/</a></p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1674'></svg>)</p>
 <p>4.编写用户主要视图。</p>
 <p>这里分别定义了register(注册),login(登录),profile(用户资料),logout(注销)四个视图，这里要注意的是错误的判断以及用户验证流程，用flask-login中相应的login_user(user)和logout_user()来实现登录／登出功能，最后记得在需要保护的视图中添加上login_required装饰器，防止未经登录的访问。</p>
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-dc96d6d1e40702e48b43ea04677724e0_1440w.jpg" alt="img"></p>
@@ -301,25 +301,25 @@
 <p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/v2-fa17a3129841839449b5493d092f34a0_1440w.jpg" alt="img"></p>
 <p>3.编写渲染器。</p>
 <p>jinjia2的灵活性使得我们可以方便地在模板中使用python代码，下面定义了一个简单的类型渲染器，根据传入的【属性名，属性值，属性类型】构造出html。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2560' height='1600'></svg>)</p>
 <p>然后在页面中这样调用，记得使用safe过滤器取消转义。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2560' height='1600'></svg>)</p>
 <p>4.增加编辑/删除属性方法。</p>
 <p>添加属性有了，怎么可以没有编辑和删除属性的方法呢？</p>
 <p>一开始想用可编辑表格的方式对表格的数据进行即时修改，却发现这样做会带来一些问题，最终放弃之。</p>
 <p>改成了双击表格列，用模态框修改之。</p>
 <p>修改成功之后会刷新页面，看到修改后的表格。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1672'></svg>)</p>
 <p>5.完善表单验证。</p>
 <p>因为之前做的表单验证实在是太简陋了，出于安全考虑，一定要对表单验证（尤其是用户信息方面）加以完善。</p>
 <p>编辑表单文件，在之前的基础上，我们改用一个validators字典来存放不同表单域的规则，在用户名和密码中都加上了长度以及正则表表达式加以限制。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2560' height='1600'></svg>)</p>
 <p>在页面中也要提示用户怎么填写表单。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1770'></svg>)</p>
 <p>6.完善样式。</p>
 <p>最后再修饰一下页面。</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
-<p>![img](data:image/svg+xml;utf8,<!-- raw HTML omitted --><!-- raw HTML omitted -->)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='2784' height='1770'></svg>)</p>
+<p>![img](data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1017'></svg>)</p>
 <h2 id="day-8使用gridfs实现文件上传"><strong>Day 8：使用GridFS实现文件上传</strong></h2>
 <p>文件上传有许多种方法，一般用文件系统的io即可，这里使用了mongodb的GridFS系统，mongodb推荐使用它来保存大型文件，</p>
 <p>这里先尝鲜试用一下，用gridfs实现用户头像的上传。</p>
