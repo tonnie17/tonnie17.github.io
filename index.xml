@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Go项目组织实践</title>
+      <link>https://4fish.blue/posts/go-project-structure/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/go-project-structure/</guid>
+      <description>前言 为Go项目设计一个合适的目录结构是一个令人头痛的事情，也是初学者入坑不可避免的一段弯路，一个好的项目结构不仅会使项目组织看起来更为清晰，</description>
+    </item>
+    
+    <item>
       <title>迁移博客图床到腾讯云</title>
       <link>https://4fish.blue/notes/notes/</link>
       <pubDate>Tue, 31 Mar 2020 00:00:00 +0800</pubDate>

@@ -6,10 +6,19 @@
     <description>Recent content in Posts on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 03 Apr 2020 00:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://4fish.blue/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go项目组织实践</title>
+      <link>https://4fish.blue/posts/go-project-structure/</link>
+      <pubDate>Fri, 03 Apr 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/go-project-structure/</guid>
+      <description>前言 为Go项目设计一个合适的目录结构是一个令人头痛的事情，也是初学者入坑不可避免的一段弯路，一个好的项目结构不仅会使项目组织看起来更为清晰，</description>
+    </item>
     
     <item>
       <title>基于Prometheus的监控系统实践</title>
