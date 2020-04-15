@@ -13,10 +13,10 @@
     
     <item>
       <title>JS中的闭包概念</title>
-      <link>https://4fish.blue/posts/js-closure/</link>
+      <link>https://4fish.blue/notes/js-closure/</link>
       <pubDate>Tue, 14 Mar 2017 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/js-closure/</guid>
+      <guid>https://4fish.blue/notes/js-closure/</guid>
       <description>像其他大多数动态编程语言一样，js也采用词法作用域，换而言之，函数的执行依赖于变量作用域，这个作用域是在函数定义时决定的，而不是函数调用时决</description>
     </item>
     

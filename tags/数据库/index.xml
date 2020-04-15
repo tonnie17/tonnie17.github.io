@@ -13,19 +13,19 @@
     
     <item>
       <title>数据库索引笔记</title>
-      <link>https://4fish.blue/posts/db-index/</link>
+      <link>https://4fish.blue/notes/db-index/</link>
       <pubDate>Sat, 04 Aug 2018 10:18:55 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/db-index/</guid>
+      <guid>https://4fish.blue/notes/db-index/</guid>
       <description>表和索引的物理结构 表和索引行都存储在页中。页的大小一般为4KB/8KB，页的大小决定了一个页可以存放多少个索引行、表行。 对于一个唯一索引（如</description>
     </item>
     
     <item>
       <title>《DDIA》笔记</title>
-      <link>https://4fish.blue/posts/ddia-note/</link>
+      <link>https://4fish.blue/notes/ddia-note/</link>
       <pubDate>Wed, 25 Apr 2018 21:00:09 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/ddia-note/</guid>
+      <guid>https://4fish.blue/notes/ddia-note/</guid>
       <description>第一章：可靠性，可扩展性，可维护性 许多应用程序都需要：数据库，缓存，搜索索引，流处理，批处理。 三个软件系统中的重要问题：可靠性（在困境中仍能</description>
     </item>
     

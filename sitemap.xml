@@ -4,7 +4,22 @@
   
   <url>
     <loc>https://4fish.blue/tags/go/</loc>
-    <lastmod>2020-04-03T00:00:00+08:00</lastmod>
+    <lastmod>2020-04-15T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://4fish.blue/notes/go-db-sql-notice/</loc>
+    <lastmod>2020-04-15T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://4fish.blue/notes/</loc>
+    <lastmod>2020-04-15T00:00:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://4fish.blue/tags/</loc>
+    <lastmod>2020-04-15T00:00:00+08:00</lastmod>
   </url>
   
   <url>
@@ -15,16 +30,6 @@
   <url>
     <loc>https://4fish.blue/posts/</loc>
     <lastmod>2020-04-03T00:00:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://4fish.blue/tags/</loc>
-    <lastmod>2020-04-03T00:00:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://4fish.blue/notes/</loc>
-    <lastmod>2020-03-31T00:00:00+08:00</lastmod>
   </url>
   
   <url>
@@ -98,7 +103,7 @@
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/db-index/</loc>
+    <loc>https://4fish.blue/notes/db-index/</loc>
     <lastmod>2018-08-04T10:18:55+08:00</lastmod>
   </url>
   
@@ -118,7 +123,7 @@
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/think-os-note/</loc>
+    <loc>https://4fish.blue/notes/think-os-note/</loc>
     <lastmod>2018-05-08T22:18:55+08:00</lastmod>
   </url>
   
@@ -138,12 +143,12 @@
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/ddia-note/</loc>
+    <loc>https://4fish.blue/notes/ddia-note/</loc>
     <lastmod>2018-04-25T21:00:09+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/blog/</loc>
+    <loc>https://4fish.blue/notes/blog/</loc>
     <lastmod>2018-04-14T12:01:47+08:00</lastmod>
   </url>
   
@@ -223,7 +228,7 @@
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/network-note/</loc>
+    <loc>https://4fish.blue/notes/network-note/</loc>
     <lastmod>2017-03-15T00:00:00+08:00</lastmod>
   </url>
   
@@ -233,7 +238,7 @@
   </url>
   
   <url>
-    <loc>https://4fish.blue/posts/js-closure/</loc>
+    <loc>https://4fish.blue/notes/js-closure/</loc>
     <lastmod>2017-03-14T00:00:00+08:00</lastmod>
   </url>
   

@@ -13,10 +13,10 @@
     
     <item>
       <title>《DDIA》笔记</title>
-      <link>https://4fish.blue/posts/ddia-note/</link>
+      <link>https://4fish.blue/notes/ddia-note/</link>
       <pubDate>Wed, 25 Apr 2018 21:00:09 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/ddia-note/</guid>
+      <guid>https://4fish.blue/notes/ddia-note/</guid>
       <description>第一章：可靠性，可扩展性，可维护性 许多应用程序都需要：数据库，缓存，搜索索引，流处理，批处理。 三个软件系统中的重要问题：可靠性（在困境中仍能</description>
     </item>
     
@@ -31,10 +31,10 @@
     
     <item>
       <title>网络笔记</title>
-      <link>https://4fish.blue/posts/network-note/</link>
+      <link>https://4fish.blue/notes/network-note/</link>
       <pubDate>Wed, 15 Mar 2017 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/network-note/</guid>
+      <guid>https://4fish.blue/notes/network-note/</guid>
       <description>socket是一种ipc方法（介于传输层和应用层的一组api），允许同一主机或网络连接的主机上的应用程序交换数据。 现代操作系统支持下列soc</description>
     </item>
     

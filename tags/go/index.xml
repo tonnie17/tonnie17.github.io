@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Go on 4 Fish</title>
+    <title>go on 4 Fish</title>
     <link>https://4fish.blue/tags/go/</link>
-    <description>Recent content in Go on 4 Fish</description>
+    <description>Recent content in go on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 03 Apr 2020 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://4fish.blue/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go database/sql使用误区</title>
+      <link>https://4fish.blue/notes/go-db-sql-notice/</link>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/go-db-sql-notice/</guid>
+      <description>在循环中defer：在一个长生命周期的函数里进行defer rows.Close()，容易使连接数得不到释放，或defer堆栈过多，导致内存占</description>
+    </item>
     
     <item>
       <title>Go项目组织实践</title>

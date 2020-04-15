@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.69.0-DEV" />
+		<title>Go database/sql使用误区 &middot; 4 Fish</title>
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+
+		
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
+		
+
+		
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Go database/sql使用误区
+                    </h1>
+                    <h2 class="headline">
+                    Apr 15, 2020
+                    · 816 words
+                    · 2 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://4fish.blue/tags/go">go</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <ul>
+<li><strong>在循环中defer</strong>：在一个长生命周期的函数里进行<code>defer rows.Close()</code>，容易使连接数得不到释放，或defer堆栈过多，导致内存占用过多。</li>
+<li><strong>打开多个sql.DB对象</strong>：使用一个全局的<code>sql.DB</code>对象，否则会频繁打开和关闭对db的tcp连接，导致延时，以及过多的<code>TIME-WAIT</code>。</li>
+<li><strong>结束后没有进行row.Close</strong>：会导致连接得不到释放（回到连接池），导致占用内存增多，同理<code>db.QueryRow()</code>和<code>Scan()</code>应该在同一个链中使用。</li>
+<li><strong>单次使用的prepare statements</strong>：会导致两次网络往返请求，增加不必要的耗时，如果可以考虑使用<code>fmt.Sprintf</code>来避免参数绑定和prepare statements。</li>
+<li><strong>在代码中使用strconv和cast来转换db type</strong>：应该使用<code>Scan()</code>，它会在内部来帮你自动进行类型转换。</li>
+<li><strong>在代码中显示处理错误和重试</strong>：应该借助<code>database/sql</code>的功能来处理连接池，重连和重试逻辑，而不是显式编写逻辑。</li>
+<li><strong>没有在rows.Next()后检查错误</strong>：<code>rows.Next()</code>可能会非正常退出，如果没有在内部检查错误，需要在<code>rows.Next()</code>结束后用<code>rows.Err()</code>来捕获rows里存放的错误。</li>
+<li><strong>使用db.Query()来执行非SELECT查询</strong>：应该使用<code>db.Exec()</code>。</li>
+<li><strong>假设两条连续查询使用了同一个连接</strong>：使用db对象执行两次操作时使用的是两个不同的连接，如果分别进行了加锁和查询操作会导致一直阻塞，对于这类查询，应该使用<code>sql.Tx</code>或者同一个连接对象。</li>
+<li><strong>在使用事务时操作db对象</strong>：因为<code>sql.Tx</code>对象绑定了一个事务，而db则不是，这时候可能不会得到想要的结果。</li>
+<li><strong>错误处理NULL对象</strong>：不能把一个NULL对象scan到一个类型不是<code>sql.NullXXX</code>的变量中。</li>
+<li><strong>使用uint64作为参数</strong>：如果使用一个uint64变量作为<code>Query()</code>，<code>Exec()</code>的参数，并且它的高位不为0，会抛出一个错误。</li>
+</ul>
+<hr>
+<p>References:</p>
+<ul>
+<li><a href="https://www.vividcortex.com/blog/learn-how-to-connect-golang-to-databases-with-database-sql">learn-how-to-connect-golang-to-databases-with-database-sql</a></li>
+</ul>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://4fish.blue/js/jquery-3.3.1.min.js"></script>
+<script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/prism.js"></script>
+
+
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-117516487-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+    </body>
+</html>
