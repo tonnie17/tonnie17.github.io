@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.69.0" />
+		<title>GKE使用小记 &middot; 4 Fish</title>
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+
+		
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
+		
+
+		
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        GKE使用小记
+                    </h1>
+                    <h2 class="headline">
+                    Nov 5, 2020
+                    · 1154 words
+                    · 3 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://4fish.blue/tags/gke">gke</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <h2 id="申请">申请</h2>
+<p>申请官网：https://cloud.google.com/kubernetes-engine</p>
+<p>首先到申请官网登录 Google 账号，接着开始进入试用申请流程，在第1步中的国家/地区选择地区为美国，进入第2步，账号类型选择个人，姓名和地址通过美国地址生成器获取：http://www.haoweichi.com/ ，付款方式填上信用卡的信息（我用的是招行的全币卡），完成信息填写后提交，申请成功后信用卡会扣费1美元（会退回），结束后会得到300美元的免费试用金额以及91天的免费试用期。</p>
+<p>申请完试用账号后可以创建 Kubernetes 集群，区域对应的位置可以在：https://cloud.google.com/compute/docs/regions-zones 查看，这里选择的是香港的节点（asia-east2-c），节点默认使用的机器配置是 e2-medium（2个vCPU，4GB内存），磁盘大小为100G，完成配置后点击创建按钮开始创建一个有3个节点集群。</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-11-05%2018.59.58.png" alt="屏幕快照 2020-11-05 18.59.58"></p>
+<h2 id="安装gcloud-sdk">安装Gcloud SDK</h2>
+<p>参考官方文档：https://cloud.google.com/sdk/docs/install</p>
+<p>把对应的 GcloudSDK 版本下载下来后解压：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-315.0.0-darwin-x86_64.tar.gz
+</code></pre></div><p>执行安装脚本：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ ./google-cloud-sdk/install.sh
+</code></pre></div><p>按照安装提示输入交互选项即可完成安装，这里需要配置默认的 PROJECT_ID 来访问集群，PROJECT_ID 可以在 gcp 的控制台获取，配置完成后执行<code>gcloud init</code>来登录Google账号，执行命令后会弹出一个浏览器页面进行账号登录，在此步骤中也会更新 kubectl 的配置，完成后就可以在本地使用 kubectl 命令来连接 GKE 集群了。</p>
+<p>在完成这个步骤后要注意本地用的 kubectl 版本跟服务端使用的版本是否一致，可以通过<code>kubectl version</code>命令获取，如果两者版本不一致可能会导致兼容性问题，这时候需要更新 kubectl 的版本：https://kubernetes.io/zh/docs/tasks/tools/install-kubectl/</p>
+<p>更新相应的 kubectl 版本:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">curl -LO <span style="color:#e6db74">&#34;https://storage.googleapis.com/kubernetes-release/release/</span><span style="color:#66d9ef">$(</span>curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt<span style="color:#66d9ef">)</span><span style="color:#e6db74">/bin/darwin/amd64/kubectl&#34;</span>
+</code></pre></div><p>现在执行<code>gcloud compute instances list</code>，获取 GKE 上的计算节点列表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">NAME                                      ZONE          MACHINE_TYPE  PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+gke-cluster-1-default-pool-98a27c33-368d  asia-east2-c  e2-medium                  10.170.0.3   34.92.195.10    RUNNING
+gke-cluster-1-default-pool-98a27c33-mm1m  asia-east2-c  e2-medium                  10.170.0.4   35.220.224.219  RUNNING
+gke-cluster-1-default-pool-98a27c33-pvf6  asia-east2-c  e2-medium                  10.170.0.2   35.220.229.6    RUNNING
+</code></pre></div><h2 id="测试gke集群">测试GKE集群</h2>
+<p>为了测试 GKE 集群，在这里需要推送一个本地镜像到 GKE 集群，在推送镜像之前，需要完成<code>gcloud auth configure-docker</code> 完成配置 Docker。</p>
+<p>完成后执行命令推送镜像到 gcr（其中 PROJECT_ID 可通过<code>gcloud config get-value project</code>获取）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ docker push gcr.io/$PROJECT_ID/nginx:v1
+</code></pre></div><p>推送完毕后，使用推送的镜像部署一个 Deployment：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl run web --image<span style="color:#f92672">=</span>gcr.io/$PROJECT_ID/nginx:v1 --port <span style="color:#ae81ff">80</span>
+</code></pre></div><p>通过 NodePort 方式创建服务：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl expose deployment web --target-port<span style="color:#f92672">=</span><span style="color:#ae81ff">80</span> --type<span style="color:#f92672">=</span>NodePort
+</code></pre></div><p>最后使用 Ingress 暴露服务到 GKE 分配的公网IP，Ingress 定义如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          serviceName: web
+          servicePort: 80
+        path: /
+</code></pre></div><p>执行<code>kubectl apply -f ingress.yml</code>创建一个 Ingress，创建完成后等待数分钟，可以在 GKE 的控制台上看到 Ingress 状态变为 OK。</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-11-05%2019.30.13.png" alt="屏幕快照 2020-11-05 19.30.13"></p>
+<p>这时候访问 Ingress 端点的IP，即可看到服务运行成功：</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-11-05%2019.31.38.png" alt="屏幕快照 2020-11-05 19.31.38"></p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/prism.js"></script>
+
+
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-117516487-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+    </body>
+</html>

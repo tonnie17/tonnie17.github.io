@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gke on 4 Fish</title>
+    <link>https://4fish.blue/tags/gke/</link>
+    <description>Recent content in gke on 4 Fish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 05 Nov 2020 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://4fish.blue/tags/gke/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GKE使用小记</title>
+      <link>https://4fish.blue/posts/gke/</link>
+      <pubDate>Thu, 05 Nov 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/gke/</guid>
+      <description>申请 申请官网：https://cloud.google.com/kubernetes-engine 首先到申请官网登录 Google 账号，接着开始进入试用</description>
+    </item>
+    
+  </channel>
+</rss>
