@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.69.0" />
+		<title>初试Helm &middot; 4 Fish</title>
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+
+		
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
+		
+
+		
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        初试Helm
+                    </h1>
+                    <h2 class="headline">
+                    Nov 13, 2020
+                    · 571 words
+                    · 2 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://4fish.blue/tags/gke">gke</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <h1 id="helm">Helm</h1>
+<p>Helm 是一个用来管理 Kubernetes 包（Charts）的工具集，使用 Helm 可以轻松管理 Kubernetes 包的配置和依赖，简化了 Kubernetes 的应用管理和更新。</p>
+<p>Helm 分为两个部分：</p>
+<ul>
+<li>客户端（Helm）和服务端（Tiller）</li>
+</ul>
+<p>实验内容演示了如何用 GKE 来使用 Helm 进行包的安装，由于 Helm 3.0 版本以后去除了 Tiller，因此修改了演示命令，不再包含 Tiller 内容。</p>
+<p>首先获取 Helm 的安装脚本：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get &gt; get_helm.sh
+</code></pre></div><p>执行脚本安装 Helm：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ chmod <span style="color:#ae81ff">700</span> get_helm.sh <span style="color:#f92672">&amp;&amp;</span> ./get_helm.sh
+</code></pre></div><p>在安装 Charts 之前，使用<code>helm repo update</code>命令来更新可用的 Charts 列表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ helm repo update
+</code></pre></div><p>更新完毕后，安装 mysql 官方的 chart，release名称为<code>my-release</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ helm install my-release stable/mysql
+</code></pre></div><p>执行完后，得到以下输出：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">NAME: my-release
+LAST DEPLOYED: Fri Nov 13 09:04:23 2020
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+MySQL can be accessed via port 3306 on the following DNS name from within your cluster:
+my-release-mysql.default.svc.cluster.local
+
+To get your root password run:
+
+    MYSQL_ROOT_PASSWORD=$(kubectl get secret --namespace default my-release-mysql -o jsonpath=&#34;{.data.mysql-root-password}&#34; | base64 --decode; echo)
+
+To connect to your database:
+
+1. Run an Ubuntu pod that you can use as a client:
+
+    kubectl run -i --tty ubuntu --image=ubuntu:16.04 --restart=Never -- bash -il
+
+2. Install the mysql client:
+
+    $ apt-get update &amp;&amp; apt-get install mysql-client -y
+
+3. Connect using the mysql cli, then provide your password:
+    $ mysql -h my-release-mysql -p
+
+To connect to your database directly from outside the K8s cluster:
+    MYSQL_HOST=127.0.0.1
+    MYSQL_PORT=3306
+
+    # Execute the following command to route the connection:
+    kubectl port-forward svc/my-release-mysql 3306
+
+    mysql -h ${MYSQL_HOST} -P${MYSQL_PORT} -u root -p${MYSQL_ROOT_PASSWORD}
+</code></pre></div><p>这时 mysql chart 已经被安装并部署了，可以用<code>helm ls</code>来验证：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART      	APP VERSION
+my-release	default  	1       	2020-11-13 09:04:23.913907536 +0000 UTC	deployed	mysql-1.6.7	5.7.30
+</code></pre></div><p>根据输出提示，我们可以运行一个系统镜像安装 mysql client 来连接之前部署的 mysql 服务：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl run -i --tty ubuntu --image<span style="color:#f92672">=</span>ubuntu:16.04 --restart<span style="color:#f92672">=</span>Never -- bash -il
+</code></pre></div><p>进入容器后，执行命令更新并安装 mysql client：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ apt-get update <span style="color:#f92672">&amp;&amp;</span> apt-get install mysql-client -y
+</code></pre></div><p>Helm 在安装 mysql 后会创建一个 Service，使用 mysql 命令连接服务名来连接到 mysql 服务端：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mysql -h my-release-mysql -p
+</code></pre></div>
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/prism.js"></script>
+
+
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-117516487-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+    </body>
+</html>

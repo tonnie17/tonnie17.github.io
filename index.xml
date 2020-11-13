@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>初试Helm</title>
+      <link>https://4fish.blue/posts/gke-helm/</link>
+      <pubDate>Fri, 13 Nov 2020 01:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/gke-helm/</guid>
+      <description>Helm Helm 是一个用来管理 Kubernetes 包（Charts）的工具集，使用 Helm 可以轻松管理 Kubernetes 包的配置和依赖，简化了 Kubernetes 的应用管理和更新。 Helm 分为两个部分： 客户端（Hel</description>
+    </item>
+    
+    <item>
       <title>使用GKE管理Deployment</title>
       <link>https://4fish.blue/posts/gke-manage-deployment/</link>
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0800</pubDate>
