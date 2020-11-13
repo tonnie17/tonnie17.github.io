@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.69.0" />
+		<title>使用GKE管理Deployment &middot; 4 Fish</title>
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+
+		
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
+		
+
+		
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        使用GKE管理Deployment
+                    </h1>
+                    <h2 class="headline">
+                    Nov 13, 2020
+                    · 2523 words
+                    · 6 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://4fish.blue/tags/gke">gke</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <h1 id="用gke管理deployments">用GKE管理Deployments</h1>
+<p>在本节中介绍了一些 Dev Ops 在管理部署阶段中使用的一些手段，例如：“持续部署”，“蓝绿部署”和“金丝雀部署”等等。</p>
+<p>Heterogeneous deployments（异构部署）通常包含两个或多个特定的基础设施或地区以解决特殊的技术需求，根据不同的部署细节，Heterogeneous deployments 也被称作 &ldquo;hybrid&rdquo;,  &ldquo;multi-cloud&rdquo; 或 &ldquo;public-private&rdquo;，包括在跨区域的单一云，多公有云（multi-cloud），私有云和公有云的混合（&ldquo;hybrid&rdquo;， &ldquo;public-private&rdquo;）。</p>
+<p>在单一环境或地区上部署通常会遇到一些局限：</p>
+<ul>
+<li>资源耗尽：在单一环境，尤其是私有云的环境，你可能没有生产环境所需要的计算、网络和存储资源。</li>
+<li>地理区域的限制：只部署在一个环境会使地理区域遥远的流量在访问时需要跨越大半个世界的区域。</li>
+<li>限制的高可用性</li>
+<li>供应商锁定</li>
+<li>不灵活的资源</li>
+</ul>
+<p>Heterogeneous deployments 可以用来解决这些难题，三个常见的场景是：多云部署、导向内部数据、持续集成和持续部署（CI/CD）。</p>
+<p>实验内容演示了如何用 GKE 来实践 Heterogeneous deployments。</p>
+<h2 id="创建-deployment">创建 Deployment</h2>
+<p>首先获取实验需要的样例代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
+cd orchestrate-with-kubernetes/kubernetes
+</code></pre></div><p>创建一个5个节点的集群：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ gcloud container clusters create bootcamp --num-nodes <span style="color:#ae81ff">5</span> --scopes <span style="color:#e6db74">&#34;https://www.googleapis.com/auth/projecthosting,storage-rw&#34;</span>
+</code></pre></div><p>更新<code>deployments/auth.yaml</code>文件，把 Deployment 镜像的版本修改为 1.0.0：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">...
+<span style="color:#66d9ef">containers</span>:
+- <span style="color:#66d9ef">name</span>: auth
+  <span style="color:#66d9ef">image</span>: kelseyhightower/auth:<span style="color:#ae81ff">1.0.0</span>
+...
+</code></pre></div><p>使用<code>kubectl create</code>命令创建<code>auth</code>服务的 Deployment 对象：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f deployments/auth.yaml
+</code></pre></div><p>验证 Deployment 对象的创建状态：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get deployments
+</code></pre></div><p>当 Deployment 创建完后，会为之创建一个 ReplicaSet 对象，它会用来创建 Pod 对象，通过下面命令查看 Pod 状态：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get pods
+</code></pre></div><p>接下来创建<code>auth</code>服务的 Service：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f services/auth.yaml
+</code></pre></div><p>现在继续创建<code>hello</code>服务的 Deployment 和 Service：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f deployments/hello.yaml
+$ kubectl create -f services/hello.yaml
+</code></pre></div><p>同样地，创建<code>frontend</code>服务的 Deployment 和 Service：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create secret generic tls-certs --from-file tls/
+$ kubectl create configmap nginx-frontend-conf --from-file<span style="color:#f92672">=</span>nginx/frontend.conf
+$ kubectl create -f deployments/frontend.yaml
+$ kubectl create -f services/frontend.yaml
+</code></pre></div><p>当服务创建好之后，可以通过<code>kubectl get services frontend</code>获取到 frontend Service 的 external IP，通过 curl 命令来对服务进行访问：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl -ks https://&lt;EXTERNAL-IP&gt;
+</code></pre></div><p>或者可以直接通过模板语法来对服务进行访问，而避免手动获取 ip 地址：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl -ks https://<span style="color:#e6db74">`</span>kubectl get svc frontend -o<span style="color:#f92672">=</span>jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.status.loadBalancer.ingress[0].ip}&#34;</span><span style="color:#e6db74">`</span>
+</code></pre></div><p>通过<code>kubectl scale</code>命令可以更新 Deployment 对象 Pod 副本集数量，下面将 hello Deployment 的 Pod 数量提升为5个：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl scale deployment hello --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>
+</code></pre></div><p>现在可以看到 5 个 Pod 都处于运行状态了：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get pods | grep hello-
+</code></pre></div><p>还是通过<code>kubectl scale</code>命令，这次把实例数更新回 3 个：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl scale deployment hello --replicas<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>
+</code></pre></div><p>运行中的 Pod 变回了 3 个：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get pods | grep hello-
+</code></pre></div><h2 id="滚动更新">滚动更新</h2>
+<p>通过滚动更新机制我们可以把一个运行的 Deployment 逐渐升级到新版本，当 Deployment 更新到新版本时，会创建一个新的 ReplicaSet，在增加新的 ReplicaSet 的副本数的同时降低旧的 ReplicaSet 的副本数。</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/uc6D9jQ5Blkv8wf_ccEcT35LyfKDHz7kFpsI4oHUmb0%3D.png" alt="8d107e36763fd5c1.png"></p>
+<p>要更新 Deployment 对象，可以使用<code>kubectl edit</code>命令：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl edit deployment hello
+</code></pre></div><p>把 Deployment 的镜像版本修改为 2.0.0：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">...
+<span style="color:#66d9ef">containers</span>:
+  <span style="color:#66d9ef">image</span>: kelseyhightower/hello:<span style="color:#ae81ff">2.0.0</span>
+...
+</code></pre></div><p>保存退出后会触发 hello Deployment 进行滚动更新，查看 Deployment 创建的新的 ReplicaSet：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get replicaset
+</code></pre></div><p>查看滚动更新历史的新版本对应的记录：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout history deployment/hello
+</code></pre></div><p>如果在滚动更新 Deployment 时发现问题，可以执行<code>kubectl rollout pause</code>暂停 Deployment 的滚动更新：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout pause deployment/hello
+</code></pre></div><p>查看当前状态：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout status deployment/hello
+</code></pre></div><p>或者直接验证 Pod 的状态：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl get pods -o jsonpath --template<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{range .items[*]}{.metadata.name}{&#34;\t&#34;}{&#34;\t&#34;}{.spec.containers[0].image}{&#34;\n&#34;}{end}&#39;</span>
+</code></pre></div><p>通过<code>kubectl rollout resume</code>我们可以继续被暂停的滚动更新：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout resume deployment/hello
+</code></pre></div><p>滚动更新完成后，执行<code>kubectl rollout status deployment/hello</code>会得到以下输出，代表 Deployment 的滚动更新已经完毕：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">deployment &#34;hello&#34; successfully rolled out
+</code></pre></div><p>如果我们发现新版的 Deployment 存在问题，想要回滚到旧的版本，可以通过<code>kubectl rollout undo</code>把 Deployment 回退到旧的版本：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout undo deployment/hello
+</code></pre></div><p>验证版本历史：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl rollout history deployment/hello
+</code></pre></div><h2 id="金丝雀部署">金丝雀部署</h2>
+<p>如果你想要你的一部分用户体验新的 Deployment，可以使用金丝雀部署的方式，它允许你的变更部署只关联到一部分用户子集，从而降低风险。</p>
+<p>一个金丝雀部署包含新旧版本的多个 Deployment，以及导向 Deployment 的共同 Service。</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/qSrgIP5FyWKEbwOk3PMPAALJtQoJoEpgJMVwauZaZow%3D.png" alt="48190cf58fdf2eeb.png"></p>
+<p>首先，创建下面这个新版本的 hello Deployemnt：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: Deployment
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: hello-canary
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app</span>: hello
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app</span>: hello
+        <span style="color:#66d9ef">track</span>: canary
+        <span style="color:#75715e"># Use ver 1.0.0 so it matches version on service selector</span>
+        <span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">1.0.0</span>
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+        - <span style="color:#66d9ef">name</span>: hello
+          <span style="color:#66d9ef">image</span>: kelseyhightower/hello:<span style="color:#ae81ff">2.0.0</span>
+          <span style="color:#66d9ef">ports</span>:
+            - <span style="color:#66d9ef">name</span>: http
+              <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">80</span>
+            - <span style="color:#66d9ef">name</span>: health
+              <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">81</span>
+...
+</code></pre></div><p>通过<code>kubectl create</code>来创建一个 Deployment 对象：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f deployments/hello-canary.yaml
+</code></pre></div><p>通过 curl 我们对<code>hello</code>服务的 version 进行验证：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl -ks https://<span style="color:#e6db74">`</span>kubectl get svc frontend -o<span style="color:#f92672">=</span>jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.status.loadBalancer.ingress[0].ip}&#34;</span><span style="color:#e6db74">`</span>/version
+</code></pre></div><p>因为此前我们已经部署了具有 3 个副本的旧版本的 Deployment，因此我们执行上面这条命令时，流量只有 1/4 的比例会访问到新版本，执行多次会发现输出的版本可能是 1.0.0（75%）或 2.0.0（25%）。</p>
+<p>但如果我们只想要让一部分用户“固定”在 Canary Deployment，而不影响所有的用户时，这时我们可以创建一个 session affinity 的 Service，在 Service 的定义中添加<code>sessionAffinity: ClientIP</code>后，具有相同 IP 的用户每次请求都会路由到相同版本的 Deployment 上：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: <span style="color:#e6db74">&#34;hello&#34;</span>
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">sessionAffinity</span>: ClientIP
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app</span>: <span style="color:#e6db74">&#34;hello&#34;</span>
+  <span style="color:#66d9ef">ports</span>:
+    - <span style="color:#66d9ef">protocol</span>: <span style="color:#e6db74">&#34;TCP&#34;</span>
+      <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+      <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+</code></pre></div><h2 id="蓝绿部署">蓝绿部署</h2>
+<p>滚动更新的好处是可以让我们以最小的影响和开销来缓慢地部署新版本的应用，使用蓝绿部署的方式，我们可以在当新版本的应用在完全部署后再修改 Load Blancer 把流量引向新版本。</p>
+<p>在 Kubernetes 蓝绿部署下，分为 blue 和 green 两个版本的 Deployment，对应旧版本和新版本，它们都包含完整的实例数，当 green 版本部署运行后，可以通过 Service，作为 Deployment 的 router，把流量指向对应的新版本。</p>
+<p>因为蓝绿版本的部署特性，你至少需要 Deployment 需要的资源数 X2 作为部署所需的资源，所以要保证你有足够的资源来进行部署。</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/POW8Q247ZKNY%2ByHIartCsoEu8MAih7k4u1twusCx6pw%3D.png" alt="9e624196fdaf4534.png"></p>
+<p>在这种方式下，我们会有一个 blue 版本的 Service，对应着版本 1.0.0 的 Deployment：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: <span style="color:#e6db74">&#34;hello&#34;</span>
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app</span>: <span style="color:#e6db74">&#34;hello&#34;</span>
+    <span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">1.0.0</span>
+  <span style="color:#66d9ef">ports</span>:
+    - <span style="color:#66d9ef">protocol</span>: <span style="color:#e6db74">&#34;TCP&#34;</span>
+      <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+      <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f deployments/hello-blue.yaml
+</code></pre></div><p>然后我们有一个准备部署的版本为 2.0.0 的 Deployment：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">apiVersion</span>: apps/v1
+<span style="color:#66d9ef">kind</span>: Deployment
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: hello-green
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">replicas</span>: <span style="color:#ae81ff">3</span>
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">matchLabels</span>:
+      <span style="color:#66d9ef">app</span>: hello
+  <span style="color:#66d9ef">template</span>:
+    <span style="color:#66d9ef">metadata</span>:
+      <span style="color:#66d9ef">labels</span>:
+        <span style="color:#66d9ef">app</span>: hello
+        <span style="color:#66d9ef">track</span>: stable
+        <span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">2.0.0</span>
+    <span style="color:#66d9ef">spec</span>:
+      <span style="color:#66d9ef">containers</span>:
+        - <span style="color:#66d9ef">name</span>: hello
+          <span style="color:#66d9ef">image</span>: kelseyhightower/hello:<span style="color:#ae81ff">2.0.0</span>
+          <span style="color:#66d9ef">ports</span>:
+            - <span style="color:#66d9ef">name</span>: http
+              <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">80</span>
+            - <span style="color:#66d9ef">name</span>: health
+              <span style="color:#66d9ef">containerPort</span>: <span style="color:#ae81ff">81</span>
+          <span style="color:#66d9ef">resources</span>:
+            <span style="color:#66d9ef">limits</span>:
+              <span style="color:#66d9ef">cpu</span>: <span style="color:#ae81ff">0.2</span>
+              <span style="color:#66d9ef">memory</span>: 10Mi
+          <span style="color:#66d9ef">livenessProbe</span>:
+            <span style="color:#66d9ef">httpGet</span>:
+              <span style="color:#66d9ef">path</span>: /healthz
+              <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">81</span>
+              <span style="color:#66d9ef">scheme</span>: HTTP
+            <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">5</span>
+            <span style="color:#66d9ef">periodSeconds</span>: <span style="color:#ae81ff">15</span>
+            <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">5</span>
+          <span style="color:#66d9ef">readinessProbe</span>:
+            <span style="color:#66d9ef">httpGet</span>:
+              <span style="color:#66d9ef">path</span>: /readiness
+              <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">81</span>
+              <span style="color:#66d9ef">scheme</span>: HTTP
+            <span style="color:#66d9ef">initialDelaySeconds</span>: <span style="color:#ae81ff">5</span>
+            <span style="color:#66d9ef">timeoutSeconds</span>: <span style="color:#ae81ff">1</span>
+</code></pre></div><p>再来创建一个 green 版本的 Service，对应着版本 2.0.0 的 Deployment：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">kind</span>: Service
+<span style="color:#66d9ef">apiVersion</span>: v1
+<span style="color:#66d9ef">metadata</span>:
+  <span style="color:#66d9ef">name</span>: hello
+<span style="color:#66d9ef">spec</span>:
+  <span style="color:#66d9ef">selector</span>:
+    <span style="color:#66d9ef">app</span>: hello
+    <span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">2.0.0</span>
+  <span style="color:#66d9ef">ports</span>:
+    - <span style="color:#66d9ef">protocol</span>: TCP
+      <span style="color:#66d9ef">port</span>: <span style="color:#ae81ff">80</span>
+      <span style="color:#66d9ef">targetPort</span>: <span style="color:#ae81ff">80</span>
+</code></pre></div><p>通过 curl 我们会看到当前使用的是 1.0.0 版本：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl -ks https://<span style="color:#e6db74">`</span>kubectl get svc frontend -o<span style="color:#f92672">=</span>jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.status.loadBalancer.ingress[0].ip}&#34;</span><span style="color:#e6db74">`</span>/version
+</code></pre></div><p>接下来创建 green 版本对应的 Service：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl create -f deployments/hello-green.yaml
+</code></pre></div><p>现在再执行 curl 命令会发现新的版本已被使用：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ curl -ks https://<span style="color:#e6db74">`</span>kubectl get svc frontend -o<span style="color:#f92672">=</span>jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.status.loadBalancer.ingress[0].ip}&#34;</span><span style="color:#e6db74">`</span>/version
+</code></pre></div><p>当需要的时候，我们要把版本回退到旧版本，这时候只需要重新应用旧版本的 Service即可：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ kubectl apply -f services/hello-blue.yaml
+</code></pre></div>
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/prism.js"></script>
+
+
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-117516487-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+    </body>
+</html>

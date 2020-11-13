@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>使用GKE管理Deployment</title>
+      <link>https://4fish.blue/posts/gke-manage-deployment/</link>
+      <pubDate>Fri, 13 Nov 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/gke-manage-deployment/</guid>
+      <description>用GKE管理Deployments 在本节中介绍了一些 Dev Ops 在管理部署阶段中使用的一些手段，例如：“持续部署”，“蓝绿部署”和“金丝雀部署”等等</description>
+    </item>
+    
+    <item>
       <title>《影响力》读书笔记</title>
       <link>https://4fish.blue/posts/influence/</link>
       <pubDate>Sun, 08 Nov 2020 00:00:00 +0800</pubDate>
