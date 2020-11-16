@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		
+		
+		<meta name="generator" content="Hugo 0.69.0" />
+		<title>Go调试方法 &middot; 4 Fish</title>
+		<link rel="shortcut icon" href="https://4fish.blue/images/favicon.ico">
+		<link rel="stylesheet" href="https://4fish.blue/css/style.css">
+
+		
+		<link rel="stylesheet" href="https://4fish.blue/css/monosocialiconsfont.css">
+		
+
+		
+		<link href="https://4fish.blue/index.xml" rel="alternate" type="application/rss+xml" title="4 Fish" />
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='https://4fish.blue/'> <span class="arrow">←</span>Home</a>
+	
+	<a href='https://4fish.blue/posts'>Archive</a>
+	<a href='https://4fish.blue/notes'>Notes</a>
+	<a href='https://4fish.blue/about'>About</a>
+
+	
+
+	
+	<a class="cta" href="https://4fish.blue/index.xml">Subscribe</a>
+	
+</nav>
+
+
+        <section id="wrapper" class="post">
+            <article>
+                <header>
+                    <h1>
+                        Go调试方法
+                    </h1>
+                    <h2 class="headline">
+                    Dec 13, 2019
+                    · 913 words
+                    · 2 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="https://4fish.blue/tags/go">go</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                
+                <section id="post-body">
+                    <h2 id="pprof">pprof</h2>
+<p>需要在服务添加监听的pprof端口：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">import <span style="color:#f92672">(</span>
+  <span style="color:#e6db74">&#34;net/http&#34;</span>
+	_ <span style="color:#e6db74">&#34;net/http/pprof&#34;</span>
+<span style="color:#f92672">)</span>
+
+go func<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  log.Println<span style="color:#f92672">(</span>http.ListenAndServe<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;localhost:&#34;</span>+os.Getenv<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;PORT&#34;</span><span style="color:#f92672">)</span>, nil<span style="color:#f92672">))</span>
+<span style="color:#f92672">}()</span>
+</code></pre></div><p>查看进程内存运行信息：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ go tool pprof &lt;http://localhost&gt;:$PORT/debug/pprof/heap
+</code></pre></div><p>查看30秒内cpu运行信息：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ go tool pprof &lt;http://localhost&gt;:$PORT/debug/pprof/profile?seconds<span style="color:#f92672">=</span><span style="color:#ae81ff">30</span>
+</code></pre></div><p>查看goroutine阻塞信息：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ go tool pprof &lt;http://localhost&gt;:$PORT/debug/pprof/block
+</code></pre></div><p>查看5秒钟内的trace跟踪信息：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ wget &lt;http://localhost&gt;:$PORT/debug/pprof/trace?seconds<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>
+</code></pre></div><p>查看mutex的holder信息：（需要在代码添加<code>runtime.SetMutexProfileFraction</code>）</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ go tool pprof &lt;http://localhost:6060/debug/pprof/mutex&gt;
+</code></pre></div><h3 id="pprof输出说明">pprof输出说明</h3>
+<p>使用pprof profile时经常会输出以下信息：</p>
+<p><img src="https://image-1301539196.cos.ap-guangzhou.myqcloud.com/pprof.png" alt="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/561f15b8-7d05-428e-9b93-916b9ac87a92/Untitled.png"></p>
+<p>其中这几列的含义：</p>
+<ul>
+<li>Flat：该函数自身执行的时长/内存</li>
+<li>Flat%：该函数自身执行的时长/内存占采样的百分比</li>
+<li>Cum：该函数自身+所有调用函数执行的时长/内存</li>
+<li>Cum%：该函数自身+所有调用函数执行的时长/内存占采样的百分比</li>
+<li>Sum%：代表从上到下Flat%的总和累计值</li>
+</ul>
+<h2 id="注意事项">注意事项</h2>
+<ol>
+<li><strong>内存profiling记录的是堆内存分配的情况，以及调用栈信息</strong>，并不是进程完整的内存情况，猜测这也是在go pprof中称为heap而不是memory的原因。</li>
+<li><strong>栈内存的分配是在调用栈结束后会被释放的内存，所以并不在内存profile中</strong>。</li>
+<li>内存profiling是基于抽样的，默认是每1000次堆内存分配，执行1次profile记录。</li>
+<li>因为内存profiling是基于抽样和它跟踪的是已分配的内存，而不是使用中的内存，（比如有些内存已经分配，看似使用，但实际以及不使用的内存，比如内存泄露的那部分），所以<strong>不能使用内存profiling衡量程序总体的内存使用情况</strong>。</li>
+</ol>
+<h2 id="gdb">gdb</h2>
+<p>根据进程号查看系统调用（mac下使用dtruss）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ strace -f -p $PID
+</code></pre></div><p>gdb调试（go build时候需要保留符号信息）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ gdb --pid<span style="color:#f92672">=</span>$PID $BINARY_FILE
+
+<span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> info goroutine //查看所有goroutine信息
+<span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> goroutine $GOROUTINE_ID bt //查看goroutine backtrace调用堆栈
+<span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> goroutine $GOROUTINE_ID frame //查看goroutine栈帧信息
+</code></pre></div><p>gdb导出core dump文件：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">(</span>gdb<span style="color:#f92672">)</span> gcore
+</code></pre></div><h2 id="dlv">dlv</h2>
+<p>使用<a href="https://github.com/go-delve/delve">dlv</a>分析core文件：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ dlv core $BINARY_FILE $CORE_FILE
+</code></pre></div><p>启动dlv api服务：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$  dlv core $BINARY_FILE $CORE_FILE --listen :11111 --headless --log
+</code></pre></div><p>获取goroutine 列表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$echo -n <span style="color:#e6db74">&#39;{&#34;method&#34;:&#34;RPCServer.ListGoroutines&#34;,&#34;params&#34;:[],&#34;id&#34;:2}&#39;</span> | nc -w <span style="color:#ae81ff">1</span> localhost <span style="color:#ae81ff">11111</span> &gt; list_goroutines.json
+</code></pre></div><p>分类统计goroutine列表：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ jq -c <span style="color:#e6db74">&#39;.result[] | [.userCurrentLoc.function.name, .userCurrentLoc.line]&#39;</span> list_goroutines.json | sort | uniq -c
+</code></pre></div><p>attach到运行的go进程：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ dlv attach $PID
+</code></pre></div><h2 id="信号">信号</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">A SIGQUIT, SIGILL, SIGTRAP, SIGABRT, SIGSTKFLT, SIGEMT, or SIGSYS signal causes the program to exit with a stack dump.
+</code></pre></div><p>使进程退出并打印堆栈：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ kill -SIGQUIT $PID
+</code></pre></div>
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+    <p class="small">
+    
+       © Copyright 2020 <i class="fa fa-heart" aria-hidden="true"></i> 
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://4fish.blue/js/main.js"></script>
+<script src="https://4fish.blue/js/prism.js"></script>
+
+
+
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-117516487-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+
+    </body>
+</html>

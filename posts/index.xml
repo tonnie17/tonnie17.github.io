@@ -26,16 +26,7 @@
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0800</pubDate>
       
       <guid>https://4fish.blue/posts/gke-manage-deployment/</guid>
-      <description>用GKE管理Deployments 在本节中介绍了一些 Dev Ops 在管理部署阶段中使用的一些手段，例如：“持续部署”，“蓝绿部署”和“金丝雀部署”等等</description>
-    </item>
-    
-    <item>
-      <title>《影响力》读书笔记</title>
-      <link>https://4fish.blue/posts/influence/</link>
-      <pubDate>Sun, 08 Nov 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/influence/</guid>
-      <description>影响力的武器 固定行为模式：雌火鸡在照顾小宝宝时通过小火鸡发出的“叽叽”声来触发母爱。 自动顺从反应：在要求别人帮忙时，要是能给一个理由，成功的</description>
+      <description>在本节中介绍了一些 Dev Ops 在管理部署阶段中使用的一些手段，例如：“持续部署”，“蓝绿部署”和“金丝雀部署”等等。 Heterogeneous deployments（异构部</description>
     </item>
     
     <item>
@@ -45,24 +36,6 @@
       
       <guid>https://4fish.blue/posts/gke/</guid>
       <description>申请 申请官网：https://cloud.google.com/kubernetes-engine 首先到申请官网登录 Google 账号，接着开始进入试用</description>
-    </item>
-    
-    <item>
-      <title>《监视资本主义：智能陷阱》观后感</title>
-      <link>https://4fish.blue/posts/the-social-dilemma/</link>
-      <pubDate>Sat, 24 Oct 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/the-social-dilemma/</guid>
-      <description>《监视资本主义：智能陷阱》是Neflix今年推出的一部纪录片，该纪录片讨论了在当今社交媒体发达的时代，对个人行为产生的影响，以及在大数据时代</description>
-    </item>
-    
-    <item>
-      <title>《投资中最简单的事》读书笔记</title>
-      <link>https://4fish.blue/posts/touzi/</link>
-      <pubDate>Wed, 14 Oct 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/touzi/</guid>
-      <description>投资理念 什么的行业容易出牛股？行业集中度持续提高的行业，因为这样的行业有门槛，有先发优势，护城河足够深，后来者难以竞争。 好公司的两个标准：一</description>
     </item>
     
     <item>

@@ -30,6 +30,33 @@
     </item>
     
     <item>
+      <title>Redis笔记</title>
+      <link>https://4fish.blue/notes/redis-note/</link>
+      <pubDate>Thu, 19 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/redis-note/</guid>
+      <description>Redis是一种基于键值对（key-value）的 NoSQL 数据库，它支持存储多种类型数据结构，因为Redis会把所有的数据都存放在内存中，所以它的</description>
+    </item>
+    
+    <item>
+      <title>Go调试方法</title>
+      <link>https://4fish.blue/notes/go-debug/</link>
+      <pubDate>Fri, 13 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/go-debug/</guid>
+      <description>pprof 需要在服务添加监听的pprof端口： import ( &amp;#34;net/http&amp;#34; _ &amp;#34;net/http/pprof&amp;#34; ) go func() { log.Println(http.ListenAndServe(&amp;#34;localhost:&amp;#34;+os.Getenv(&amp;#34;PORT&amp;#34;), nil)) }() 查看进程内存运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/heap 查看30秒内cpu运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/profile?seconds=30 查看go</description>
+    </item>
+    
+    <item>
+      <title>Go Runtime笔记</title>
+      <link>https://4fish.blue/notes/go-runtime/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/go-runtime/</guid>
+      <description>Go Runtime是go语言运行的基础设施，Runtime的功能： 协程的创建和调度 内存分配和回收管理 map，channel，mutex的创建和</description>
+    </item>
+    
+    <item>
       <title>go单元测试规范</title>
       <link>https://4fish.blue/posts/go-unittest/</link>
       <pubDate>Sat, 27 Jul 2019 00:00:00 +0800</pubDate>

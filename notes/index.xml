@@ -6,10 +6,37 @@
     <description>Recent content in Notes on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 08 Nov 2020 00:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://4fish.blue/notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>《影响力》读书笔记</title>
+      <link>https://4fish.blue/notes/influence/</link>
+      <pubDate>Sun, 08 Nov 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/influence/</guid>
+      <description>影响力的武器 固定行为模式：雌火鸡在照顾小宝宝时通过小火鸡发出的“叽叽”声来触发母爱。 自动顺从反应：在要求别人帮忙时，要是能给一个理由，成功的</description>
+    </item>
+    
+    <item>
+      <title>《监视资本主义：智能陷阱》观后感</title>
+      <link>https://4fish.blue/notes/the-social-dilemma/</link>
+      <pubDate>Sat, 24 Oct 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/the-social-dilemma/</guid>
+      <description>《监视资本主义：智能陷阱》是Neflix今年推出的一部纪录片，该纪录片讨论了在当今社交媒体发达的时代，对个人行为产生的影响，以及在大数据时代</description>
+    </item>
+    
+    <item>
+      <title>《投资中最简单的事》读书笔记</title>
+      <link>https://4fish.blue/notes/touzi/</link>
+      <pubDate>Wed, 14 Oct 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/touzi/</guid>
+      <description>投资理念 什么的行业容易出牛股？行业集中度持续提高的行业，因为这样的行业有门槛，有先发优势，护城河足够深，后来者难以竞争。 好公司的两个标准：一</description>
+    </item>
     
     <item>
       <title>go database/sql使用误区</title>
@@ -27,6 +54,33 @@
       
       <guid>https://4fish.blue/notes/notes/</guid>
       <description>最近访问尘封已久的博客，发现之前使用免费图床的链接都失效了，在没有备份的情况下丢失了数张图片，再次明白了一个道理：免费的东西是最贵的。因为博</description>
+    </item>
+    
+    <item>
+      <title>Redis笔记</title>
+      <link>https://4fish.blue/notes/redis-note/</link>
+      <pubDate>Thu, 19 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/redis-note/</guid>
+      <description>Redis是一种基于键值对（key-value）的 NoSQL 数据库，它支持存储多种类型数据结构，因为Redis会把所有的数据都存放在内存中，所以它的</description>
+    </item>
+    
+    <item>
+      <title>Go调试方法</title>
+      <link>https://4fish.blue/notes/go-debug/</link>
+      <pubDate>Fri, 13 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/go-debug/</guid>
+      <description>pprof 需要在服务添加监听的pprof端口： import ( &amp;#34;net/http&amp;#34; _ &amp;#34;net/http/pprof&amp;#34; ) go func() { log.Println(http.ListenAndServe(&amp;#34;localhost:&amp;#34;+os.Getenv(&amp;#34;PORT&amp;#34;), nil)) }() 查看进程内存运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/heap 查看30秒内cpu运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/profile?seconds=30 查看go</description>
+    </item>
+    
+    <item>
+      <title>Go Runtime笔记</title>
+      <link>https://4fish.blue/notes/go-runtime/</link>
+      <pubDate>Tue, 03 Dec 2019 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/notes/go-runtime/</guid>
+      <description>Go Runtime是go语言运行的基础设施，Runtime的功能： 协程的创建和调度 内存分配和回收管理 map，channel，mutex的创建和</description>
     </item>
     
     <item>
