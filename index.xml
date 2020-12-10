@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Gin源码随读</title>
+      <link>https://4fish.blue/posts/gin/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/gin/</guid>
+      <description>使用 gin 框架最常用的方式是使用 gin.New 或者 gin.Default 函数创建一个 *gin.Engine 实例，然后使用实例的方法注册 HTTP 路由函数，最后调用 Run 方法监听端口和启动服务。 package main import &amp;#34;github.com/gin-gonic/gin&amp;#34; func main() { r</description>
+    </item>
+    
+    <item>
       <title>初试Helm</title>
       <link>https://4fish.blue/posts/gke-helm/</link>
       <pubDate>Fri, 13 Nov 2020 01:00:00 +0800</pubDate>
