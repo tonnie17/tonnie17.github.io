@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>个人总结 on 4 Fish</title>
+    <link>https://4fish.blue/tags/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/</link>
+    <description>Recent content in 个人总结 on 4 Fish</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 31 Jan 2021 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://4fish.blue/tags/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2020年的总结和反思</title>
+      <link>https://4fish.blue/posts/2020/</link>
+      <pubDate>Sun, 31 Jan 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/2020/</guid>
+      <description>今天是2021年1月的最后一天，处于2021年再去回望2020年，真是发生了太多不可思议的事，令人感觉到一切都是那么的不真实，这一年对我来说</description>
+    </item>
+    
+  </channel>
+</rss>
