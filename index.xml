@@ -12,12 +12,12 @@
     
     
     <item>
-      <title>2020年的总结和反思</title>
-      <link>https://4fish.blue/posts/2020/</link>
-      <pubDate>Sun, 31 Jan 2021 00:00:00 +0800</pubDate>
+      <title>如何实现重试</title>
+      <link>https://4fish.blue/posts/retry/</link>
+      <pubDate>Mon, 15 Mar 2021 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/2020/</guid>
-      <description>今天是2021年1月的最后一天，处于2021年再去回望2020年，真是发生了太多不可思议的事，令人感觉到一切都是那么的不真实，这一年对我来说</description>
+      <guid>https://4fish.blue/posts/retry/</guid>
+      <description>为什么要重试？ 重试是在工程实践中用来提高系统容错能力的一种手段，在微服务的部署架构中，一个请求链路往往需要经过多个服务进行处理返回，而每个服</description>
     </item>
     
     <item>
@@ -57,15 +57,6 @@
     </item>
     
     <item>
-      <title>《影响力》读后感</title>
-      <link>https://4fish.blue/posts/influence/</link>
-      <pubDate>Sun, 08 Nov 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/influence/</guid>
-      <description>影响力的武器 固定行为模式：雌火鸡在照顾小宝宝时通过小火鸡发出的“叽叽”声来触发母爱。 自动顺从反应：在要求别人帮忙时，要是能给一个理由，成功的</description>
-    </item>
-    
-    <item>
       <title>GKE使用小记</title>
       <link>https://4fish.blue/posts/gke/</link>
       <pubDate>Thu, 05 Nov 2020 00:00:00 +0800</pubDate>
@@ -84,29 +75,11 @@
     </item>
     
     <item>
-      <title>《监视资本主义：智能陷阱》观后感</title>
-      <link>https://4fish.blue/posts/the-social-dilemma/</link>
-      <pubDate>Sat, 24 Oct 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/the-social-dilemma/</guid>
-      <description>《监视资本主义：智能陷阱》是Neflix今年推出的一部纪录片，该纪录片讨论了在当今社交媒体发达的时代，对个人行为产生的影响，以及在大数据时代</description>
-    </item>
-    
-    <item>
       <title>《投资中最简单的事》读书笔记</title>
       <link>https://4fish.blue/notes/touzi/</link>
       <pubDate>Wed, 14 Oct 2020 00:00:00 +0800</pubDate>
       
       <guid>https://4fish.blue/notes/touzi/</guid>
-      <description>投资理念 什么的行业容易出牛股？行业集中度持续提高的行业，因为这样的行业有门槛，有先发优势，护城河足够深，后来者难以竞争。 好公司的两个标准：一</description>
-    </item>
-    
-    <item>
-      <title>《投资中最简单的事》读后感</title>
-      <link>https://4fish.blue/posts/touzi/</link>
-      <pubDate>Wed, 14 Oct 2020 00:00:00 +0800</pubDate>
-      
-      <guid>https://4fish.blue/posts/touzi/</guid>
       <description>投资理念 什么的行业容易出牛股？行业集中度持续提高的行业，因为这样的行业有门槛，有先发优势，护城河足够深，后来者难以竞争。 好公司的两个标准：一</description>
     </item>
     

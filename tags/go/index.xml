@@ -6,10 +6,19 @@
     <description>Recent content in go on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Mar 2021 00:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://4fish.blue/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何实现重试</title>
+      <link>https://4fish.blue/posts/retry/</link>
+      <pubDate>Mon, 15 Mar 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://4fish.blue/posts/retry/</guid>
+      <description>为什么要重试？ 重试是在工程实践中用来提高系统容错能力的一种手段，在微服务的部署架构中，一个请求链路往往需要经过多个服务进行处理返回，而每个服</description>
+    </item>
     
     <item>
       <title>Gin源码随读</title>
