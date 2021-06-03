@@ -2,39 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>gke on 4 Fish</title>
-    <link>https://4fish.blue/tags/gke/</link>
+    <link>https://tonnie17.github.io/tags/gke/</link>
     <description>Recent content in gke on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 13 Nov 2020 01:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://4fish.blue/tags/gke/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://tonnie17.github.io/tags/gke/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>初试Helm</title>
-      <link>https://4fish.blue/posts/gke-helm/</link>
+      <link>https://tonnie17.github.io/posts/gke-helm/</link>
       <pubDate>Fri, 13 Nov 2020 01:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/gke-helm/</guid>
+      <guid>https://tonnie17.github.io/posts/gke-helm/</guid>
       <description>Helm Helm 是一个用来管理 Kubernetes 包（Charts）的工具集，使用 Helm 可以轻松管理 Kubernetes 包的配置和依赖，简化了 Kubernetes 的应用管理和更新。 Helm 分为两个部分： 客户端（Hel</description>
     </item>
     
     <item>
       <title>使用GKE管理Deployment</title>
-      <link>https://4fish.blue/posts/gke-manage-deployment/</link>
+      <link>https://tonnie17.github.io/posts/gke-manage-deployment/</link>
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/gke-manage-deployment/</guid>
+      <guid>https://tonnie17.github.io/posts/gke-manage-deployment/</guid>
       <description>在本节中介绍了一些 Dev Ops 在管理部署阶段中使用的一些手段，例如：“持续部署”，“蓝绿部署”和“金丝雀部署”等等。 Heterogeneous deployments（异构部</description>
     </item>
     
     <item>
       <title>GKE使用小记</title>
-      <link>https://4fish.blue/posts/gke/</link>
+      <link>https://tonnie17.github.io/posts/gke/</link>
       <pubDate>Thu, 05 Nov 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/gke/</guid>
+      <guid>https://tonnie17.github.io/posts/gke/</guid>
       <description>申请 申请官网：https://cloud.google.com/kubernetes-engine 首先到申请官网登录 Google 账号，接着开始进入试用</description>
     </item>
     

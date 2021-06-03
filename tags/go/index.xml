@@ -2,102 +2,102 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>go on 4 Fish</title>
-    <link>https://4fish.blue/tags/go/</link>
+    <link>https://tonnie17.github.io/tags/go/</link>
     <description>Recent content in go on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 15 Mar 2021 00:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://4fish.blue/tags/go/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://tonnie17.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>如何实现重试</title>
-      <link>https://4fish.blue/posts/retry/</link>
+      <link>https://tonnie17.github.io/posts/retry/</link>
       <pubDate>Mon, 15 Mar 2021 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/retry/</guid>
+      <guid>https://tonnie17.github.io/posts/retry/</guid>
       <description>为什么要重试？ 重试是在工程实践中用来提高系统容错能力的一种手段，在微服务的部署架构中，一个请求链路往往需要经过多个服务进行处理返回，而每个服</description>
     </item>
     
     <item>
       <title>Gin源码随读</title>
-      <link>https://4fish.blue/posts/gin/</link>
+      <link>https://tonnie17.github.io/posts/gin/</link>
       <pubDate>Thu, 10 Dec 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/gin/</guid>
+      <guid>https://tonnie17.github.io/posts/gin/</guid>
       <description>使用 gin 框架最常用的方式是使用 gin.New 或者 gin.Default 函数创建一个 *gin.Engine 实例，然后使用实例的方法注册 HTTP 路由函数，最后调用 Run 方法监听端口和启动服务。 package main import &amp;#34;github.com/gin-gonic/gin&amp;#34; func main() { r</description>
     </item>
     
     <item>
       <title>go database/sql使用误区</title>
-      <link>https://4fish.blue/notes/go-db-sql-notice/</link>
+      <link>https://tonnie17.github.io/notes/go-db-sql-notice/</link>
       <pubDate>Wed, 15 Apr 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/notes/go-db-sql-notice/</guid>
+      <guid>https://tonnie17.github.io/notes/go-db-sql-notice/</guid>
       <description>在循环中defer：在一个长生命周期的函数里进行defer rows.Close()，容易使连接数得不到释放，或defer堆栈过多，导致内存占</description>
     </item>
     
     <item>
       <title>go项目组织实践</title>
-      <link>https://4fish.blue/posts/go-project-structure/</link>
+      <link>https://tonnie17.github.io/posts/go-project-structure/</link>
       <pubDate>Fri, 03 Apr 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/go-project-structure/</guid>
+      <guid>https://tonnie17.github.io/posts/go-project-structure/</guid>
       <description>前言 为Go项目设计一个合适的目录结构是一个令人头痛的事情，也是初学者入坑不可避免的一段弯路，一个好的项目结构不仅会使项目组织看起来更为清晰，</description>
     </item>
     
     <item>
       <title>Redis笔记</title>
-      <link>https://4fish.blue/notes/redis-note/</link>
+      <link>https://tonnie17.github.io/notes/redis-note/</link>
       <pubDate>Thu, 19 Dec 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/notes/redis-note/</guid>
+      <guid>https://tonnie17.github.io/notes/redis-note/</guid>
       <description>Redis是一种基于键值对（key-value）的 NoSQL 数据库，它支持存储多种类型数据结构，因为Redis会把所有的数据都存放在内存中，所以它的</description>
     </item>
     
     <item>
       <title>Go调试方法</title>
-      <link>https://4fish.blue/notes/go-debug/</link>
+      <link>https://tonnie17.github.io/notes/go-debug/</link>
       <pubDate>Fri, 13 Dec 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/notes/go-debug/</guid>
+      <guid>https://tonnie17.github.io/notes/go-debug/</guid>
       <description>pprof 需要在服务添加监听的pprof端口： import ( &amp;#34;net/http&amp;#34; _ &amp;#34;net/http/pprof&amp;#34; ) go func() { log.Println(http.ListenAndServe(&amp;#34;localhost:&amp;#34;+os.Getenv(&amp;#34;PORT&amp;#34;), nil)) }() 查看进程内存运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/heap 查看30秒内cpu运行信息： $ go tool pprof &amp;lt;http://localhost&amp;gt;:$PORT/debug/pprof/profile?seconds=30 查看go</description>
     </item>
     
     <item>
       <title>Go Runtime笔记</title>
-      <link>https://4fish.blue/notes/go-runtime/</link>
+      <link>https://tonnie17.github.io/notes/go-runtime/</link>
       <pubDate>Tue, 03 Dec 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/notes/go-runtime/</guid>
+      <guid>https://tonnie17.github.io/notes/go-runtime/</guid>
       <description>Go Runtime是go语言运行的基础设施，Runtime的功能： 协程的创建和调度 内存分配和回收管理 map，channel，mutex的创建和</description>
     </item>
     
     <item>
       <title>go单元测试规范</title>
-      <link>https://4fish.blue/posts/go-unittest/</link>
+      <link>https://tonnie17.github.io/posts/go-unittest/</link>
       <pubDate>Sat, 27 Jul 2019 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/go-unittest/</guid>
+      <guid>https://tonnie17.github.io/posts/go-unittest/</guid>
       <description>测试原则 编写可测试的代码。 编写可测试的代码意味着在编写代码时就要考虑到这段代码是否易于测试。 例如对于以下这段代码： func NewHouse() *House { kitchen := new(Kitchen) bedroom := new(Bedroom) return &amp;amp;House{ kitchen:</description>
     </item>
     
     <item>
       <title>MIT 6.824笔记 - MapReduce</title>
-      <link>https://4fish.blue/posts/map-reduce/</link>
+      <link>https://tonnie17.github.io/posts/map-reduce/</link>
       <pubDate>Wed, 12 Dec 2018 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/map-reduce/</guid>
+      <guid>https://tonnie17.github.io/posts/map-reduce/</guid>
       <description>什么是MapReduce MapReduce是一种用以处理和生成大数据集的编程模型，其中用户指定map函数和reduce函数，它们分别用以把一</description>
     </item>
     
     <item>
       <title>实现连接池的几种姿势</title>
-      <link>https://4fish.blue/posts/go-connection-pool/</link>
+      <link>https://tonnie17.github.io/posts/go-connection-pool/</link>
       <pubDate>Tue, 23 Oct 2018 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/go-connection-pool/</guid>
+      <guid>https://tonnie17.github.io/posts/go-connection-pool/</guid>
       <description>连接池是一个用来维护可复用连接的数据结构，正确地使用连接池可以达到减少网络往返损耗，降低系统资源占用，提升响应性能的目的。连接池主要的思想是</description>
     </item>
     

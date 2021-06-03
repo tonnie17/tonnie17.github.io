@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>prometheus on 4 Fish</title>
-    <link>https://4fish.blue/tags/prometheus/</link>
+    <link>https://tonnie17.github.io/tags/prometheus/</link>
     <description>Recent content in prometheus on 4 Fish</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 06 Jan 2020 00:00:00 +0800</lastBuildDate>
     
-	<atom:link href="https://4fish.blue/tags/prometheus/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://tonnie17.github.io/tags/prometheus/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>基于Prometheus的监控系统实践</title>
-      <link>https://4fish.blue/posts/prometheus/</link>
+      <link>https://tonnie17.github.io/posts/prometheus/</link>
       <pubDate>Mon, 06 Jan 2020 00:00:00 +0800</pubDate>
       
-      <guid>https://4fish.blue/posts/prometheus/</guid>
+      <guid>https://tonnie17.github.io/posts/prometheus/</guid>
       <description>监控作为底层基础设施的一环，是保障生产环境服务稳定性不可或缺的一部分，线上问题从发现到定位再到解决，通过监控和告警手段可以有效地覆盖了「发现</description>
     </item>
     
